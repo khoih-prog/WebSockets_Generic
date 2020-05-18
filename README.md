@@ -25,6 +25,48 @@ WebSocket Server and Client for Arduino based on RFC6455.
  - ping
  - pong
  - continuation frame
+ 
+## Prerequisite
+ 1. [`Arduino IDE 1.8.12 or later` for Arduino](https://www.arduino.cc/en/Main/Software)
+ 2. [`Blynk library 0.6.1 or later`](https://github.com/blynkkk/blynk-library/releases) if use Blynk
+ 3. [`ESP32 core 1.0.4 or later`](https://github.com/espressif/arduino-esp32/releases) for ESP32 boards
+ 4. [`ESP8266 core 2.6.3 or later` for Arduino](https://github.com/esp8266/Arduino#installing-with-boards-manager) for ESP8266 boards. To use ESP8266 core 2.7.1+ for LittleFS.
+ 5. `Arduino AVR core 1.8.2 or later` for Arduino (Use Arduino Board Manager)
+ 6. [`Teensy core 1.51 or later`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards.
+ 7. [`Arduino SAM DUE core 1.6.12 or later`](https://www.arduino.cc/en/Guide/ArduinoDue) for SAM DUE ARM Cortex-M3 boards
+ 8. [`Arduino SAMD core 1.8.5 or later`](https://www.arduino.cc/en/Guide/ArduinoM0) for SAMD ARM Cortex-M0+ boards
+ 9. [`Adafruit SAMD core 1.5.11 or later`](https://www.adafruit.com/) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.)
+10. [`Adafruit nRF52 v0.20.1 or later`](https://www.adafruit.com/) for nRF52 boards such as AdaFruit Feather nRF52840 Express, NINA_B302_ublox, etc.
+11. [`Arduino Core for STM32 v1.8.0 or later`](https://github.com/khoih-prog/Arduino_Core_STM32) for STM32 boards. To install go to Arduino IDE, select Boards Manager, search for ***`STM32`***
+12. [`EthernetWebServer library v1.0.8+`](https://github.com/khoih-prog/EthernetWebServer) if necessary to use certain Ethernet features.
+13. Depending on which Ethernet card you're using:
+   - [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet) for W5200 and W5500
+   - [`Ethernet2 library`](https://github.com/khoih-prog/Ethernet2) for W5500 (Deprecated, use Arduino Ethernet library)
+   - [`Ethernet3 library`](https://github.com/sstaub/Ethernet3) for W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip.
+   - [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge) for W5100, W5200 and W5500.
+   - [`UIPEthernet library`](https://github.com/khoih-prog/UIPEthernet) for ENC28J60
+14. [`WiFiNINA_Generic library v1.5.1-final or later`](https://github.com/khoih-prog/WiFiNINA_Generic) if necessary to use WiFiNINA. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiNINA_Generic.svg?)](https://www.ardu-badge.com/WiFiNINA_Generic)
+15. [`WiFiWebServer library v1.0.1 or later`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
+16. [`FlashStorage_SAMD library v1.0.0`](https://github.com/khoih-prog/FlashStorage_SAMD) for SAMD21 and SAMD51 boards (ZERO, MKR, ***NANO_33_IOT***, M0, M0 Pro, ***AdaFruit Itsy-Bitsy M4***, etc.) if necessary to use certain features.
+17. [`DueFlashStorage library`](https://github.com/sebnil/DueFlashStorage) for SAM DUE if necessary to use certain features.
+18. [`Adafruit's LittleFS/InternalFS`](https://www.adafruit.com) for nRF52. Already included if you already installed Adafruit ***nRF52 board package*** from Boards Manager.
+19. [`DoubleResetDetector_Generic v1.0.2 or later`](https://github.com/khoih-prog/DoubleResetDetector_Generic). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic) if necessary to use certain features.
+
+## Installation
+
+### Use Arduino Library Manager
+The best and easiest way is to use `Arduino Library Manager`. Search for `WebSockets_Generic`, then select / install the latest version.
+You can also use this link [![arduino-library-badge](https://www.ardu-badge.com/badge/WebSockets_Generic.svg?)](https://www.ardu-badge.com/WebSockets_Generic) for more detailed instructions.
+
+### Manual Install
+
+Another way to install is to:
+
+1. Navigate to [WebSockets_Generic](https://github.com/khoih-prog/WebSockets_Generic) page.
+2. Download the latest release `WebSockets_Generic-master.zip`.
+3. Extract the zip file to `WebSockets_Generic-master` directory 
+4. Copy whole `WebSockets_Generic-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
+
 
 ##### Limitations #####
  - max input length is limited to the ram size and the ```WEBSOCKETS_MAX_DATA_SIZE``` define
@@ -62,6 +104,7 @@ WebSocket Server and Client for Arduino based on RFC6455.
   Arduino for AVR not supports std namespace of c++.
 
 ### wss / SSL ###
+
  supported for:
  - wss client on the ESP8266
  - wss / SSL is not natively supported in WebSocketsServer however it is possible to achieve secure websockets
@@ -76,6 +119,24 @@ The mode can be activated in the ```WebSockets.h``` (see WEBSOCKETS_NETWORK_TYPE
 
 [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) libary is required.
 
+### How to use
+
+In your code, select one of the currently supported network connection from the following list:
+
+1. ***NETWORK_ESP8266_ASYNC*** for ESP8266 Async
+2. ***NETWORK_W5100*** for W5x00 Ethernet
+3. ***NETWORK_ENC28J60*** for ENC28J60 Ethernet
+4. ***NETWORK_ESP32*** for ESP32 WiFi
+5. ***NETWORK_ESP32_ETH*** for ESP32 Ethernet
+6. ***NETWORK_WIFININA*** for WiFiNINA
+
+then add `#define WEBSOCKETS_NETWORK_TYPE`  before `#include <WebSocketsClient_Generic.h>`
+
+```
+#define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
+
+#include <WebSocketsClient_Generic.h>
+```
 
 ### High Level Client API ###
 
@@ -115,6 +176,268 @@ typedef enum
 } WStype_t;
 ```
 
+
+
+### Examples
+
+##### For WiFiNINA
+
+1. [nRF52_Blynk_NINA_Alexa](examples/WiFiNINA/nRF52_Blynk_NINA_Alexa)
+2. [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa)
+3. [WebSocketClient_NINA](examples/WiFiNINA/WebSocketClient_NINA)
+4. [WebSocketClientSocketIO_NINA](examples/WiFiNINA/WebSocketClientSocketIO_NINA)
+5. [WebSocketClientStomp_NINA](examples/WiFiNINA/WebSocketClientStomp_NINA)
+6. [WebSocketClientStompOverSockJs_NINA](examples/WiFiNINA/WebSocketClientStompOverSockJs_NINA)
+
+##### For W5x00 Ethernet shield
+
+1. [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa)
+2. [SAMD_Blynk_W5500_Alexa](examples/W5500/SAMD_Blynk_W5500_Alexa)
+3. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500)
+4. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500)
+5. [WebSocketClientStomp_W5500](examples/W5500/WebSocketClientStomp_W5500)
+6. [WebSocketClientStompOverSockJs_W5500](examples/W5500/WebSocketClientStompOverSockJs_W5500)
+
+##### For ENC28J60 Ethernet shield
+
+1. [nRF52_Blynk_ENC_Alexa](examples/ENC28J60/nRF52_Blynk_ENC_Alexa)
+2. [SAMD_Blynk_ENC_Alexa](examples/ENC28J60/SAMD_Blynk_ENC_Alexa)
+3. [WebSocketClientSocketIO_ENC](examples/ENC28J60/WebSocketClientSocketIO_ENC)
+4. [WebSocketClientSocketIO_ENC](examples/ENC28J60/WebSocketClientSocketIO_ENC)
+5. [WebSocketClientStomp_ENC](examples/ENC28J60/WebSocketClientStomp_ENC)
+6. [WebSocketClientStompOverSockJs_ENC](examples/ENC28J60/WebSocketClientStompOverSockJs_ENC)
+
+##### For AVR board
+
+1. [WebSocketClientAVR](examples/avr/WebSocketClientAVR)
+
+##### For ESP32 board
+
+1. [WebSocketClient](examples/esp32/WebSocketClient)
+2. [WebSocketClientSSL](examples/esp32/WebSocketClientSSL)
+3. [WebSocketServer](examples/esp32/WebSocketServer)
+
+##### For ESP8266 board
+
+ 1. [WebSocketClient](examples/esp8266/WebSocketClient)
+ 2. [WebSocketClientSocketIO](examples/esp8266/WebSocketClientSocketIO)
+ 3. [WebSocketClientSSL](examples/esp8266/WebSocketClientSSL)
+ 4. [WebSocketClientStomp](examples/esp8266/WebSocketClientStomp)
+ 5. [WebSocketClientStompOverSockJs](examples/esp8266/WebSocketClientStompOverSockJs)
+ 6. [WebSocketServer](examples/esp8266/WebSocketServer)
+ 7. [WebSocketServerAllFunctionsDemo](examples/esp8266/WebSocketServerAllFunctionsDemo)
+ 8. [WebSocketServerFragmentation](examples/esp8266/WebSocketServerFragmentation)
+ 9. [WebSocketServerHttpHeaderValidation](examples/esp8266/WebSocketServerHttpHeaderValidation)
+10. [WebSocketServer_LEDcontrol](examples/esp8266/WebSocketServer_LEDcontrol)
+
+##### For Particle board
+
+1. [ParticleWebSocketClient](examples/particle/ParticleWebSocketClient)
+
+### Example [WebSocketClient_NINA](examples/WiFiNINA/WebSocketClient_NINA)
+
+```cpp
+#define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
+
+#include <WiFiNINA_Generic.h>
+
+#include <WebSocketsClient_Generic.h>
+
+//#include <Hash.h>
+
+WebSocketsClient webSocket;
+
+int status = WL_IDLE_STATUS;
+
+///////please enter your sensitive data in the Secret tab/arduino_secrets.h
+char ssid[] = "****";        // your network SSID (name)
+char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+
+
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) 
+{
+
+	switch(type) 
+	{
+		case WStype_DISCONNECTED:
+			Serial.printf("[WSc] Disconnected!\n");
+			break;
+		case WStype_CONNECTED: 
+		{
+			Serial.printf("[WSc] Connected to url: %s\n", payload);
+
+			// send message to server when Connected
+			webSocket.sendTXT("Connected");
+		}
+			break;
+		case WStype_TEXT:
+			Serial.printf("[WSc] get text: %s\n", payload);
+
+			// send message to server
+			// webSocket.sendTXT("message here");
+			break;
+		case WStype_BIN:
+			Serial.printf("[WSc] get binary length: %u\n", length);
+      // KH, To check
+			// hexdump(payload, length);
+
+			// send data to server
+			 webSocket.sendBIN(payload, length);
+			break;
+	}
+
+}
+
+void setup() 
+{
+	//Initialize serial and wait for port to open:
+  Serial.begin(115200);
+  while (!Serial);
+
+  Serial.println("Used/default SPI pinout:");
+  Serial.print("MOSI:");
+  Serial.println(MOSI);
+  Serial.print("MISO:");
+  Serial.println(MISO);
+  Serial.print("SCK:");
+  Serial.println(SCK);
+  Serial.print("SS:");
+  Serial.println(SS);
+
+  // check for the WiFi module:
+  if (WiFi.status() == WL_NO_MODULE)
+  {
+    Serial.println("Communication with WiFi module failed!");
+    // don't continue
+    while (true);
+  }
+
+  String fv = WiFi.firmwareVersion();
+  if (fv < WIFI_FIRMWARE_LATEST_VERSION)
+  {
+    Serial.println("Please upgrade the firmware");
+  }
+
+  // attempt to connect to Wifi network:
+  while (status != WL_CONNECTED)
+  {
+    Serial.print("Attempting to connect to SSID: ");
+    Serial.println(ssid);
+    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+    status = WiFi.begin(ssid, pass);
+
+    // wait 10 seconds for connection:
+    //delay(10000);
+  }
+
+	// server address, port and URL
+	webSocket.begin("192.168.2.123", 81, "/");
+
+	// event handler
+	webSocket.onEvent(webSocketEvent);
+
+	// use HTTP Basic Authorization this is optional remove if not needed
+	webSocket.setAuthorization("user", "Password");
+
+	// try ever 5000 again if connection has failed
+	webSocket.setReconnectInterval(5000);
+
+}
+
+void loop() 
+{
+	webSocket.loop();
+}
+```
+
+### Debug Terminal Output when running [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa)
+
+You can see the Adafruit NRF52840_FEATHER Express board, with W5500 Ethernet shield, connects to Blynk using [BlynkEthernet_WM library](https://github.com/khoih-prog/BlynkEthernet_WM). 
+
+It also uses [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with `SINRIC` skills, and `Alexa`, to control a relay using Alexa voice control of a `Amazon Alexa` phone APP
+
+```
+Start nRF52_Blynk_W5500_Alexa using W5x00_Shield on NRF52840_FEATHER
+LittleFS Flag read = 0xd0d04321
+Flag read = 0xd0d04321
+No doubleResetDetected
+Saving DOUBLERESETDETECTOR_FLAG to DRD file : 0xd0d01234
+Saving DRD file OK
+SetFlag write = 0xd0d01234
+[881] ======= Start Default Config Data =======
+[881] Hdr=NonSSL,BName=Air-Control
+[881] Svr=account.duckdns.org,Tok=token1
+[881] Svr1=blynk-cloud.com,Tok1=<<my real Blynk auth>>
+[882] Prt=8080,SIP=
+[882] LoadCfgFile 
+[883] OK
+[883] ======= Start Stored Config Data =======
+[883] Hdr=W5X00,BName=Air-Control
+[883] Svr=account.duckdns.org,Tok=****
+[884] Svr1=blynk-cloud.com,Tok1=****
+[884] Prt=8080,SIP=
+[884] CCSum=0x262e,RCSum=0x262e
+[886] LoadCredFile 
+[886] ChkCrR: Buffer allocated, sz=37
+[886] ChkCrR:pdata=****,len=36
+[886] ChkCrR:pdata=****,len=24
+[886] OK
+[887] CrCCsum=ea7,CrRCsum=ea7
+[887] Buffer freed
+[887] Valid Stored Dynamic Data
+[889] LoadCredFile 
+[889] CrR:pdata=****,len=36
+[889] CrR:pdata=****,len=24
+[889] OK
+[889] CrCCsum=ea7,CrRCsum=ea7
+[890] Hdr=W5X00,BName=Air-Control
+[890] Svr=account.duckdns.org,Tok=****
+[890] Svr1=blynk-cloud.com,Tok1=****
+[890] Prt=8080,SIP=
+[890] MAC:FE-F8-E0-CB-D0-BD
+_pinCS = 0
+W5100 init, using SS_PIN_DEFAULT = 10, new ss_pin = 10, W5100Class::ss_pin = 10
+W5100::init: W5500, SSIZE =4096
+[2577] IP:192.168.2.89
+[2577] bg: noConfigPortal = true
+[2577] bg: noConfigPortal = true
+[2577] bg:ECon.TryB
+[2577] 
+    ___  __          __
+   / _ )/ /_ _____  / /__
+  / _  / / // / _ \/  '_/
+ /____/_/\_, /_//_/_/\_\
+        /___/ v0.6.1 on Arduino
+
+[2578] BlynkArduinoClient.connect: Connecting to account.duckdns.org:8080
+[2687] Ready (ping: 3ms).
+[2754] Connected to Blynk Server = account.duckdns.org, Token = ****
+[2754] bg:EBCon
+
+Your stored Credentials :
+SINRIC API Key = ****
+Device_ID1 = ****
+[WSc] Service connected to sinric.com at url: /
+Waiting for commands from sinric.com ...
+Stop doubleResetDetecting
+Saving to DRD file : 0xd0d04321
+Saving DRD file OK
+LittleFS Flag read = 0xd0d04321
+ClearFlag write = 0xd0d04321
+[WSc] get text: {"deviceId":"****","action":"setPowerState","value":"ON"}
+Turn on for unknown device id: ****
+[WSc] get text: {"deviceId":"****","action":"setPowerState","value":"OFF"}
+Turn off for unknown device id: ****
+[WSc] get text: {"action":"test","sender":"web"}
+[WSc] received test command from sinric.com
+[WSc] get text: {"action":"test","sender":"web"}
+[WSc] received test command from sinric.com
+[WSc] get text: {"deviceId":"****","action":"setPowerState","value":"ON"}
+Turn on device id: ****
+[WSc] get text: {"deviceId":"****","action":"setPowerState","value":"OFF"}
+Turn off Device ID: ****
+```
+
 ### Issues ###
 
 Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebSockets_Generic/issues)
@@ -136,7 +459,7 @@ If you want to contribute to this project:
 
 ### License and credits ###
 
-- All credits go to original author [Markus Sattler](https://github.com/Links2004)
+- All credits go to original author [Markus Sattler](https://github.com/Links2004).
 
 - The library is licensed under [LGPLv2.1](https://github.com/Links2004/arduinoWebSockets/blob/master/LICENSE) and [MIT](https://github.com/khoih-prog/WebSockets_Generic/blob/master/LICENSE)
 
