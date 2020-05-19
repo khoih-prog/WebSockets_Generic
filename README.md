@@ -9,6 +9,10 @@
 
 WebSocket Server and Client for Arduino based on RFC6455.
 
+#### New in v2.2.1
+
+1. Bump up to sync with v2.2.1 of original WebSockets library
+
 #### New in v2.1.3
 
 1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***. OK.
@@ -176,8 +180,6 @@ typedef enum
   WStype_FRAGMENT_FIN,
 } WStype_t;
 ```
-
-
 
 ### Examples
 
@@ -437,6 +439,19 @@ Turn on device id: ****
 [WSc] get text: {"deviceId":"****","action":"setPowerState","value":"OFF"}
 Turn off Device ID: ****
 ```
+
+#### New in v2.2.1
+
+1. Bump up to sync with v2.2.1 of original WebSockets library
+
+#### New in v2.1.3
+
+1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***. OK.
+2. Add support to ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.)***. OK.
+3. Add support to ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***. Still testing.
+4. Add support to ***Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0, LC)***. Still testing.
+5. Add support to ***STM32F1, STM32F2, STM32F4, STM32F7 with more than 32KB flash memory.*** Still testing.
+6. Add support to ***SAM DUE***. Still testing.
 
 ### Issues ###
 
