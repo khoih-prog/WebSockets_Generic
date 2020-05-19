@@ -11,7 +11,7 @@
 #include <WiFiMulti.h>
 #include <WiFiClientSecure.h>
 
-#include <WebSocketsServer.h>
+#include <WebSocketsServer_Generic.h>
 
 WiFiMulti WiFiMulti;
 WebSocketsServer webSocket = WebSocketsServer(81);

@@ -11,7 +11,7 @@
 #include <WiFiMulti.h>
 #include <WiFiClientSecure.h>
 
-#include <WebSocketsClient.h>
+#include <WebSocketsClient_Generic.h>
 
 
 WiFiMulti WiFiMulti;

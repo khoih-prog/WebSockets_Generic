@@ -12,18 +12,18 @@
 
    Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
    to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
    Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
    Licensed under MIT license
    Version: 2.1.3
 
    Created on: 24.05.2015
    Author: Markus Sattler
-    
+
    Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
-   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832, 
-                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc. 
+   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
  *****************************************************************************************************************************/
 #include "defines.h"
 #include "Credentials.h"
@@ -41,7 +41,7 @@ bool lastDevice_01_ON;
 
 #include <IPAddress.h>
 
-//#include <WebSocketsClient.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases 
+//#include <WebSocketsClient.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases
 #include <WebSocketsClient_Generic.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases 
 
 #include <ArduinoJson.h>      // get it from https://arduinojson.org/ or install via Arduino library manager
@@ -102,22 +102,24 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
     case WStype_DISCONNECTED:
       isConnected = false;
 #if (DEBUG_SETUP > 0)
-      Serial.printf("[WSc] Webservice disconnected from sinric.com!\n");
+      Serial.println("[WSc] Webservice disconnected from sinric.com!");
 #endif
       break;
     case WStype_CONNECTED:
       {
         isConnected = true;
 #if (DEBUG_SETUP > 0)
-        Serial.printf("[WSc] Service connected to sinric.com at url: %s\n", payload);
-        Serial.printf("Waiting for commands from sinric.com ...\n");
+        Serial.print("[WSc] Service connected to sinric.com at url: ");
+        Serial.println((char *) payload);
+        Serial.println("Waiting for commands from sinric.com ...");
 #endif
       }
       break;
     case WStype_TEXT:
       {
 #if (DEBUG_SETUP > 1)
-        Serial.printf("[WSc] get text: %s\n", payload);
+        Serial.print("[WSc] get text: ");
+        Serial.println((char *) payload);
 #endif
         // Example payloads
 
@@ -180,7 +182,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       break;
     case WStype_BIN:
 #if (DEBUG_SETUP > 1)
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
 #endif
       break;
   }
@@ -307,130 +310,130 @@ void setup()
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH); // Deselect the SD card
 
-  #if USE_ETHERNET_WRAPPER
+#if USE_ETHERNET_WRAPPER
 
-    EthernetInit();
+  EthernetInit();
 
-  #else
+#else
 
-    #if USE_ETHERNET
-      LOGWARN(F("=========== USE_ETHERNET ==========="));
-    #elif USE_ETHERNET2
-      LOGWARN(F("=========== USE_ETHERNET2 ==========="));
-    #elif USE_ETHERNET3
-      LOGWARN(F("=========== USE_ETHERNET3 ==========="));
-    #elif USE_ETHERNET_LARGE
-      LOGWARN(F("=========== USE_ETHERNET_LARGE ==========="));
-    #elif USE_ETHERNET_ESP8266
-      LOGWARN(F("=========== USE_ETHERNET_ESP8266 ==========="));
-    #else
-      LOGWARN(F("========================="));
-    #endif
-   
-      LOGWARN(F("Default SPI pinout:"));
-      LOGWARN1(F("MOSI:"), MOSI);
-      LOGWARN1(F("MISO:"), MISO);
-      LOGWARN1(F("SCK:"),  SCK);
-      LOGWARN1(F("SS:"),   SS);
-      LOGWARN(F("========================="));
-       
-    #if defined(ESP8266)
-      // For ESP8266, change for other boards if necessary
-      #ifndef USE_THIS_SS_PIN
-        #define USE_THIS_SS_PIN   D2    // For ESP8266
-      #endif
-      
-      LOGWARN1(F("ESP8266 setCsPin:"), USE_THIS_SS_PIN);
-      
-      #if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2 )
-        // For ESP8266
-        // Pin                D0(GPIO16)    D1(GPIO5)    D2(GPIO4)    D3(GPIO0)    D4(GPIO2)    D8
-        // Ethernet           0                 X            X            X            X        0
-        // Ethernet2          X                 X            X            X            X        0
-        // Ethernet3          X                 X            X            X            X        0
-        // EthernetLarge      X                 X            X            X            X        0
-        // Ethernet_ESP8266   0                 0            0            0            0        0
-        // D2 is safe to used for Ethernet, Ethernet2, Ethernet3, EthernetLarge libs
-        // Must use library patch for Ethernet, EthernetLarge libraries
-        //Ethernet.setCsPin (USE_THIS_SS_PIN);
-        Ethernet.init (USE_THIS_SS_PIN);
-  
-      #elif USE_ETHERNET3
-        // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
-        #ifndef ETHERNET3_MAX_SOCK_NUM
-          #define ETHERNET3_MAX_SOCK_NUM      4
-        #endif
-        
-        Ethernet.setCsPin (USE_THIS_SS_PIN);
-        Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
- 
-      #endif  //( USE_ETHERNET || USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE )
-        
-    #elif defined(ESP32)
-  
-      // You can use Ethernet.init(pin) to configure the CS pin
-      //Ethernet.init(10);  // Most Arduino shields
-      //Ethernet.init(5);   // MKR ETH shield
-      //Ethernet.init(0);   // Teensy 2.0
-      //Ethernet.init(20);  // Teensy++ 2.0
-      //Ethernet.init(15);  // ESP8266 with Adafruit Featherwing Ethernet
-      //Ethernet.init(33);  // ESP32 with Adafruit Featherwing Ethernet
-      
-      #ifndef USE_THIS_SS_PIN
-        #define USE_THIS_SS_PIN   22    // For ESP32
-      #endif
-      
-      LOGWARN1(F("ESP32 setCsPin:"), USE_THIS_SS_PIN);
-      
-      // For other boards, to change if necessary
-      #if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2 )
-        // Must use library patch for Ethernet, EthernetLarge libraries
-        // ESP32 => GPIO2,4,5,13,15,21,22 OK with Ethernet, Ethernet2, EthernetLarge
-        // ESP32 => GPIO2,4,5,15,21,22 OK with Ethernet3
-           
-        //Ethernet.setCsPin (USE_THIS_SS_PIN);
-        Ethernet.init (USE_THIS_SS_PIN);
-  
-      #elif USE_ETHERNET3
-        // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
-        #ifndef ETHERNET3_MAX_SOCK_NUM
-          #define ETHERNET3_MAX_SOCK_NUM      4
-        #endif
-        
-        Ethernet.setCsPin (USE_THIS_SS_PIN);
-        Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
-              
-      #endif  //( USE_ETHERNET || USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE )
-  
-    #else   //defined(ESP8266)
-      // unknown board, do nothing, use default SS = 10
-      #ifndef USE_THIS_SS_PIN
-        #define USE_THIS_SS_PIN   10    // For other boards
-      #endif
-           
-      LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
-  
-      // For other boards, to change if necessary
-      #if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2 )
-        // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-  
-        Ethernet.init (USE_THIS_SS_PIN);
-  
-      #elif USE_ETHERNET3
-        // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
-        #ifndef ETHERNET3_MAX_SOCK_NUM
-          #define ETHERNET3_MAX_SOCK_NUM      4
-        #endif
-        
-        Ethernet.setCsPin (USE_THIS_SS_PIN);
-        Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
-                        
-      #endif  //( USE_ETHERNET || USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE )
-      
-    #endif    //defined(ESP8266)
-  
-  
-  #endif  //USE_ETHERNET_WRAPPER
+#if USE_ETHERNET
+  LOGWARN(F("=========== USE_ETHERNET ==========="));
+#elif USE_ETHERNET2
+  LOGWARN(F("=========== USE_ETHERNET2 ==========="));
+#elif USE_ETHERNET3
+  LOGWARN(F("=========== USE_ETHERNET3 ==========="));
+#elif USE_ETHERNET_LARGE
+  LOGWARN(F("=========== USE_ETHERNET_LARGE ==========="));
+#elif USE_ETHERNET_ESP8266
+  LOGWARN(F("=========== USE_ETHERNET_ESP8266 ==========="));
+#else
+  LOGWARN(F("========================="));
+#endif
+
+  LOGWARN(F("Default SPI pinout:"));
+  LOGWARN1(F("MOSI:"), MOSI);
+  LOGWARN1(F("MISO:"), MISO);
+  LOGWARN1(F("SCK:"),  SCK);
+  LOGWARN1(F("SS:"),   SS);
+  LOGWARN(F("========================="));
+
+#if defined(ESP8266)
+  // For ESP8266, change for other boards if necessary
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   D2    // For ESP8266
+#endif
+
+  LOGWARN1(F("ESP8266 setCsPin:"), USE_THIS_SS_PIN);
+
+#if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2 )
+  // For ESP8266
+  // Pin                D0(GPIO16)    D1(GPIO5)    D2(GPIO4)    D3(GPIO0)    D4(GPIO2)    D8
+  // Ethernet           0                 X            X            X            X        0
+  // Ethernet2          X                 X            X            X            X        0
+  // Ethernet3          X                 X            X            X            X        0
+  // EthernetLarge      X                 X            X            X            X        0
+  // Ethernet_ESP8266   0                 0            0            0            0        0
+  // D2 is safe to used for Ethernet, Ethernet2, Ethernet3, EthernetLarge libs
+  // Must use library patch for Ethernet, EthernetLarge libraries
+  //Ethernet.setCsPin (USE_THIS_SS_PIN);
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#elif USE_ETHERNET3
+  // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
+#ifndef ETHERNET3_MAX_SOCK_NUM
+#define ETHERNET3_MAX_SOCK_NUM      4
+#endif
+
+  Ethernet.setCsPin (USE_THIS_SS_PIN);
+  Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
+
+#endif  //( USE_ETHERNET || USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE )
+
+#elif defined(ESP32)
+
+  // You can use Ethernet.init(pin) to configure the CS pin
+  //Ethernet.init(10);  // Most Arduino shields
+  //Ethernet.init(5);   // MKR ETH shield
+  //Ethernet.init(0);   // Teensy 2.0
+  //Ethernet.init(20);  // Teensy++ 2.0
+  //Ethernet.init(15);  // ESP8266 with Adafruit Featherwing Ethernet
+  //Ethernet.init(33);  // ESP32 with Adafruit Featherwing Ethernet
+
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   22    // For ESP32
+#endif
+
+  LOGWARN1(F("ESP32 setCsPin:"), USE_THIS_SS_PIN);
+
+  // For other boards, to change if necessary
+#if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2 )
+  // Must use library patch for Ethernet, EthernetLarge libraries
+  // ESP32 => GPIO2,4,5,13,15,21,22 OK with Ethernet, Ethernet2, EthernetLarge
+  // ESP32 => GPIO2,4,5,15,21,22 OK with Ethernet3
+
+  //Ethernet.setCsPin (USE_THIS_SS_PIN);
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#elif USE_ETHERNET3
+  // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
+#ifndef ETHERNET3_MAX_SOCK_NUM
+#define ETHERNET3_MAX_SOCK_NUM      4
+#endif
+
+  Ethernet.setCsPin (USE_THIS_SS_PIN);
+  Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
+
+#endif  //( USE_ETHERNET || USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE )
+
+#else   //defined(ESP8266)
+  // unknown board, do nothing, use default SS = 10
+#ifndef USE_THIS_SS_PIN
+#define USE_THIS_SS_PIN   10    // For other boards
+#endif
+
+  LOGWARN1(F("Unknown board setCsPin:"), USE_THIS_SS_PIN);
+
+  // For other boards, to change if necessary
+#if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2 )
+  // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#elif USE_ETHERNET3
+  // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
+#ifndef ETHERNET3_MAX_SOCK_NUM
+#define ETHERNET3_MAX_SOCK_NUM      4
+#endif
+
+  Ethernet.setCsPin (USE_THIS_SS_PIN);
+  Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
+
+#endif  //( USE_ETHERNET || USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE )
+
+#endif    //defined(ESP8266)
+
+
+#endif  //USE_ETHERNET_WRAPPER
 
   Serial.println("\nStart nRF52_Blynk_W5500_Alexa using W5x00_Shield on " + String(BOARD_TYPE));
 

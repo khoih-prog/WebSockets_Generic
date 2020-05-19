@@ -50,7 +50,13 @@
 #ifdef ARDUINO_ARCH_AVR
   #error Version 2.x.x currently does not support Arduino with AVR since there is no support for std namespace of c++.
   #error Use Version 1.x.x. (ATmega branch)
-#else
+#else  
+  #ifdef max
+    #undef max
+  #endif
+  #ifdef min
+    #undef min
+  #endif
   #include <functional>
 #endif
 

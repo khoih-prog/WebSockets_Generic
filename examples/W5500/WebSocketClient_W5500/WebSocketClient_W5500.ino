@@ -38,38 +38,40 @@ uint8_t mac[6] =  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x09 };
 
 #define SDCARD_CS       4
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) 
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
+  switch (type)
+  {
+    case WStype_DISCONNECTED:
+      Serial.println("[WSc] Disconnected!");
+      break;
+    case WStype_CONNECTED:
+      {
+        Serial.print("[WSc] Connected to url: ");
+        Serial.println((char *) payload);
 
-	switch(type) 
-	{
-		case WStype_DISCONNECTED:
-			Serial.printf("[WSc] Disconnected!\n");
-			break;
-		case WStype_CONNECTED: 
-		{
-			Serial.printf("[WSc] Connected to url: %s\n", payload);
+        // send message to server when Connected
+        webSocket.sendTXT("Connected");
+      }
+      break;
+    case WStype_TEXT:
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
 
-			// send message to server when Connected
-			webSocket.sendTXT("Connected");
-		}
-			break;
-		case WStype_TEXT:
-			Serial.printf("[WSc] get text: %s\n", payload);
-
-			// send message to server
-			// webSocket.sendTXT("message here");
-			break;
-		case WStype_BIN:
-			Serial.printf("[WSc] get binary length: %u\n", length);
+      // send message to server
+      // webSocket.sendTXT("message here");
+      break;
+    case WStype_BIN:
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
+      
       // KH, To check
-			// hexdump(payload, length);
+      // hexdump(payload, length);
 
-			// send data to server
-			 webSocket.sendBIN(payload, length);
-			break;
-	}
-
+      // send data to server
+      webSocket.sendBIN(payload, length);
+      break;
+  }
 }
 
 void setup() 

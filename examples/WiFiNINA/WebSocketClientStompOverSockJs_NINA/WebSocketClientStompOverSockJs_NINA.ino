@@ -5,10 +5,10 @@
   Blynk_WiFiNINA_WM is a library for the Mega, Teensy, SAM DUE, nRF52, STM32 and SAMD boards
   (https://github.com/khoih-prog/Blynk_WiFiNINA_WM) to enable easy configuration/reconfiguration and
   autoconnect/autoreconnect of WiFiNINA/Blynk
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
   Version: 2.1.3
@@ -18,11 +18,11 @@
 
   Created on: 18.07.2017
   Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
-    
+
   Version Modified By   Date      Comments
- ------- -----------  ---------- -----------
-  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832, 
-                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.                      
+  ------- -----------  ---------- -----------
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
  *****************************************************************************************************************************/
 
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
@@ -57,11 +57,12 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.printf("[WSc] Disconnected!\n");
+      Serial.println("[WSc] Disconnected!");
       break;
     case WStype_CONNECTED:
       {
-        Serial.printf("[WSc] Connected to url: %s\n",  payload);
+        Serial.print("[WSc] Connected to url: ");
+        Serial.println((char *) payload);
       }
       break;
     case WStype_TEXT:
@@ -72,50 +73,44 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
         String text = (char*) payload;
 
-        Serial.printf("[WSc] get text: %s\n", payload);
+        Serial.print("[WSc] get text: ");
+        Serial.println((char *) payload);
 
         if (payload[0] == 'h')
         {
-
           Serial.println("Heartbeat!");
-
         }
         else if (payload[0] == 'o')
         {
-
           // on open connection
           String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
-          
-          webSocket.sendTXT(msg);
 
-        } 
+          webSocket.sendTXT(msg);
+        }
         else if (text.startsWith("a[\"CONNECTED"))
         {
-
           // subscribe to some channels
           String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
-          
+
           webSocket.sendTXT(msg);
           delay(1000);
 
           // and send a message
-
           msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
           webSocket.sendTXT(msg);
           delay(1000);
         }
-
         break;
       }
     case WStype_BIN:
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
       //hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
       break;
   }
-
 }
 
 void setup()
@@ -176,7 +171,7 @@ void setup()
   webSocket.onEvent(webSocketEvent);
 }
 
-void loop() 
+void loop()
 {
   webSocket.loop();
 }

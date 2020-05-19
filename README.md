@@ -15,12 +15,9 @@ WebSocket Server and Client for Arduino based on RFC6455.
 
 #### New in v2.1.3
 
-1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***. OK.
-2. Add support to ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.)***. OK.
-3. Add support to ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***. Still testing.
-4. Add support to ***Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0, LC)***. Still testing.
-5. Add support to ***STM32F1, STM32F2, STM32F4, STM32F7 with more than 32KB flash memory.*** Still testing.
-6. Add support to ***SAM DUE***. Still testing.
+1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***.
+2. Add support to ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.)***.
+3. Add support to ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***.
 
 
 ##### Supported features of RFC6455 #####
@@ -99,8 +96,6 @@ Another way to install is to:
  - ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***
  - ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.) and SAM DUE***.
  - ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***
- - ***Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0, LC)***
- - ***STM32F1, STM32F2, STM32F4, STM32F7 with more than 32KB flash memory.***
 
 ##### Note: #####
 
@@ -354,7 +349,7 @@ void loop()
 
 ### Debug Terminal Output when running [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa)
 
-You can see the Adafruit NRF52840_FEATHER Express board, with W5500 Ethernet shield, connects to Blynk using [BlynkEthernet_WM library](https://github.com/khoih-prog/BlynkEthernet_WM). 
+You can see the ***Adafruit NRF52840_FEATHER Express*** board, with W5500 Ethernet shield, connects to Blynk using [BlynkEthernet_WM library](https://github.com/khoih-prog/BlynkEthernet_WM). 
 
 It also uses [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with `SINRIC` skills, and `Alexa`, to control a relay using Alexa voice control of a `Amazon Alexa` phone APP
 
@@ -439,6 +434,77 @@ Turn on device id: ****
 [WSc] get text: {"deviceId":"****","action":"setPowerState","value":"OFF"}
 Turn off Device ID: ****
 ```
+### Debug Terminal Output when running [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa)
+
+You can see the ***Arduino SAMD NANO_33_IoT*** board, with built-in WiFiNINA, connects to Blynk using [Blynk_WiFiNINA_WM library](https://github.com/khoih-prog/Blynk_WiFiNINA_WM). 
+
+It also uses [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with `SINRIC` skills, and `Alexa`, to control a relay using Alexa voice control of a `Amazon Alexa` phone APP
+
+```
+Start Blynk_WiFiNINA_WM using WiFiNINA_Shield on SAMD NANO_33_IOT
+Start Blynk_WM
+Flag read = 0xd0d04321
+No doubleResetDetected
+SetFlag write = 0xd0d01234
+[21425] ======= Start Default Config Data =======
+[21425] Hdr=NonSSL,BrdName=Air-Control
+[21426] SSID=SSID1,PW=password1
+[21426] SSID1=SSID2,PW1=password2
+[21426] Server=account.ddns.net,Token=token
+[21426] Server1=account.duckdns.org,Token1=token1
+[21426] Port=8080
+[21427] ======= End Config Data =======
+[21427] Hostname=SAMD-WiFiNINA
+[21427] bg: noConfigPortal = true
+[21427] ChkCrR:CrCCsum=ef8,CrRCsum=ef8
+[21428] CrCCSum=3832,CrRCSum=3832
+[21428] ======= Start Stored Config Data =======
+[21428] Hdr=SHD_WiFiNINA,BrdName=Air-Control
+[21428] SSID=HueNet1,PW=****
+[21429] SSID1=HueNet2,PW1=****
+[21429] Server=account.ddns.net,Token=****
+[21429] Server1=account.duckdns.org,Token1=****
+[21429] Port=8080
+[21429] ======= End Config Data =======
+[21430] CCSum=0x3678,RCSum=0x3678
+[21430] Hdr=SHD_WiFiNINA,BrdName=Air-Control
+[21430] SSID=HueNet1,PW=****
+[21430] SSID1=HueNet2,PW1=****
+[21430] Server=account.ddns.net,Token=****
+[21431] Server1=account.duckdns.org,Token1=****
+[21431] Port=8080
+[21431] ======= End Config Data =======
+[21431] Connecting MultiWifi...
+[22192] con2WF:spentMsec=761
+WiFi-begin: return1 = 3
+WiFi-begin: return2 = 3
+[25451] con2WF:OK
+[25452] IP = 192.168.2.46, GW = 192.168.2.1, SN = 255.255.0.0
+[25453] b:WOK.TryB
+[25453] 
+    ___  __          __
+   / _ )/ /_ _____  / /__
+  / _  / / // / _ \/  '_/
+ /____/_/\_, /_//_/_/\_\
+        /___/ v0.6.1 on Arduino
+
+[25454] BlynkArduinoClient.connect: Connecting to account.ddns.net:8080
+[25488] Ready (ping: 5ms).
+[25559] Con2BlynkServer=account.ddns.net,Token=****
+[25559] b:WBOK
+Stop doubleResetDetecting
+ClearFlag write = 0xd0d04321
+
+Your stored Credentials :
+SINRIC API Key = ****
+Device_ID1 = ****
+[WSc] Service connected to sinric.com at url: /
+Waiting for commands from sinric.com ...
+[WSc] get text: {"deviceId":"****","action":"setPowerState","value":"ON"}
+Turn on device id: ****
+[WSc] get text: {"deviceId":"****","action":"setPowerState","value":"OFF"}
+Turn off Device ID: ****
+```
 
 #### New in v2.2.1
 
@@ -446,13 +512,9 @@ Turn off Device ID: ****
 
 #### New in v2.1.3
 
-1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***. OK.
-2. Add support to ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.)***. OK.
-3. Add support to ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***. Still testing.
-4. Add support to ***Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0, LC)***. Still testing.
-5. Add support to ***STM32F1, STM32F2, STM32F4, STM32F7 with more than 32KB flash memory.*** Still testing.
-6. Add support to ***SAM DUE***. Still testing.
-
+1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***.
+2. Add support to ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.)***.
+3. Add support to ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***.
 ### Issues ###
 
 Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebSockets_Generic/issues)

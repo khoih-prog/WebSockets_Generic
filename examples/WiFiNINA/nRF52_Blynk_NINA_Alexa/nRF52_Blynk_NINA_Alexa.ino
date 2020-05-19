@@ -5,18 +5,18 @@
   Blynk_WiFiNINA_WM is a library for the Mega, Teensy, SAM DUE, nRF52, STM32 and SAMD boards
   (https://github.com/khoih-prog/Blynk_WiFiNINA_WM) to enable easy configuration/reconfiguration and
   autoconnect/autoreconnect of WiFiNINA/Blynk
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
   Version: 2.1.3
-    
+
   Version Modified By   Date      Comments
- ------- -----------  ---------- -----------
-  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832, 
-                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.                      
+  ------- -----------  ---------- -----------
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
  *****************************************************************************************************************************/
 
 #include "defines.h"
@@ -35,7 +35,7 @@ bool lastDevice_01_ON;
 
 #include <IPAddress.h>
 
-//#include <WebSocketsClient.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases 
+//#include <WebSocketsClient.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases
 #include <WebSocketsClient_Generic.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases 
 
 #include <ArduinoJson.h>      // get it from https://arduinojson.org/ or install via Arduino library manager
@@ -96,22 +96,24 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
     case WStype_DISCONNECTED:
       isConnected = false;
 #if (DEBUG_SETUP > 0)
-      Serial.printf("[WSc] Webservice disconnected from sinric.com!\n");
+      Serial.println("[WSc] Webservice disconnected from sinric.com!");
 #endif
       break;
     case WStype_CONNECTED:
       {
         isConnected = true;
 #if (DEBUG_SETUP > 0)
-        Serial.printf("[WSc] Service connected to sinric.com at url: %s\n", payload);
-        Serial.printf("Waiting for commands from sinric.com ...\n");
+        Serial.print("[WSc] Service connected to sinric.com at url: ");
+        Serial.println((char *) payload);
+        Serial.println("Waiting for commands from sinric.com ...");
 #endif
       }
       break;
     case WStype_TEXT:
       {
 #if (DEBUG_SETUP > 1)
-        Serial.printf("[WSc] get text: %s\n", payload);
+        Serial.print("[WSc] get text: ");
+        Serial.println((char *) payload);
 #endif
         // Example payloads
 
@@ -174,7 +176,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       break;
     case WStype_BIN:
 #if (DEBUG_SETUP > 1)
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
 #endif
       break;
   }

@@ -33,24 +33,28 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.printf("[WSc] Disconnected!\n");
+      Serial.println("[WSc] Disconnected!");
       break;
     case WStype_CONNECTED:
       {
-        Serial.printf("[WSc] Connected to url: %s\n", payload);
+        Serial.print("[WSc] Connected to url: ");
+        Serial.println((char *) payload);
 
         // send message to server when Connected
         webSocket.sendTXT("Connected");
       }
       break;
     case WStype_TEXT:
-      Serial.printf("[WSc] get text: %s\n", payload);
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
 
       // send message to server
       // webSocket.sendTXT("message here");
       break;
     case WStype_BIN:
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
+
       // KH, To check
       // hexdump(payload, length);
 

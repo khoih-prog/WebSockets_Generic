@@ -30,11 +30,8 @@ bool lastDevice_01_ON;
 
 #define RELAY_PIN_1       5         // Pin D1 mapped to pin GPIO5 of ESP8266
 
-//#include <Arduino.h>
-
 #include <IPAddress.h>
 
-//#include <WebSocketsClient.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases 
 #include <WebSocketsClient_Generic.h> //  get it from https://github.com/Links2004/arduinoWebSockets/releases 
 
 #include <ArduinoJson.h>      // get it from https://arduinojson.org/ or install via Arduino library manager
@@ -95,22 +92,24 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
     case WStype_DISCONNECTED:
       isConnected = false;
 #if (DEBUG_SETUP > 0)
-      Serial.printf("[WSc] Webservice disconnected from sinric.com!\n");
+      Serial.println("[WSc] Webservice disconnected from sinric.com!");
 #endif
       break;
     case WStype_CONNECTED:
       {
         isConnected = true;
 #if (DEBUG_SETUP > 0)
-        Serial.printf("[WSc] Service connected to sinric.com at url: %s\n", payload);
-        Serial.printf("Waiting for commands from sinric.com ...\n");
+        Serial.print("[WSc] Service connected to sinric.com at url: ");
+        Serial.println((char *) payload);
+        Serial.println("Waiting for commands from sinric.com ...");
 #endif
       }
       break;
     case WStype_TEXT:
       {
 #if (DEBUG_SETUP > 1)
-        Serial.printf("[WSc] get text: %s\n", payload);
+        Serial.print("[WSc] get text: ");
+        Serial.println((char *) payload);
 #endif
         // Example payloads
 
@@ -173,7 +172,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       break;
     case WStype_BIN:
 #if (DEBUG_SETUP > 1)
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
 #endif
       break;
   }

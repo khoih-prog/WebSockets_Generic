@@ -47,11 +47,12 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.printf("[WSc] Disconnected!\n");
+      Serial.println("[WSc] Disconnected!");
       break;
     case WStype_CONNECTED:
       {
-        Serial.printf("[WSc] Connected to url: %s\n",  payload);
+        Serial.print("[WSc] Connected to url: ");
+        Serial.println((char *) payload);
       }
       break;
     case WStype_TEXT:
@@ -62,7 +63,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
         String text = (char*) payload;
 
-        Serial.printf("[WSc] get text: %s\n", payload);
+        Serial.print("[WSc] get text: ");
+        Serial.println((char *) payload);
 
         if (payload[0] == 'h')
         {
@@ -72,28 +74,27 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         {
           // on open connection
           String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
-          
+
           webSocket.sendTXT(msg);
-        } 
+        }
         else if (text.startsWith("a[\"CONNECTED"))
         {
           // subscribe to some channels
           String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
-          
+
           webSocket.sendTXT(msg);
           delay(1000);
 
           // and send a message
-
           msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
           webSocket.sendTXT(msg);
           delay(1000);
         }
-
         break;
       }
     case WStype_BIN:
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
       //hexdump(payload, length);
 
       // send data to server
@@ -140,7 +141,7 @@ void setup()
   webSocket.onEvent(webSocketEvent);
 }
 
-void loop() 
+void loop()
 {
   webSocket.loop();
 }

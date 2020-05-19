@@ -67,15 +67,15 @@ void sendMessage(String & msg)
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
-
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.printf("[WSc] Disconnected!\n");
+      Serial.println("[WSc] Disconnected!");
       break;
     case WStype_CONNECTED:
       {
-        Serial.printf("[WSc] Connected to url: %s\n",  payload);
+        Serial.print("[WSc] Connected to url: ");
+        Serial.println((char *) payload);
 
         String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
         sendMessage(msg);
@@ -88,7 +88,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // #####################
 
         String text = (char*) payload;
-        Serial.printf("[WSc] get text: %s\n", payload);
+        Serial.print("[WSc] get text: ");
+        Serial.println((char *) payload);
 
         if (text.startsWith("CONNECTED"))
         {
@@ -104,26 +105,24 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
           msg = "SEND\ndestination:/app/message\n\n{\"user\":\"esp\",\"message\":\"Hello!\"}";
           sendMessage(msg);
           delay(1000);
-
         }
         else
         {
-
           // do something with messages
-
         }
 
         break;
       }
     case WStype_BIN:
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
+
       //hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
       break;
   }
-
 }
 
 void setup()

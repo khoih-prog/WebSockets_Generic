@@ -34,7 +34,6 @@ WebSocketsClient webSocket;
 
 int status = WL_IDLE_STATUS;
 
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = "****";        // your network SSID (name)
 char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
 
@@ -51,12 +50,13 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.printf("[WSc] Disconnected!\n");
+      Serial.println("[WSc] Disconnected!");
       isConnected = false;
       break;
     case WStype_CONNECTED:
       {
-        Serial.printf("[WSc] Connected to url: %s\n",  payload);
+        Serial.print("[WSc] Connected to url: ");
+        Serial.println((char *) payload);
         isConnected = true;
 
         // send message to server when Connected
@@ -65,20 +65,23 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       break;
     case WStype_TEXT:
-      Serial.printf("[WSc] get text: %s\n", payload);
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
 
       // send message to server
        webSocket.sendTXT("message here");
       break;
     case WStype_BIN:
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
+
+      // KH, To check
       //hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
       break;
   }
-
 }
 
 void setup() 

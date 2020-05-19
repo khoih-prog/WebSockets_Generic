@@ -57,8 +57,10 @@ class WebSocketsClient : protected WebSockets
     void begin(String host, uint16_t port, String url = "/", String protocol = "arduino");
     
     //KH
-    //void begin(IPAddress host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
-
+    #if 0
+    void begin(IPAddress host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
+    #endif
+    
 #if defined(HAS_SSL)
     void beginSSL(const char * host, uint16_t port, const char * url = "/", const char * = "", const char * protocol = "arduino");
     void beginSSL(String host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
