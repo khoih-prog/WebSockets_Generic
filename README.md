@@ -11,11 +11,12 @@ WebSocket Server and Client for Arduino based on RFC6455.
 
 #### New in v2.1.3
 
-1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***
-2. Add support to ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.) and SAM DUE***.
-3. Add support to ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***
-4. Add support to ***Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0, LC)***
-5. Add support to ***STM32F1, STM32F2, STM32F4, STM32F7 with more than 32KB flash memory.***
+1. Add support to ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***. OK.
+2. Add support to ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.)***. OK.
+3. Add support to ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***. Still testing.
+4. Add support to ***Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0, LC)***. Still testing.
+5. Add support to ***STM32F1, STM32F2, STM32F4, STM32F7 with more than 32KB flash memory.*** Still testing.
+6. Add support to ***SAM DUE***. Still testing.
 
 
 ##### Supported features of RFC6455 #####
@@ -74,7 +75,7 @@ Another way to install is to:
  - Client send big frames with mask 0x00000000 (on AVR all frames)
  - continuation frame reassembly need to be handled in the application code
 
- ##### Limitations for Async #####
+##### Limitations for Async #####
  - Functions called from within the context of the websocket event might not honor `yield()` and/or `delay()`.  See [this issue](https://github.com/Links2004/arduinoWebSockets/issues/58#issuecomment-192376395) for more info and a potential workaround.
  - wss / SSL is not possible.
 
@@ -97,7 +98,7 @@ Another way to install is to:
  - ***Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0, LC)***
  - ***STM32F1, STM32F2, STM32F4, STM32F7 with more than 32KB flash memory.***
 
-###### Note: ######
+##### Note: #####
 
   version 2.0 and up is not compatible with AVR/ATmega, check ATmega branch.
 
@@ -169,10 +170,10 @@ typedef enum
   WStype_CONNECTED,
   WStype_TEXT,
   WStype_BIN,
-	WStype_FRAGMENT_TEXT_START,
-	WStype_FRAGMENT_BIN_START,
-	WStype_FRAGMENT,
-	WStype_FRAGMENT_FIN,
+  WStype_FRAGMENT_TEXT_START,
+  WStype_FRAGMENT_BIN_START,
+  WStype_FRAGMENT,
+  WStype_FRAGMENT_FIN,
 } WStype_t;
 ```
 
@@ -254,43 +255,42 @@ char ssid[] = "****";        // your network SSID (name)
 char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
 
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) 
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
+  switch (type)
+  {
+    case WStype_DISCONNECTED:
+      Serial.printf("[WSc] Disconnected!\n");
+      break;
+    case WStype_CONNECTED:
+      {
+        Serial.printf("[WSc] Connected to url: %s\n", payload);
 
-	switch(type) 
-	{
-		case WStype_DISCONNECTED:
-			Serial.printf("[WSc] Disconnected!\n");
-			break;
-		case WStype_CONNECTED: 
-		{
-			Serial.printf("[WSc] Connected to url: %s\n", payload);
+        // send message to server when Connected
+        webSocket.sendTXT("Connected");
+      }
+      break;
+    case WStype_TEXT:
+      Serial.printf("[WSc] get text: %s\n", payload);
 
-			// send message to server when Connected
-			webSocket.sendTXT("Connected");
-		}
-			break;
-		case WStype_TEXT:
-			Serial.printf("[WSc] get text: %s\n", payload);
-
-			// send message to server
-			// webSocket.sendTXT("message here");
-			break;
-		case WStype_BIN:
-			Serial.printf("[WSc] get binary length: %u\n", length);
+      // send message to server
+      // webSocket.sendTXT("message here");
+      break;
+    case WStype_BIN:
+      Serial.printf("[WSc] get binary length: %u\n", length);
       // KH, To check
-			// hexdump(payload, length);
+      // hexdump(payload, length);
 
-			// send data to server
-			 webSocket.sendBIN(payload, length);
-			break;
-	}
+      // send data to server
+      webSocket.sendBIN(payload, length);
+      break;
+  }
 
 }
 
-void setup() 
+void setup()
 {
-	//Initialize serial and wait for port to open:
+  //Initialize serial and wait for port to open:
   Serial.begin(115200);
   while (!Serial);
 
@@ -330,23 +330,23 @@ void setup()
     //delay(10000);
   }
 
-	// server address, port and URL
-	webSocket.begin("192.168.2.123", 81, "/");
+  // server address, port and URL
+  webSocket.begin("192.168.2.123", 81, "/");
 
-	// event handler
-	webSocket.onEvent(webSocketEvent);
+  // event handler
+  webSocket.onEvent(webSocketEvent);
 
-	// use HTTP Basic Authorization this is optional remove if not needed
-	webSocket.setAuthorization("user", "Password");
+  // use HTTP Basic Authorization this is optional remove if not needed
+  webSocket.setAuthorization("user", "Password");
 
-	// try ever 5000 again if connection has failed
-	webSocket.setReconnectInterval(5000);
+  // try ever 5000 again if connection has failed
+  webSocket.setReconnectInterval(5000);
 
 }
 
-void loop() 
+void loop()
 {
-	webSocket.loop();
+  webSocket.loop();
 }
 ```
 
@@ -441,8 +441,6 @@ Turn off Device ID: ****
 ### Issues ###
 
 Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebSockets_Generic/issues)
-
-[![Join the chat at https://gitter.im/Links2004/arduinoWebSockets](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Links2004/arduinoWebSockets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### Contributions and thanks
 
