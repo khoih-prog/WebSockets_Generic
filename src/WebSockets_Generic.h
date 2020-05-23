@@ -52,6 +52,8 @@
   #error Use Version 1.x.x. (ATmega branch)
 #else  
   #ifdef max
+    // KH
+    #warning Undef min/max in WebSockets_Generic
     #undef max
   #endif
   #ifdef min
@@ -119,10 +121,10 @@
   #define WEBSOCKETS_YIELD() yield()
   //#define WEBSOCKETS_YIELD()
 
-#elif ( /*defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
+#elif ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
    || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) \
    || defined(ARDUINO_SAMD_MKRWAN1310) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) \
-   || defined(ARDUINO_SAMD_MKRVIDOR4000) || */ defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
+   || defined(ARDUINO_SAMD_MKRVIDOR4000) ||  defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
    || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) || defined(__SAMD51G19A__) )
 
   // KH
@@ -169,9 +171,6 @@
 // max size of the WS Message Header
 #define WEBSOCKETS_MAX_HEADER_SIZE (14)
 
-//#define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
-
-//#if !defined(WEBSOCKETS_NETWORK_TYPE)
 #ifndef WEBSOCKETS_NETWORK_TYPE
   // select Network type based
   #if defined(ESP8266) || defined(ESP31B)
@@ -192,10 +191,10 @@
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_WIFININA
     
-  #elif ( /*defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
+  #elif ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
    || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) \
    || defined(ARDUINO_SAMD_MKRWAN1310) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) \
-   || defined(ARDUINO_SAMD_MKRVIDOR4000) || */ defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
+   || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
    || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) || defined(__SAMD51G19A__) )
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
