@@ -9,6 +9,14 @@
 
 WebSocket Server and Client for Arduino based on RFC6455.
 
+### Why do we need this [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic)
+
+Many Web services require WebSockets library, which is so far written only for ESP8266/ESP32 boards. The ESP boards rely on this [Markus Sattler's WebSockets Library](https://github.com/Links2004/arduinoWebSockets) to connect to Alexa via Sinric or SinricPro skills.
+
+This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) is based on and modified from [Markus Sattler's WebSockets Library](https://github.com/Links2004/arduinoWebSockets) to provide support to many boards such as Arduino SAMD21, Adafruit SAMD21/SAMD51, nRF52, STM32, etc. and enable those boards to use WebSockets services, including voice-control Alexa along with Blynk. The WebSockets can be used with ESP’s WiFi, WiFiNINA, W5x00 and ENC28J60 Ethernet.
+
+Please see illustrating examples.
+
 #### New in v2.2.1
 
 1. Bump up to sync with v2.2.1 of original WebSockets library
@@ -69,6 +77,14 @@ Another way to install is to:
 3. Extract the zip file to `WebSockets_Generic-master` directory 
 4. Copy whole `WebSockets_Generic-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
 
+### VS Code & PlatformIO:
+1. Install [VS Code](https://code.visualstudio.com/)
+2. Install [PlatformIO](https://platformio.org/platformio-ide)
+3. Install **WebSockets_Generic** library by using [Library Manager](https://docs.platformio.org/en/latest/librarymanager/)
+4. Use included [platformio.ini](examples/platformio/platformio.ini) file from examples to ensure that all dependent libraries will installed automaticly.
+
+[![arduino-library-badge](https://www.ardu-badge.com/badge/WebSockets_Generic.svg?)](https://www.ardu-badge.com/WebSockets_Generic)
+
 
 ##### Limitations #####
  - max input length is limited to the ram size and the ```WEBSOCKETS_MAX_DATA_SIZE``` define
@@ -87,9 +103,9 @@ Another way to install is to:
  - ESP31B
  - Particle with STM32 ARM Cortex M3
  - ATmega328 with Ethernet Shield (ATmega branch)
- - ATmega328 with enc28j60 (ATmega branch)
+ - ATmega328 with ENC28J60 (ATmega branch)
  - ATmega2560 with Ethernet Shield (ATmega branch)
- - ATmega2560 with enc28j60 (ATmega branch)
+ - ATmega2560 with ENC28J60 (ATmega branch)
  
 ##### New support from v2.1.3
  
