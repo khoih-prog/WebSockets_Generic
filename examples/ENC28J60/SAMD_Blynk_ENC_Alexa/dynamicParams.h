@@ -15,15 +15,14 @@
 
    Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
    Licensed under MIT license
-   Version: 2.1.3
-
-   Created on: 24.05.2015
-   Author: Markus Sattler
+   Version: 2.2.2
 
    Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
    2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
+   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
  *****************************************************************************************************************************/
 
 #ifndef dynamicParams_h

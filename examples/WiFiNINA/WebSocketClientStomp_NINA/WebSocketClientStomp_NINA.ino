@@ -11,7 +11,7 @@
   
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  Version: 2.1.3
+  Version: 2.2.2
 
   Example for connecting and maintining a connection with a STOMP websocket connection.
   In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
@@ -21,17 +21,18 @@
     
   Version Modified By   Date      Comments
  ------- -----------  ---------- -----------
-  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832, 
-                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.                      
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
+  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.  
  *****************************************************************************************************************************/
 
+#define _WEBSOCKETS_LOGLEVEL_     3
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
 #include <WiFiNINA_Generic.h>
 
 #include <WebSocketsClient_Generic.h>
-
-//#include <Hash.h>
 
 WebSocketsClient webSocket;
 
@@ -124,11 +125,31 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
   }
 }
 
-void setup() 
+void printWifiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your board's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("WebSockets Client IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
+}
+
+void setup()
 {
   //Initialize serial and wait for port to open:
   Serial.begin(115200);
   while (!Serial);
+
+  Serial.println("\nStart WebSocketClientStomp_NINA");
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");
@@ -166,6 +187,8 @@ void setup()
     //delay(10000);
   }
 
+  printWifiStatus();
+  
   // connect to websocket
   webSocket.begin(ws_host, ws_port, stompUrl);
   webSocket.setExtraHeaders(); // remove "Origin: file://" header because it breaks the connection with Spring's default websocket config
