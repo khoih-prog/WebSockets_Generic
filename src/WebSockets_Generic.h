@@ -1,13 +1,13 @@
 /****************************************************************************************************************************
   WebSockets_Generic.h - WebSockets Library for boards
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  Version: 2.2.1
-   
+  Version: 2.2.2
+
   @original file WebSockets.h
   @date 20.05.2015
   @author Markus Sattler
@@ -28,16 +28,19 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
   Version Modified By   Date      Comments
- ------- -----------  ---------- -----------
-  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832, 
+  ------- -----------  ---------- -----------
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
  *****************************************************************************************************************************/
 
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
+
+#include "WebSocketsDebug_Generic.h"
 
 #ifdef STM32_DEVICE
   #include <application.h>
@@ -50,7 +53,7 @@
 #ifdef ARDUINO_ARCH_AVR
   #error Version 2.x.x currently does not support Arduino with AVR since there is no support for std namespace of c++.
   #error Use Version 1.x.x. (ATmega branch)
-#else  
+#else
   #ifdef max
     // KH
     #warning Undef min/max in WebSockets_Generic
@@ -59,7 +62,26 @@
   #ifdef min
     #undef min
   #endif
+  
   #include <functional>
+#endif
+
+#if defined(TEENSYDUINO)
+  namespace std
+  {
+    //To avoid Teensy linker issue wth STL library
+    unsigned __exidx_start;
+    unsigned __exidx_end;
+
+    // This is defined so that calling a std::function<void()> can compile when
+    // size optimization is enabled.
+    __attribute__((weak))
+    void __throw_bad_function_call()
+    {
+      Serial.println("Library Exception");
+      while (true) yield();
+    }
+  }
 #endif
 
 #ifndef NODEBUG_WEBSOCKETS
@@ -101,22 +123,31 @@
   #define WEBSOCKETS_USE_BIG_MEM
   #define GET_FREE_HEAP System.freeMemory()
   #define WEBSOCKETS_YIELD()
+
+#elif ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3) \
+      ||defined(STM32F4) || defined(STM32F7) )
+  // KH
+  #warning Use STM32F in WebSockets_Generic
+
+  #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
   
+  // moves all Header strings to Flash (~300 Byte)
+  #define WEBSOCKETS_SAVE_RAM
+  #define WEBSOCKETS_YIELD()
+
 #elif ( defined(NRF52_SERIES) || defined(NINA_B302_ublox) )
   // KH
   #warning Use nRF52 in WebSockets_Generic
-  
+
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
-  
+
   // Try to use GET_FREE_HEAP and large mem
   // only for ESP since AVR has less HEAP
   // try to send data in one TCP package (only if some free Heap is there)
-  //#define WEBSOCKETS_USE_BIG_MEM
-  #define WEBSOCKETS_SAVE_RAM
-  
-  //#define GET_FREE_HEAP System.freeMemory()
+  //#define WEBSOCKETS_USE_BIG_MEM  
+
   // moves all Header strings to Flash (~300 Byte)
-  //#define WEBSOCKETS_SAVE_RAM
+  #define WEBSOCKETS_SAVE_RAM
 
   #define WEBSOCKETS_YIELD() yield()
   //#define WEBSOCKETS_YIELD()
@@ -129,26 +160,57 @@
 
   // KH
   #warning Use SAMD21/SAMD51 in WebSockets_Generic
-  
+
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
-  
+
   // Try to use GET_FREE_HEAP and large mem
   // only for ESP since AVR has less HEAP
   // try to send data in one TCP package (only if some free Heap is there)
   //#define WEBSOCKETS_USE_BIG_MEM
-  #define WEBSOCKETS_SAVE_RAM
-  
-  //#define GET_FREE_HEAP System.freeMemory()
+
   // moves all Header strings to Flash (~300 Byte)
-  //#define WEBSOCKETS_SAVE_RAM
+  #define WEBSOCKETS_SAVE_RAM
 
   #define WEBSOCKETS_YIELD() yield()
   //#define WEBSOCKETS_YIELD()
 
+#elif ( defined(ARDUINO_SAM_DUE) || defined(__SAM3X8E__) )
 
+  // KH
+  #warning Use SAM DUE in WebSockets_Generic
+
+  #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
+
+  // Try to use GET_FREE_HEAP and large mem
+  // only for ESP since AVR has less HEAP
+  // try to send data in one TCP package (only if some free Heap is there)
+  //#define WEBSOCKETS_USE_BIG_MEM
+
+  // moves all Header strings to Flash (~300 Byte)
+  #define WEBSOCKETS_SAVE_RAM
+
+  #define WEBSOCKETS_YIELD() yield()
+
+#elif defined(TEENSYDUINO)
+
+  // KH
+  #warning Use Teensy in WebSockets_Generic
+
+  #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
+
+  // Try to use GET_FREE_HEAP and large mem
+  // only for ESP since AVR has less HEAP
+  // try to send data in one TCP package (only if some free Heap is there)
+  //#define WEBSOCKETS_USE_BIG_MEM
+
+  // moves all Header strings to Flash (~300 Byte)
+  #define WEBSOCKETS_SAVE_RAM
+
+  #define WEBSOCKETS_YIELD() yield()
+  
 #else
   #warning Use atmega328p in WebSockets_Generic
-  
+
   //atmega328p has only 2KB ram!
   #define WEBSOCKETS_MAX_DATA_SIZE (1024)
   // moves all Header strings to Flash
@@ -185,31 +247,32 @@
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32
     //#define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32_ETH
-    
+
   #elif ( defined(NRF52_SERIES) || defined(NINA_B302_ublox) )
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_WIFININA
-    
+
   #elif ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
-   || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) \
-   || defined(ARDUINO_SAMD_MKRWAN1310) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) \
-   || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
-   || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) || defined(__SAMD51G19A__) )
+     || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) \
+     || defined(ARDUINO_SAMD_MKRWAN1310) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) \
+     || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
+     || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) || defined(__SAMD51G19A__) )
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_WIFININA
-  
+
   #else
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_W5100
 
-  #endif
-#endif
+  #endif  //#if defined(ESP8266) || defined(ESP31B)
+  
+#endif    //#ifndef WEBSOCKETS_NETWORK_TYPE
 
 // Includes and defined based on Network Type
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
   // Note:
   //   No SSL/WSS support for client in Async mode
@@ -280,6 +343,7 @@
   #define WEBSOCKETS_NETWORK_SERVER_CLASS WiFiServer
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
+
   //KH
   #include <WiFiNINA_Generic.h>
   #define WEBSOCKETS_NETWORK_CLASS        WiFiClient
@@ -300,14 +364,14 @@
   #define WEBSOCKETS_STRING(var) var
 #endif
 
-typedef enum 
+typedef enum
 {
   WSC_NOT_CONNECTED,
   WSC_HEADER,
   WSC_CONNECTED
 } WSclientsStatus_t;
 
-typedef enum 
+typedef enum
 {
   WStype_ERROR,
   WStype_DISCONNECTED,
@@ -322,7 +386,7 @@ typedef enum
   WStype_PONG,
 } WStype_t;
 
-typedef enum 
+typedef enum
 {
   WSop_continuation = 0x00,    ///< %x0 denotes a continuation frame
   WSop_text         = 0x01,    ///< %x1 denotes a text frame
@@ -334,7 +398,7 @@ typedef enum
                ///< %xB-F are reserved for further control frames
 } WSopcode_t;
 
-typedef struct 
+typedef struct
 {
   bool fin;
   bool rsv1;
@@ -349,7 +413,7 @@ typedef struct
   uint8_t * maskKey;
 } WSMessageHeader_t;
 
-typedef struct 
+typedef struct
 {
   uint8_t num;    ///< connection number
 
@@ -403,7 +467,7 @@ typedef struct
 
 } WSclient_t;
 
-class WebSockets 
+class WebSockets
 {
   protected:
 #ifdef __AVR__
@@ -441,6 +505,20 @@ class WebSockets
     void enableHeartbeat(WSclient_t * client, uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount);
     void handleHBTimeout(WSclient_t * client);
 };
+
+
+// KH
+String WS_IPAddressToString(IPAddress _address)
+{
+  String str = String(_address[0]);
+  str += ".";
+  str += String(_address[1]);
+  str += ".";
+  str += String(_address[2]);
+  str += ".";
+  str += String(_address[3]);
+  return str;
+}
 
 #ifndef UNUSED
 #define UNUSED(var) (void)(var)

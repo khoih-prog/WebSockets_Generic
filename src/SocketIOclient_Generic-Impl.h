@@ -6,7 +6,7 @@
   
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  Version: 2.2.1
+  Version: 2.2.2
    
   @original file SocketIOclient.cpp
   @Created on: May 12, 2018
@@ -34,14 +34,13 @@
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832, 
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
  *****************************************************************************************************************************/
 
 #ifndef SOCKETIOCLIENT_GENERIC_IMPL_H_
 #define SOCKETIOCLIENT_GENERIC_IMPL_H_
 
-#include "WebSockets_Generic.h"
 #include "WebSocketsClient_Generic.h"
-//#include "SocketIOclient_Generic.h"
 
 SocketIOclient::SocketIOclient()
 {
@@ -58,6 +57,12 @@ void SocketIOclient::begin(const char * host, uint16_t port, const char * url, c
 }
 
 void SocketIOclient::begin(String host, uint16_t port, String url, String protocol)
+{
+  WebSocketsClient::beginSocketIO(host, port, url, protocol);
+  WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+}
+
+void SocketIOclient::begin(IPAddress host, uint16_t port, String url, String protocol);
 {
   WebSocketsClient::beginSocketIO(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
@@ -186,7 +191,9 @@ void SocketIOclient::loop(void)
   if ((t - _lastConnectionFail) > EIO_HEARTBEAT_INTERVAL)
   {
     _lastConnectionFail = t;
-    DEBUG_WEBSOCKETS("[wsIOc] send ping\n");
+
+    LOGDEBUG("[wsIOc] send ping");
+    
     WebSocketsClient::sendTXT(eIOtype_PING);
   }
 }
@@ -197,11 +204,14 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
   {
     case WStype_DISCONNECTED:
       runIOCbEvent(sIOtype_DISCONNECT, NULL, 0);
-      DEBUG_WEBSOCKETS("[wsIOc] Disconnected!\n");
+
+      LOGDEBUG("[wsIOc] Disconnected!");
+      
       break;
     case WStype_CONNECTED:
       {
-        DEBUG_WEBSOCKETS("[wsIOc] Connected to url: %s\n", payload);
+        LOGDEBUG1("[wsIOc] Connected to url:", payload);
+        
         // send message to server when Connected
         // Engine.io upgrade confirmation message (required)
         WebSocketsClient::sendTXT(eIOtype_UPGRADE);
@@ -219,11 +229,14 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
         {
           case eIOtype_PING:
             payload[0] = eIOtype_PONG;
-            DEBUG_WEBSOCKETS("[wsIOc] get ping send pong (%s)\n", payload);
+
+            LOGDEBUG1("[wsIOc] get ping send pong:", payload);
+            
             WebSocketsClient::sendTXT(payload, length, false);
             break;
           case eIOtype_PONG:
-            DEBUG_WEBSOCKETS("[wsIOc] get pong\n");
+            LOGDEBUG("[wsIOc] get pong");
+            
             break;
           case eIOtype_MESSAGE:
             {
@@ -239,7 +252,9 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
               switch (ioType)
               {
                 case sIOtype_EVENT:
-                  DEBUG_WEBSOCKETS("[wsIOc] get event (%d): %s\n", lData, data);
+                  LOGDEBUG2("[wsIOc] get event: ", lData);
+                  LOGDEBUG2("[wsIOc] get data: ", data);
+                  
                   break;
                 case sIOtype_CONNECT:
                 case sIOtype_DISCONNECT:
@@ -248,8 +263,9 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
                 case sIOtype_BINARY_EVENT:
                 case sIOtype_BINARY_ACK:
                 default:
-                  DEBUG_WEBSOCKETS("[wsIOc] Socket.IO Message Type %c (%02X) is not implemented\n", ioType, ioType);
-                  DEBUG_WEBSOCKETS("[wsIOc] get text: %s\n", payload);
+                  LOGDEBUG1("[wsIOc] Socket.IO Message Type is not implemented:", ioType);
+                  LOGDEBUG1("[wsIOc] get text:", payload);
+                  
                   break;
               }
 
@@ -260,8 +276,8 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
           case eIOtype_UPGRADE:
           case eIOtype_NOOP:
           default:
-            DEBUG_WEBSOCKETS("[wsIOc] Engine.IO Message Type %c (%02X) is not implemented\n", eType, eType);
-            DEBUG_WEBSOCKETS("[wsIOc] get text: %s\n", payload);
+            LOGDEBUG1("[wsIOc] Socket.IO Message Type is not implemented:", eType);
+            LOGDEBUG1("[wsIOc] get text:", payload);
             break;
         }
       }

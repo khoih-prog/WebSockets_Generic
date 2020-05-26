@@ -13,9 +13,16 @@ WebSocket Server and Client for Arduino based on RFC6455.
 
 Many Web services require WebSockets library, which is so far written only for ESP8266/ESP32 boards. The ESP boards rely on this [Markus Sattler's WebSockets Library](https://github.com/Links2004/arduinoWebSockets) to connect to Alexa via Sinric or SinricPro skills.
 
-This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) is based on and modified from [Markus Sattler's WebSockets Library](https://github.com/Links2004/arduinoWebSockets) to provide support to many boards such as Arduino SAMD21, Adafruit SAMD21/SAMD51, nRF52, STM32, etc. and enable those boards to use WebSockets services, including voice-control Alexa along with Blynk. The WebSockets can be used with ESP’s WiFi, WiFiNINA, W5x00 and ENC28J60 Ethernet.
+This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) is based on and modified from [Markus Sattler's WebSockets Library](https://github.com/Links2004/arduinoWebSockets) to provide support to many more boards, such as ***Arduino SAMD21, Adafruit SAMD21/SAMD51, nRF52, STM32, Teensy, SAM DUE, etc.*** and enable those boards to use WebSockets services, including voice-control Alexa along with Blynk. Those supported boards can also run ***WebSockets Server.*** The WebSockets can be used with ***ESP’s WiFi, WiFiNINA, W5x00 and ENC28J60 Ethernet.***
 
 Please see illustrating examples.
+
+#### New in v2.2.2
+
+1. Add support to ***Teensy*** boards, such as ***Teensy 4.1, 4.0. 3.6, 3.5, 3.2/3.1, 3.0, LC.***.
+2. Add support to ***STM32 (Nucleo-144, Nucleo-64, Nucleo-32, Discovery, STM32F1, STM32F3, STM32F4, STM32H7, STM32L0, etc.)***.
+3. Add support to ***SAM DUE***
+4. Add WebSocketServer examples to those supported boards.
 
 #### New in v2.2.1
 
@@ -35,6 +42,8 @@ Please see illustrating examples.
  - ping
  - pong
  - continuation frame
+
+---
  
 ## Prerequisite
  1. [`Arduino IDE 1.8.12 or later` for Arduino](https://www.arduino.cc/en/Main/Software)
@@ -42,7 +51,7 @@ Please see illustrating examples.
  3. [`ESP32 core 1.0.4 or later`](https://github.com/espressif/arduino-esp32/releases) for ESP32 boards
  4. [`ESP8266 core 2.6.3 or later` for Arduino](https://github.com/esp8266/Arduino#installing-with-boards-manager) for ESP8266 boards. To use ESP8266 core 2.7.1+ for LittleFS.
  5. `Arduino AVR core 1.8.2 or later` for Arduino (Use Arduino Board Manager)
- 6. [`Teensy core 1.51 or later`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards.
+ 6. [`Teensy core 1.52 or later`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.1, 4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards.
  7. [`Arduino SAM DUE core 1.6.12 or later`](https://www.arduino.cc/en/Guide/ArduinoDue) for SAM DUE ARM Cortex-M3 boards
  8. [`Arduino SAMD core 1.8.5 or later`](https://www.arduino.cc/en/Guide/ArduinoM0) for SAMD ARM Cortex-M0+ boards
  9. [`Adafruit SAMD core 1.5.11 or later`](https://www.adafruit.com/) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.)
@@ -55,8 +64,8 @@ Please see illustrating examples.
    - [`Ethernet3 library`](https://github.com/sstaub/Ethernet3) for W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip.
    - [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge) for W5100, W5200 and W5500.
    - [`UIPEthernet library`](https://github.com/khoih-prog/UIPEthernet) for ENC28J60
-14. [`WiFiNINA_Generic library v1.5.1-final or later`](https://github.com/khoih-prog/WiFiNINA_Generic) if necessary to use WiFiNINA. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiNINA_Generic.svg?)](https://www.ardu-badge.com/WiFiNINA_Generic)
-15. [`WiFiWebServer library v1.0.1 or later`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
+14. [`WiFiNINA_Generic library v1.5.2 or later`](https://github.com/khoih-prog/WiFiNINA_Generic) if necessary to use WiFiNINA. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiNINA_Generic.svg?)](https://www.ardu-badge.com/WiFiNINA_Generic)
+15. [`WiFiWebServer library v1.0.4 or later`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
 16. [`FlashStorage_SAMD library v1.0.0`](https://github.com/khoih-prog/FlashStorage_SAMD) for SAMD21 and SAMD51 boards (ZERO, MKR, ***NANO_33_IOT***, M0, M0 Pro, ***AdaFruit Itsy-Bitsy M4***, etc.) if necessary to use certain features.
 17. [`DueFlashStorage library`](https://github.com/sebnil/DueFlashStorage) for SAM DUE if necessary to use certain features.
 18. [`Adafruit's LittleFS/InternalFS`](https://www.adafruit.com) for nRF52. Already included if you already installed Adafruit ***nRF52 board package*** from Boards Manager.
@@ -81,9 +90,51 @@ Another way to install is to:
 1. Install [VS Code](https://code.visualstudio.com/)
 2. Install [PlatformIO](https://platformio.org/platformio-ide)
 3. Install **WebSockets_Generic** library by using [Library Manager](https://docs.platformio.org/en/latest/librarymanager/)
+4. Use included [platformio.ini](examples/platformio/platformio.ini) file from examples to ensure that all dependent libraries will installed automaticly.
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/WebSockets_Generic.svg?)](https://www.ardu-badge.com/WebSockets_Generic)
 
+### Important notes
+
+1. To be able to compile and run on nRF52840 boards, you have to copy the whole [nRF52 0.20.1](https://github.com/khoih-prog/SinricPro_Generic/tree/master/Packages_Patches/adafruit/hardware/nrf52/0.20.1) directory into Adafruit nRF52 directory (./packages/adafruit/hardware/nrf52/0.20.1). 
+
+Supposing the Adafruit nRF52 version is 0.20.1. These files must be copied into the directory:
+- `packages/adafruit/hardware/nrf52/0.20.1/platform.txt`
+- `packages/adafruit/hardware/nrf52/0.20.1/boards.txt`
+- `packages/adafruit/hardware/nrf52/0.20.1/variants/variant.h`
+- `packages/adafruit/hardware/nrf52/0.20.1/variants/variant.cpp`
+
+Whenever a new version is installed, remember to copy these files into the new version directory. For example, new version is x.yy.z
+These files must be copied into the directory:
+
+- `packages/adafruit/hardware/nrf52/x.yy.z/platform.txt`
+- `packages/adafruit/hardware/nrf52/x.yy.z/boards.txt`
+- `packages/adafruit/hardware/nrf52/x.yy.z/variants/variant.h`
+- `packages/adafruit/hardware/nrf52/x.yy.z/variants/variant.cpp`
+
+2. To be able to compile and run on Teensy boards, you have to copy the file [Teensy boards.txt](https://github.com/khoih-prog/SinricPro_Generic/blob/master/Packages_Patches/hardware/teensy/avr/boards.txt) into Teensy hardware directory (./arduino-1.8.12/hardware/teensy/avr/boards.txt). 
+
+Supposing the Arduino version is 1.8.12. This file must be copied into the directory:
+
+- `./arduino-1.8.12/hardware/teensy/avr/boards.txt`
+
+Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
+This file must be copied into the directory:
+
+- `./arduino-x.yy.zz/hardware/teensy/avr/boards.txt`
+
+3. To be able to compile and run on SAM DUE boards, you have to copy the whole [SAM DUE](https://github.com/khoih-prog/SinricPro_Generic/tree/master/Packages_Patches/arduino/hardware/sam/1.6.12) directory into Arduino sam directory (./packages/arduino/hardware/sam/1.6.12). 
+
+Supposing the Arduino sam version is 1.6.12. This file must be copied into the directory:
+
+- `packages/arduino/hardware/sam/1.6.12/platform.txt`
+
+Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
+This file must be copied into the directory:
+
+- `packages/arduino/hardware/sam/x.yy.zz/platform.txt`
+
+---
 
 ##### Limitations #####
  - max input length is limited to the ram size and the ```WEBSOCKETS_MAX_DATA_SIZE``` define
@@ -106,11 +157,18 @@ Another way to install is to:
  - ATmega2560 with Ethernet Shield (ATmega branch)
  - ATmega2560 with ENC28J60 (ATmega branch)
  
+#### New support from v2.2.2
+
+1. ***Teensy*** boards, such as ***Teensy 4.1, 4.0. 3.6, 3.5, 3.2/3.1, 3.0, LC.***.
+2. ***STM32 (Nucleo-144, Nucleo-64, Nucleo-32, Discovery, STM32F1, STM32F3, STM32F4, STM32H7, STM32L0, etc.)***.
+3. ***SAM DUE***
+4. WebSocketServer for those supported boards.
+
 ##### New support from v2.1.3
  
- - ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***
- - ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.) and SAM DUE***.
- - ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***
+1. ***nRF52*** boards, such as ***AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.***
+2. ***SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.) and SAM DUE***.
+3. ***SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)***
 
 ##### Note: #####
 
@@ -193,6 +251,30 @@ typedef enum
 
 ### Examples
 
+##### For Generic boards using W5x00 Ethernet shield
+
+1. [Generic_WebSocketClientSocketIO_W5500](examples/Generic/W5500/Generic_WebSocketClientSocketIO_W5500)
+2. [Generic_WebSocketClientStompOverSockJs_W5500](examples/Generic/W5500/Generic_WebSocketClientStompOverSockJs_W5500)
+3. [Generic_WebSocketClientStomp_W5500](examples/Generic/W5500/Generic_WebSocketClientStomp_W5500)
+4. [Generic_WebSocketClient_W5500](examples/Generic/W5500/Generic_WebSocketClient_W5500)
+5. [Generic_WebSocketServerAllFunctionsDemo_W5500](examples/Generic/W5500/Generic_WebSocketServerAllFunctionsDemo_W5500)
+6. [Generic_WebSocketServerFragmentation_W5500](examples/Generic/W5500/Generic_WebSocketServerFragmentation_W5500)
+7. [Generic_WebSocketServerHttpHeaderValidation_W5500](examples/Generic/W5500/Generic_WebSocketServerHttpHeaderValidation_W5500)
+8. [Generic_WebSocketServer_LEDcontrol_W5500](examples/Generic/W5500/Generic_WebSocketServer_LEDcontrol_W5500)
+9. [Generic_WebSocketServer_W5500](examples/Generic/W5500/Generic_WebSocketServer_W5500)
+
+##### For Generic boards using WiFiNINA
+
+1. [Generic_WebSocketClientSocketIO_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClientSocketIO_WiFiNINA)
+2. [Generic_WebSocketClientStompOverSockJs_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClientStompOverSockJs_WiFiNINA)
+3. [Generic_WebSocketClientStomp_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClientStomp_WiFiNINA)
+4. [Generic_WebSocketClient_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClient_WiFiNINA)
+5. [Generic_WebSocketServerAllFunctionsDemo_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServerAllFunctionsDemo_WiFiNINA)
+6. [Generic_WebSocketServerFragmentation_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServerFragmentation_WiFiNINA)
+7. [Generic_WebSocketServerHttpHeaderValidation_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServerHttpHeaderValidation_WiFiNINA)
+8. [Generic_WebSocketServer_LEDcontrol_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServer_LEDcontrol_WiFiNINA)
+9. [Generic_WebSocketServer_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServer_WiFiNINA)
+
 ##### For WiFiNINA
 
 1. [nRF52_Blynk_NINA_Alexa](examples/WiFiNINA/nRF52_Blynk_NINA_Alexa)
@@ -206,7 +288,7 @@ typedef enum
 
 1. [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa)
 2. [SAMD_Blynk_W5500_Alexa](examples/W5500/SAMD_Blynk_W5500_Alexa)
-3. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500)
+3. [WebSocketClient_W5500](examples/W5500/WebSocketClient_W5500)
 4. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500)
 5. [WebSocketClientStomp_W5500](examples/W5500/WebSocketClientStomp_W5500)
 6. [WebSocketClientStompOverSockJs_W5500](examples/W5500/WebSocketClientStompOverSockJs_W5500)
@@ -215,7 +297,7 @@ typedef enum
 
 1. [nRF52_Blynk_ENC_Alexa](examples/ENC28J60/nRF52_Blynk_ENC_Alexa)
 2. [SAMD_Blynk_ENC_Alexa](examples/ENC28J60/SAMD_Blynk_ENC_Alexa)
-3. [WebSocketClientSocketIO_ENC](examples/ENC28J60/WebSocketClientSocketIO_ENC)
+3. [WebSocketClient_ENC](examples/ENC28J60/WebSocketClient_ENC)
 4. [WebSocketClientSocketIO_ENC](examples/ENC28J60/WebSocketClientSocketIO_ENC)
 5. [WebSocketClientStomp_ENC](examples/ENC28J60/WebSocketClientStomp_ENC)
 6. [WebSocketClientStompOverSockJs_ENC](examples/ENC28J60/WebSocketClientStompOverSockJs_ENC)
@@ -226,85 +308,112 @@ typedef enum
 
 ##### For ESP32 board
 
-1. [WebSocketClient](examples/esp32/WebSocketClient)
-2. [WebSocketClientSSL](examples/esp32/WebSocketClientSSL)
-3. [WebSocketServer](examples/esp32/WebSocketServer)
+1. [ESP32_WebSocketClient](examples/esp32/ESP32_WebSocketClient)
+2. [ESP32_WebSocketClientSSL](examples/esp32/ESP32_WebSocketClientSSL)
+3. [ESP32_WebSocketServer](examples/esp32/ESP32_WebSocketServer)
 
 ##### For ESP8266 board
 
- 1. [WebSocketClient](examples/esp8266/WebSocketClient)
- 2. [WebSocketClientSocketIO](examples/esp8266/WebSocketClientSocketIO)
- 3. [WebSocketClientSSL](examples/esp8266/WebSocketClientSSL)
- 4. [WebSocketClientStomp](examples/esp8266/WebSocketClientStomp)
- 5. [WebSocketClientStompOverSockJs](examples/esp8266/WebSocketClientStompOverSockJs)
- 6. [WebSocketServer](examples/esp8266/WebSocketServer)
- 7. [WebSocketServerAllFunctionsDemo](examples/esp8266/WebSocketServerAllFunctionsDemo)
- 8. [WebSocketServerFragmentation](examples/esp8266/WebSocketServerFragmentation)
- 9. [WebSocketServerHttpHeaderValidation](examples/esp8266/WebSocketServerHttpHeaderValidation)
-10. [WebSocketServer_LEDcontrol](examples/esp8266/WebSocketServer_LEDcontrol)
+ 1. [ESP8266_WebSocketClient](examples/esp8266/ESP8266_WebSocketClient)
+ 2. [ESP8266_WebSocketClientSocketIO](examples/esp8266/ESP8266_WebSocketClientSocketIO)
+ 3. [ESP8266_WebSocketClientSSL](examples/esp8266/ESP8266_WebSocketClientSSL)
+ 4. [ESP8266_WebSocketClientStomp](examples/esp8266/ESP8266_WebSocketClientStomp)
+ 5. [ESP8266_WebSocketClientStompOverSockJs](examples/esp8266/ESP8266_WebSocketClientStompOverSockJs)
+ 6. [ESP8266_WebSocketServer](examples/esp8266/ESP8266_WebSocketServer)
+ 7. [ESP8266_WebSocketServerAllFunctionsDemo](examples/esp8266/ESP8266_WebSocketServerAllFunctionsDemo)
+ 8. [ESP8266_WebSocketServerFragmentation](examples/esp8266/ESP8266_WebSocketServerFragmentation)
+ 9. [ESP8266_WebSocketServerHttpHeaderValidation](examples/esp8266/ESP8266_WebSocketServerHttpHeaderValidation)
+10. [ESP8266_WebSocketServer_LEDcontrol](examples/esp8266/ESP8266_WebSocketServer_LEDcontrol)
 
 ##### For Particle board
 
 1. [ParticleWebSocketClient](examples/particle/ParticleWebSocketClient)
 
-### Example [WebSocketClient_NINA](examples/WiFiNINA/WebSocketClient_NINA)
+### Example [Generic_WebSocketClient_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClient_WiFiNINA)
 
 ```cpp
+#define _WEBSOCKETS_LOGLEVEL_     3
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
-
-#include <WiFiNINA_Generic.h>
 
 #include <WebSocketsClient_Generic.h>
 
-//#include <Hash.h>
-
 WebSocketsClient webSocket;
+
+// Select the IP address according to your local network
+IPAddress clientIP(192, 168, 2, 225);
+IPAddress serverIP(192, 168, 2, 222);
 
 int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
+
 char ssid[] = "****";        // your network SSID (name)
 char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
-
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.printf("[WSc] Disconnected!\n");
+      Serial.println("[WSc] Disconnected!");
       break;
     case WStype_CONNECTED:
       {
-        Serial.printf("[WSc] Connected to url: %s\n", payload);
+        Serial.print("[WSc] Connected to url: ");
+        Serial.println((char *) payload);
 
         // send message to server when Connected
         webSocket.sendTXT("Connected");
       }
       break;
     case WStype_TEXT:
-      Serial.printf("[WSc] get text: %s\n", payload);
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
 
       // send message to server
       // webSocket.sendTXT("message here");
       break;
     case WStype_BIN:
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.print("[WSc] get binary length: ");
+      Serial.println(length);
+
       // KH, To check
       // hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
       break;
-  }
 
+    default:
+      break;
+  }
+}
+
+void printWifiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your board's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("WebSockets Client IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
 }
 
 void setup()
 {
-  //Initialize serial and wait for port to open:
+  // Serial.begin(921600);
   Serial.begin(115200);
   while (!Serial);
+
+  Serial.println("\nStart Generic_WebSocketClient_WiFiNINA");
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");
@@ -315,6 +424,13 @@ void setup()
   Serial.println(SCK);
   Serial.print("SS:");
   Serial.println(SS);
+
+  for (uint8_t t = 4; t > 0; t--)
+  {
+    Serial.println("[SETUP] BOOT WAIT " + String(t));
+    Serial.flush();
+    delay(1000);
+  }
 
   // check for the WiFi module:
   if (WiFi.status() == WL_NO_MODULE)
@@ -342,8 +458,10 @@ void setup()
     //delay(10000);
   }
 
+  printWifiStatus();
+
   // server address, port and URL
-  webSocket.begin("192.168.2.123", 81, "/");
+  webSocket.begin(serverIP, 81, "/");
 
   // event handler
   webSocket.onEvent(webSocketEvent);
@@ -356,7 +474,7 @@ void setup()
 
 }
 
-void loop()
+void loop() 
 {
   webSocket.loop();
 }
@@ -520,6 +638,13 @@ Turn on device id: ****
 [WSc] get text: {"deviceId":"****","action":"setPowerState","value":"OFF"}
 Turn off Device ID: ****
 ```
+
+#### New in v2.2.2
+
+1. Add support to ***Teensy*** boards, such as ***Teensy 4.1, 4.0. 3.6, 3.5, 3.2/3.1, 3.0, LC.***.
+2. Add support to ***STM32 (Nucleo-144, Nucleo-64, Nucleo-32, Discovery, STM32F1, STM32F3, STM32F4, STM32H7, STM32L0, etc.)***.
+3. Add support to ***SAM DUE***
+4. Add WebSocketServer examples to those supported boards.
 
 #### New in v2.2.1
 

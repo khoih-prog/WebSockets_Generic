@@ -1,8 +1,20 @@
 {
   "name": "WebSockets_Generic",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "WebSocket Server and Client for Arduino based on RFC6455, ported to run on nRF52, SAMD, STM32, etc. besides ESP",
   "keywords": "wifi, http, web, server, client, websocket",
+  "authors": [
+    {
+      "name":  "Markus Sattler",
+      "url":   "https://github.com/Links2004",
+    }
+    {
+      "name":  "Khoi Hoang",
+      "url":   "https://github.com/khoih-prog",
+      "email": "khoih.prog@gmail.com",
+      "maintainer": true,
+    }  
+  ],
   "repository":
   {
     "type": "git",

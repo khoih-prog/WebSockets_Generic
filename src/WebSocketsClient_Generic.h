@@ -6,7 +6,7 @@
   
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  Version: 2.2.1
+  Version: 2.2.2
    
   @original file WebSocketsClient.h
   @date 20.05.2015
@@ -34,6 +34,7 @@
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832, 
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
  *****************************************************************************************************************************/
 
 #ifndef WEBSOCKETSCLIENT_GENERIC_H_
@@ -56,23 +57,29 @@ class WebSocketsClient : protected WebSockets
     void begin(const char * host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
     void begin(String host, uint16_t port, String url = "/", String protocol = "arduino");
     
-    //KH
-    #if 0
-    void begin(IPAddress host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
-    #endif
+    // KH
+    void begin(IPAddress host, uint16_t port, String url = "/", String protocol = "arduino");
     
 #if defined(HAS_SSL)
     void beginSSL(const char * host, uint16_t port, const char * url = "/", const char * = "", const char * protocol = "arduino");
     void beginSSL(String host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
+    // KH
+    void beginSSL(IPAddress host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
+    
     void beginSslWithCA(const char * host, uint16_t port, const char * url = "/", const char * CA_cert = NULL, const char * protocol = "arduino");
 #endif
 
     void beginSocketIO(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", const char * protocol = "arduino");
     void beginSocketIO(String host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+    // KH  
+    void beginSocketIO(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
 
 #if defined(HAS_SSL)
     void beginSocketIOSSL(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", const char * protocol = "arduino");
     void beginSocketIOSSL(String host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+    // KH
+    void beginSocketIOSSL(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+    
     void beginSocketIOSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", const char * CA_cert = NULL, const char * protocol = "arduino");
 #endif
 
