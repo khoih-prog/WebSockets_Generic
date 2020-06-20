@@ -6,6 +6,14 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/WebSockets_Generic.svg)](http://github.com/khoih-prog/WebSockets_Generic/issues)
 
+---
+
+## Important Notes
+
+1. Currently, the WebSocketServer feature is not usable for boards different from ESP8266/ESP32.
+2. The timeline when to fix and reintroduce the WebSocketServer feature is not determined yet.
+
+---
 
 WebSocket Server and Client for Arduino based on RFC6455.
 
