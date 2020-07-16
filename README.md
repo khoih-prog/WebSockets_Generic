@@ -12,6 +12,8 @@
 
 1. Currently, the WebSocketServer feature is not usable for boards different from ESP8266/ESP32.
 2. The timeline when to fix and reintroduce the WebSocketServer feature is not determined yet.
+3. Please use the new [***WebSockets2_Generic Library***](https://github.com/khoih-prog/WebSockets2_Generic) if WebSocketServer is necessary. See [Issue 2](https://github.com/khoih-prog/WebSockets_Generic/issues/2), [Issue 3](https://github.com/khoih-prog/WebSockets_Generic/issues/3) and [Issue 4](https://github.com/khoih-prog/WebSockets_Generic/issues/4)
+
 
 ---
 
