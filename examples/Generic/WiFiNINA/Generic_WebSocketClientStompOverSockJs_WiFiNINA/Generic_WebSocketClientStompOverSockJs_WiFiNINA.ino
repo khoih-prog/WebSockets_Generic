@@ -1,34 +1,28 @@
 /****************************************************************************************************************************
-   WebSocketClientStompOverSockJs_WiFiNINA.ino
-   For Generic boards using WiFiNINA Shield/Module
-
-   BlynkEthernet_WM is a library for Teensy, ESP, SAM DUE and SAMD boards, with Ethernet W5X00 or ENC28J60 shields,
-   to enable easy configuration/reconfiguration and autoconnect/autoreconnect of Ethernet/Blynk
-   AVR Mega and W5100 is not supported.
-   Library modified from Blynk library v0.6.1 https://github.com/blynkkk/blynk-library/releases
-   Built by Khoi Hoang https://github.com/khoih-prog/BlynkEthernet_WM
-   Licensed under MIT license
-   Version: 1.0.16
-
-   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
-   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-
-   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
-   Licensed under MIT license
-   Version: 2.2.2
-
-   Example for connecting and maintining a connection with a SockJS+STOMP websocket connection.
-   In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
-
-   Created on: 18.07.2017
-   Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
-
-   Version Modified By   Date      Comments
+  WebSocketClientStompOverSockJs_WiFiNINA.ino
+  For Generic boards using WiFiNINA Shield/Module
+  
+  Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
+  to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
+  
+  Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
+  Licensed under MIT license
+  
+  Example for connecting and maintining a connection with a SockJS+STOMP websocket connection.
+  In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
+  
+  Created on: 18.07.2017
+  Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
+  
+  Version: 2.2.3
+-
+  Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
-   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.
  *****************************************************************************************************************************/
 
 #define _WEBSOCKETS_LOGLEVEL_     3

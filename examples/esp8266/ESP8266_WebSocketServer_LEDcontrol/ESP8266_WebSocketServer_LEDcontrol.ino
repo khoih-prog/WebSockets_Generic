@@ -7,17 +7,19 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  Version: 2.2.2
 
   Originally Created on: 26.11.2015
   Original Author: Markus Sattler
 
+  Version: 2.2.3
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
-                                 nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
+                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.
 *****************************************************************************************************************************/
 
 #if !defined(ESP8266)
@@ -39,7 +41,14 @@
 #define LED_GREEN   12
 #define LED_BLUE    13
 
+char ssid[] = "HueNet1";
+char pass[] = "jenniqqs";
+
 ESP8266WiFiMulti WiFiMulti;
+
+IPAddress static_ip(192,168,2,105);
+IPAddress static_gw(192,168,2,1);
+IPAddress static_sn(192,168,2,1);
 
 ESP8266WebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(81);
@@ -108,7 +117,9 @@ void setup()
     delay(1000);
   }
 
-  WiFiMulti.addAP("SSID", "passpasspass");
+  //WiFi.config(static_ip, static_gw, static_sn);
+  
+  WiFiMulti.addAP(ssid, pass);
 
   //WiFi.disconnect();
   while (WiFiMulti.run() != WL_CONNECTED) 
@@ -148,8 +159,43 @@ void setup()
 
 }
 
+void heartBeatPrint(void)
+{
+  static int num = 1;
+
+  if (WiFi.status() == WL_CONNECTED)
+    Serial.print("H");        // H means connected to WiFi
+  else
+    Serial.print("F");        // F means not connected to WiFi
+
+  if (num == 80)
+  {
+    Serial.println();
+    num = 1;
+  }
+  else if (num++ % 10 == 0)
+  {
+    Serial.print(" ");
+  }
+}
+
+void check_status()
+{
+  static unsigned long checkstatus_timeout = 0;
+
+  //KH
+#define HEARTBEAT_INTERVAL    20000L
+  // Print hearbeat every HEARTBEAT_INTERVAL (20) seconds.
+  if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
+  {
+    heartBeatPrint();
+    checkstatus_timeout = millis() + HEARTBEAT_INTERVAL;
+  }
+}
+
 void loop()
 {
+  check_status();
   webSocket.loop();
   server.handleClient();
 }

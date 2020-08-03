@@ -1,28 +1,28 @@
 /****************************************************************************************************************************
-   defines.h for nRF52_Blynk_W5500_Alexa.ino
-   For nRF52 using W5x00 Ethernet Shield/Module
-
-   BlynkEthernet_WM is a library for Teensy, ESP, SAM DUE and SAMD boards, with Ethernet W5X00 or ENC28J60 shields,
-   to enable easy configuration/reconfiguration and autoconnect/autoreconnect of Ethernet/Blynk
-   AVR Mega and W5100 is not supported.
-   Library modified from Blynk library v0.6.1 https://github.com/blynkkk/blynk-library/releases
-   Built by Khoi Hoang https://github.com/khoih-prog/BlynkEthernet_WM
-   Licensed under MIT license
-   Version: 1.0.16
-
-   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
-   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
+  defines.h for nRF52_Blynk_W5500_Alexa.ino
+  For nRF52 using W5x00 Ethernet Shield/Module
   
-   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
-   Licensed under MIT license
-   Version: 2.2.2
-   
-   Version Modified By   Date      Comments
+  BlynkEthernet_WM is a library for Teensy, ESP, SAM DUE and SAMD boards, with Ethernet W5X00 or ENC28J60 shields,
+  to enable easy configuration/reconfiguration and autoconnect/autoreconnect of Ethernet/Blynk
+  AVR Mega and W5100 is not supported.
+  Library modified from Blynk library v0.6.1 https://github.com/blynkkk/blynk-library/releases
+  Built by Khoi Hoang https://github.com/khoih-prog/BlynkEthernet_WM
+  Licensed under MIT license
+  
+  Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
+  to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
+  
+  Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
+  Licensed under MIT license
+  Version: 2.2.3
+
+  Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
-   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.                   
+  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.                   
  *****************************************************************************************************************************/
 
 #ifndef defines_h
@@ -40,7 +40,7 @@
 
 #if ( defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
         defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
-        defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) | defined(NINA_B302_ublox) )
+        defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
 #if defined(ETHERNET_USE_NRF52)
 #undef ETHERNET_USE_NRF528XX
 #endif
@@ -51,36 +51,38 @@
 #endif
 
 #if defined(ETHERNET_USE_NRF528XX)
-#if defined(NRF52840_FEATHER)
-#define BOARD_TYPE      "NRF52840_FEATHER"
-#elif defined(NRF52832_FEATHER)
-#define BOARD_TYPE      "NRF52832_FEATHER"
-#elif defined(NRF52840_FEATHER_SENSE)
-#define BOARD_TYPE      "NRF52840_FEATHER_SENSE"
-#elif defined(NRF52840_ITSYBITSY)
-#define BOARD_TYPE      "NRF52840_ITSYBITSY"
-#elif defined(NRF52840_CIRCUITPLAY)
-#define BOARD_TYPE      "NRF52840_CIRCUITPLAY"
-#elif defined(NRF52840_CLUE)
-#define BOARD_TYPE      "NRF52840_CLUE"
-#elif defined(NRF52840_METRO)
-#define BOARD_TYPE      "NRF52840_METRO"
-#elif defined(NRF52840_PCA10056)
-#define BOARD_TYPE      "NRF52840_PCA10056"
-#elif defined(PARTICLE_XENON)
-#define BOARD_TYPE      "PARTICLE_XENON"
-#elif defined(NRF52840_FEATHER)
-#define BOARD_TYPE      "NRF52840_FEATHER"
-#elif defined(NINA_B302_ublox)
-#define BOARD_TYPE      "NINA_B302_ublox"
-#elif defined(ARDUINO_NRF52_ADAFRUIT)
-#define BOARD_TYPE      "ARDUINO_NRF52_ADAFRUIT"
-#elif defined(NRF52_SERIES)
-#define BOARD_TYPE      "NRF52_SERIES"
-#else
-#define BOARD_TYPE      "NRF52_UNKNOWN"
+  #if defined(NRF52840_FEATHER)
+    #define BOARD_TYPE      "NRF52840_FEATHER"
+  #elif defined(NRF52832_FEATHER)
+    #define BOARD_TYPE      "NRF52832_FEATHER"
+  #elif defined(NRF52840_FEATHER_SENSE)
+    #define BOARD_TYPE      "NRF52840_FEATHER_SENSE"
+  #elif defined(NRF52840_ITSYBITSY)
+    #define BOARD_TYPE      "NRF52840_ITSYBITSY"
+  #elif defined(NRF52840_CIRCUITPLAY)
+    #define BOARD_TYPE      "NRF52840_CIRCUITPLAY"
+  #elif defined(NRF52840_CLUE)
+    #define BOARD_TYPE      "NRF52840_CLUE"
+  #elif defined(NRF52840_METRO)
+    #define BOARD_TYPE      "NRF52840_METRO"
+  #elif defined(NRF52840_PCA10056)
+    #define BOARD_TYPE      "NRF52840_PCA10056"
+  #elif defined(NINA_B302_ublox)
+    #define BOARD_TYPE      "NINA_B302_ublox"
+  #elif defined(NINA_B112_ublox)
+    #define BOARD_TYPE      "NINA_B112_ublox"
+  #elif defined(PARTICLE_XENON)
+    #define BOARD_TYPE      "PARTICLE_XENON"
+  #elif defined(ARDUINO_NRF52_ADAFRUIT)
+    #define BOARD_TYPE      "ARDUINO_NRF52_ADAFRUIT"
+  #else
+    #define BOARD_TYPE      "nRF52 Unknown"
+  #endif
+
 #endif
 
+#ifndef BOARD_NAME
+  #define BOARD_NAME    BOARD_TYPE
 #endif
 
 // Start location in EEPROM to store config data. Default 0
@@ -99,7 +101,7 @@
 // To use faster 25MHz clock instead of defaulf 14MHz. Only for W5200 and W5500. W5100 also tested OK.
 //#define USE_W5100     false
 
-#define USE_ETHERNET_WRAPPER    true
+//#define USE_ETHERNET_WRAPPER    true
 //#define USE_ETHERNET_WRAPPER    false
 
 // Use true  for ENC28J60 and UIPEthernet library (https://github.com/UIPEthernet/UIPEthernet)
@@ -179,6 +181,10 @@
 #endif
 
 #endif    //USE_BLYNK_WM
+
+#ifdef HOST_NAME
+  #undef HOST_NAME
+#endif
 
 #define HOST_NAME   "nRF52-W5500"
 

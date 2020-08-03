@@ -1,26 +1,25 @@
 /****************************************************************************************************************************
-   Generic_WebSocketServer_W5500.ino
-   For Generic boards using W5x00 Ethernet Shield/Module
-
-   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
-   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-
-   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
-   Licensed under MIT license
-   Version: 2.2.2
-
-   First created on: 22.05.2015
-   Original Author: Markus Sattler
-
-   Version Modified By   Date      Comments
+  Generic_WebSocketServer_W5500.ino
+  For Generic boards using W5x00 Ethernet Shield/Module
+  
+  Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
+  to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
+  
+  Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
+  Licensed under MIT license
+  
+  Version: 2.2.3
+-
+  Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
-   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.                               
+  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.                          
  *****************************************************************************************************************************/
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     4
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_W5100
 
 #include <WebSocketsServer_Generic.h>
@@ -89,15 +88,15 @@ void setup()
   for (uint8_t t = 4; t > 0; t--)
   {
     Serial.println("[SETUP] BOOT WAIT " + String(t));
-    Serial.flush();
+    //Serial.flush();
     delay(1000);
   }
 
   // start the ethernet connection and the server:
   // Use Static IP
-  Ethernet.begin(mac, ip);
+  //Ethernet.begin(mac, ip);
   //Configure IP address via DHCP
-  //Ethernet.begin(mac);
+  Ethernet.begin(mac);
 
   // server address, port and URL
   Serial.print("WebSockets Server IP address: ");

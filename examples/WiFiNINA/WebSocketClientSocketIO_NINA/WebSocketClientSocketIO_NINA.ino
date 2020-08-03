@@ -1,6 +1,6 @@
 /****************************************************************************************************************************
   WebSocketClientSocketIO_NINA.ino
-  For nRF52 using WiFiNINA Shield/Module
+  For boards using WiFiNINA Shield/Module
 
   Blynk_WiFiNINA_WM is a library for the Mega, Teensy, SAM DUE, nRF52, STM32 and SAMD boards
   (https://github.com/khoih-prog/Blynk_WiFiNINA_WM) to enable easy configuration/reconfiguration and
@@ -11,17 +11,19 @@
   
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  Version: 2.2.2
 
   Created on: 06.06.2016
   Author: Markus Sattler
     
+  Version: 2.2.3
+
   Version Modified By   Date      Comments
- ------- -----------  ---------- -----------
+  ------- -----------  ---------- -----------
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.  
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.  
  *****************************************************************************************************************************/
 
 #define _WEBSOCKETS_LOGLEVEL_     3

@@ -1,26 +1,28 @@
 /****************************************************************************************************************************
-   Generic_WebSocketServer_WiFiNINA.ino
-   For Generic boards using WiFiNINA Shield/Module
-
-   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
-   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-
-   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
-   Licensed under MIT license
-   Version: 2.2.2
-
-   Created on: 22.05.2015
-   Original Author: Markus Sattler
-
-   Version Modified By   Date      Comments
+  Generic_WebSocketServer_WiFiNINA.ino
+  For Generic boards using WiFiNINA Shield/Module
+  
+  Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
+  to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
+  
+  Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
+  Licensed under MIT license
+  
+  Created on: 22.05.2015
+  Original Author: Markus Sattler
+  
+  Version: 2.2.3
+-
+  Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
-   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.                             
+  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.                        
  *****************************************************************************************************************************/
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     0
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
 #include <WebSocketsServer_Generic.h>
@@ -31,8 +33,12 @@ int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
-char ssid[] = "****";        // your network SSID (name)
-char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+char ssid[] = "HueNet1";        // your network SSID (name)
+char pass[] = "jenniqqs";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+
+
+//char ssid[] = "****";        // your network SSID (name)
+//char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
 
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
@@ -40,7 +46,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.println( "[" + String(num) + "] Disconnected!");
+      //Serial.println( "[" + String(num) + "] Disconnected!");
       break;
     case WStype_CONNECTED:
       {

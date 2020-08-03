@@ -1,28 +1,28 @@
 /****************************************************************************************************************************
-   SAMD_Blynk_ENC_Alexa.ino
-   For SAMD21/SAMD51 using ENC28J60 Shield/Module
+  SAMD_Blynk_ENC_Alexa.ino
+  For SAMD21/SAMD51 using ENC28J60 Shield/Module
+  
+  BlynkEthernet_WM is a library for Teensy, ESP, SAM DUE and SAMD boards, with Ethernet W5X00 or ENC28J60 shields,
+  to enable easy configuration/reconfiguration and autoconnect/autoreconnect of Ethernet/Blynk
+  AVR Mega and W5100 is not supported.
+  Library modified from Blynk library v0.6.1 https://github.com/blynkkk/blynk-library/releases
+  Built by Khoi Hoang https://github.com/khoih-prog/BlynkEthernet_WM
+  Licensed under MIT license
+  
+  Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
+  to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
+  
+  Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
+  Licensed under MIT license
+  Version: 2.2.3
 
-   BlynkEthernet_WM is a library for Teensy, ESP, SAM DUE and SAMD boards, with Ethernet W5X00 or ENC28J60 shields,
-   to enable easy configuration/reconfiguration and autoconnect/autoreconnect of Ethernet/Blynk
-   AVR Mega and W5100 is not supported.
-   Library modified from Blynk library v0.6.1 https://github.com/blynkkk/blynk-library/releases
-   Built by Khoi Hoang https://github.com/khoih-prog/BlynkEthernet_WM
-   Licensed under MIT license
-   Version: 1.0.16
-
-   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
-   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-
-   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
-   Licensed under MIT license
-   Version: 2.2.2
-
-   Version Modified By   Date      Comments
+  Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
-   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
+  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
+  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
  *****************************************************************************************************************************/
 #include "defines.h"
 #include "Credentials.h"
@@ -308,9 +308,9 @@ void setup()
 #if USE_BLYNK_WM
 
 #if ( USE_LITTLEFS || USE_SPIFFS)
-  Serial.println("\nStart ENC28J60_Blynk using " + String(CurrentFileFS) + " on " + String(BOARD_TYPE));
+  Serial.println("\nStart ENC28J60_Blynk using " + String(CurrentFileFS) + " on " + String(BOARD_NAME));
 #else
-  Serial.println("\nStart ENC28J60_Blynk on " + String(BOARD_TYPE));
+  Serial.println("\nStart ENC28J60_Blynk on " + String(BOARD_NAME));
 #endif
 
   Blynk.begin();
@@ -318,10 +318,10 @@ void setup()
 #else
 
 #if USE_LOCAL_SERVER
-  Serial.println("\nStart ENC28J60_Blynk, no WM, on " + String(BOARD_TYPE) + String(" using Local Server"));
+  Serial.println("\nStart ENC28J60_Blynk, no WM, on " + String(BOARD_NAME) + String(" using Local Server"));
   Blynk.begin(auth, server, BLYNK_HARDWARE_PORT);
 #else
-  Serial.println("\nStart ENC28J60_Blynk, no WM, on " + String(BOARD_TYPE) + String(" using Cloud Server"));
+  Serial.println("\nStart ENC28J60_Blynk, no WM, on " + String(BOARD_NAME) + String(" using Cloud Server"));
   //Blynk.begin(auth);
   // You can also specify server:
   Blynk.begin(auth, server, BLYNK_HARDWARE_PORT);
