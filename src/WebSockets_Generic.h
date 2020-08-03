@@ -6,7 +6,6 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  Version: 2.2.2
 
   @original file WebSockets.h
   @date 20.05.2015
@@ -28,6 +27,8 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  
+  Version: 2.2.3
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -35,6 +36,8 @@
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
+                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
  *****************************************************************************************************************************/
 
 #ifndef WEBSOCKETS_GENERIC_H_
@@ -116,6 +119,20 @@
     #define WEBSOCKETS_YIELD() yield()
   #endif
 
+#elif ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
+        defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
+        defined(STM32WB) || defined(STM32MP1) )
+  // KH
+  #warning Use STM32F/L/H/G/WB/MP1 in WebSockets_Generic
+
+  #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
+  
+  // moves all Header strings to Flash (~300 Byte)
+  //#define WEBSOCKETS_USE_BIG_MEM
+  #define WEBSOCKETS_SAVE_RAM
+  //#define GET_FREE_HEAP System.freeMemory()
+  #define WEBSOCKETS_YIELD()
+
 #elif defined(STM32_DEVICE)
   #warning Use STM32_DEVICE in WebSockets_Generic
 
@@ -123,19 +140,10 @@
   #define WEBSOCKETS_USE_BIG_MEM
   #define GET_FREE_HEAP System.freeMemory()
   #define WEBSOCKETS_YIELD()
-
-#elif ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3) \
-      ||defined(STM32F4) || defined(STM32F7) )
-  // KH
-  #warning Use STM32F in WebSockets_Generic
-
-  #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
   
-  // moves all Header strings to Flash (~300 Byte)
-  #define WEBSOCKETS_SAVE_RAM
-  #define WEBSOCKETS_YIELD()
-
-#elif ( defined(NRF52_SERIES) || defined(NINA_B302_ublox) )
+#elif ( defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
+        defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
+        defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
   // KH
   #warning Use nRF52 in WebSockets_Generic
 
@@ -152,11 +160,11 @@
   #define WEBSOCKETS_YIELD() yield()
   //#define WEBSOCKETS_YIELD()
 
-#elif ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
-   || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) \
-   || defined(ARDUINO_SAMD_MKRWAN1310) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) \
-   || defined(ARDUINO_SAMD_MKRVIDOR4000) ||  defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
-   || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) || defined(__SAMD51G19A__) )
+#elif  ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
+      || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) || defined(ARDUINO_SAMD_MKRWAN1310) \
+      || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) \
+      || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) || defined(__SAMD21E18A__) || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) \
+      || defined(__SAMD51G19A__) || defined(__SAMD51P19A__) || defined(__SAMD21G18A__) )
 
   // KH
   #warning Use SAMD21/SAMD51 in WebSockets_Generic
@@ -222,13 +230,13 @@
 #define WEBSOCKETS_TCP_TIMEOUT (5000)
 
 #define NETWORK_ESP8266_ASYNC (0)
-#define NETWORK_ESP8266 (1)
-#define NETWORK_W5100 (2)
-#define NETWORK_ENC28J60 (3)
-#define NETWORK_ESP32 (4)
-#define NETWORK_ESP32_ETH (5)
+#define NETWORK_ESP8266       (1)
+#define NETWORK_W5100         (2)
+#define NETWORK_ENC28J60      (3)
+#define NETWORK_ESP32         (4)
+#define NETWORK_ESP32_ETH     (5)
 //KH
-#define NETWORK_WIFININA (6)
+#define NETWORK_WIFININA      (6)
 
 // max size of the WS Message Header
 #define WEBSOCKETS_MAX_HEADER_SIZE (14)
@@ -248,16 +256,18 @@
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32
     //#define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32_ETH
 
-  #elif ( defined(NRF52_SERIES) || defined(NINA_B302_ublox) )
+  #elif ( defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
+          defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
+          defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_WIFININA
 
   #elif ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
-     || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) \
-     || defined(ARDUINO_SAMD_MKRWAN1310) || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) \
-     || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) \
-     || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) || defined(__SAMD51G19A__) )
+       || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) || defined(ARDUINO_SAMD_MKRWAN1310) \
+       || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) \
+       || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) || defined(__SAMD21E18A__) || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) \
+       || defined(__SAMD51G19A__) || defined(__SAMD51P19A__) || defined(__SAMD21G18A__) )
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_WIFININA
@@ -316,8 +326,26 @@
     #define WEBSOCKETS_NETWORK_CLASS TCPClient
     #define WEBSOCKETS_NETWORK_SERVER_CLASS TCPServer
   #else
-    #include <Ethernet.h>
     #include <SPI.h>
+    // KH, New v2.2.3 to support Ethernet2, Ethernet3, EthernetLarge Lib
+    #if USE_ETHERNET    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET_)
+      #include <Ethernet.h>
+      #warning Using Ethernet W5x00 Library
+    #elif USE_ETHERNET_LARGE    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET_LARGE_)
+      #include <EthernetLarge.h>
+      #warning Using EthernetLarge W5x00 Library
+    #elif USE_ETHERNET2    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET2_)
+      #include <Ethernet2.h>
+      #warning Using Ethernet2 W5x00 Library
+    #elif USE_ETHERNET3    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET3_)
+      #include <Ethernet3.h>
+      #warning Using Ethernet3 W5x00 Library
+    #else  
+      #include <Ethernet.h>
+      #warning Using default Ethernet W5x00 Library    
+    #endif
+    //////
+    
     #define WEBSOCKETS_NETWORK_CLASS EthernetClient
     #define WEBSOCKETS_NETWORK_SERVER_CLASS EthernetServer
   #endif
