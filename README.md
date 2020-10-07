@@ -12,12 +12,12 @@
 ## Important Notes
 
 1. Currently, the WebSocketServer feature is usable only for ESP8266/ESP32.
-2. The timeline when to fix and reintroduce the WebSocketServer feature is not determined yet.
+2. The timeline when to fix and reintroduce the WebSocketServer feature to other boards is not determined yet.
 3. Please use the new [**WebSockets2_Generic Library**](https://github.com/khoih-prog/WebSockets2_Generic) if WebSocketServer is necessary. See [Issue 2](https://github.com/khoih-prog/WebSockets_Generic/issues/2), [Issue 3](https://github.com/khoih-prog/WebSockets_Generic/issues/3) and [Issue 4](https://github.com/khoih-prog/WebSockets_Generic/issues/4)
 
 ---
 
-WebSocket Server and Client for Arduino based on RFC6455.
+## RFC6455-based WebSocket Server and Client for Arduino boards.
 
 ### Why do we need this [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic)
 
@@ -31,8 +31,8 @@ Please see illustrating examples.
 
 ### New in v2.3.1
 
-1. Sync with v2.3.1 of original [WebSockets Library](https://github.com/Links2004/arduinoWebSockets). 
-2. Add support to ENC28J60 using [EthernetENC library](https://github.com/jandrassy/EthernetENC).
+1. Sync with v2.3.1 of original [**WebSockets library**](https://github.com/Links2004/arduinoWebSockets). 
+2. Add support to ENC28J60 using [**EthernetENC library**](https://github.com/jandrassy/EthernetENC).
 3. Add and update examples
 
 #### New in v2.2.3
@@ -125,7 +125,7 @@ Another way to install is to:
 
 1. Install [VS Code](https://code.visualstudio.com/)
 2. Install [PlatformIO](https://platformio.org/platformio-ide)
-3. Install [**WebSockets_Generic** library](https://platformio.org/lib/show/7375/WebSockets_Generic) by using [Library Manager](https://platformio.org/lib/show/7375/WebSockets_Generic/installation). Search for WebSockets_Generic in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
+3. Install [**WebSockets_Generic** library v2.3.1+](https://platformio.org/lib/show/11283/WebSockets_Generic) by using [**Library Manager**](https://platformio.org/lib/show/11283/WebSockets_Generic/installation). Install [**WebSockets_Generic** library v2.2.2-](https://platformio.org/lib/show/7375/WebSockets_Generic) by using [Library Manager](https://platformio.org/lib/show/7375/WebSockets_Generic/installation). Search for [**WebSockets_Generic**](https://platformio.org/lib/show/11283/WebSockets_Generic) in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
 4. Use included [platformio.ini](platformio/platformio.ini) file from examples to ensure that all dependent libraries will installed automatically. Please visit documentation for the other options and examples at [Project Configuration File](https://docs.platformio.org/page/projectconf.html)
 
 ---
@@ -260,7 +260,7 @@ theses files must be copied into the corresponding directory:
 - [Ethernet2.h](LibraryPatches/Ethernet2/src/Ethernet2.h)
 - [Ethernet2.cpp](LibraryPatches/Ethernet2/src/Ethernet2.cpp)
 
-To add UDP Multicast support, necessary for this [**MDNS_Generic library**](https://github.com/khoih-prog/MDNS_Generic):
+To add **UDP Multicast** support, necessary for these [**MDNS_Generic**](https://github.com/khoih-prog/MDNS_Generic), [**UPnP_Generic**](https://github.com/khoih-prog/UPnP_Generic) libraries:
 
 - [EthernetUdp2.h](LibraryPatches/Ethernet2/src/EthernetUdp2.h)
 - [EthernetUdp2.cpp](LibraryPatches/Ethernet2/src/EthernetUdp2.cpp)
@@ -355,6 +355,8 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
  - ATmega2560 with Ethernet Shield (ATmega branch)
  - ATmega2560 with ENC28J60 (ATmega branch)
 
+---
+
 #### New support from v2.3.1
 
 1. **ENC28J60's EthernetENC Library.**
@@ -372,7 +374,7 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
 3. **SAM DUE**
 4. WebSocketServer for those supported boards.
 
-##### New support from v2.1.3
+#### New support from v2.1.3
  
 1. **nRF52** boards, such as **AdaFruit Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B30_ublox, etc.**
 2. **SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.) and SAM DUE**.
@@ -382,7 +384,7 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
 
   Version 2.0.0 and up is not compatible with AVR/ATmega, check ATmega branch.
   
-  Version 2.3.0 has API changes for the ESP8266 BearSSL (may brakes existing code)
+  Version 2.3.0 has API changes for the ESP8266 BearSSL (may break existing code)
 
   Arduino for AVR not supports std namespace of c++.
 
@@ -391,7 +393,7 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
  supported for:
  
  - wss client on the ESP8266
- - wss / SSL is not natively supported in WebSocketsServer however it is possible to achieve secure websockets
+ - wss / SSL is not natively supported in WebSocketsServer. However it is possible to achieve secure websockets
    by running the device behind an SSL proxy. See [Nginx](examples/Nginx/esp8266.ssl.reverse.proxy.conf) for a
    sample Nginx server configuration file to enable this.
 
@@ -399,9 +401,9 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
 
 This libary can run in Async TCP mode on the ESP.
 
-The mode can be activated in the `WebSockets.h` (see WEBSOCKETS_NETWORK_TYPE define).
+The mode can be activated in the [WebSockets_Generic.h](src/WebSockets_Generic.h) (see WEBSOCKETS_NETWORK_TYPE define).
 
-[ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) libary is required.
+[ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) library is required.
 
 ---
 
@@ -419,6 +421,8 @@ In your code, select one of the currently supported network connection from the 
 
 then add `#define WEBSOCKETS_NETWORK_TYPE`  before `#include <WebSocketsClient_Generic.h>`
 
+For example:
+
 ```
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
@@ -427,12 +431,49 @@ then add `#define WEBSOCKETS_NETWORK_TYPE`  before `#include <WebSocketsClient_G
 
 ### High Level Client API ###
 
- - `begin` : Initiate connection sequence to the websocket host.
+ - `begin` : Initiate connection sequence to the WebSocket host.
  
 ```
-void begin(const char *host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
+void begin(const char * host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
 void begin(String host, uint16_t port, String url = "/", String protocol = "arduino");
+void begin(IPAddress host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
+
+void begin(IPAddress host, uint16_t port, String url = "/", String protocol = "arduino");
 ```
+
+ - `beginSSL` : Initiate SSL connection sequence to the WebSocket host.
+ 
+```
+#if defined(HAS_SSL)
+#ifdef SSL_AXTLS
+
+    void beginSSL(const char * host, uint16_t port, const char * url = "/", const char * fingerprint = "", const char * protocol = "arduino");
+    void beginSSL(IPAddress host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
+    void beginSSL(String host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
+
+#else
+
+    void beginSSL(const char * host, uint16_t port, const char * url = "/", const uint8_t * fingerprint = NULL, const char * protocol = "arduino");
+    void beginSSL(IPAddress host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");   
+    void beginSslWithCA(const char * host, uint16_t port, const char * url = "/", BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
+
+#endif    // SSL_AXTLS
+
+    void beginSslWithCA(const char * host, uint16_t port, const char * url = "/", const char * CA_cert = NULL, const char * protocol = "arduino");
+
+#endif    // HAS_SSL
+```
+
+ - `beginSocketIO` : Initiate connection sequence to the WebSocketIO host.
+ 
+```
+void beginSocketIO(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", const char * protocol = "arduino");
+void beginSocketIO(String host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+
+void beginSocketIO(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+```
+
+---
 
  - `onEvent`: Callback to handle for websocket events
 
@@ -466,10 +507,11 @@ typedef enum
 ```
 
 ---
+---
 
 ### Examples
 
-##### For Generic boards using W5x00 Ethernet shield
+#### For Generic boards using W5x00 Ethernet shield
 
 1. [Generic_WebSocketClientSocketIO_W5500](examples/Generic/W5500/Generic_WebSocketClientSocketIO_W5500)
 2. [Generic_WebSocketClientStompOverSockJs_W5500](examples/Generic/W5500/Generic_WebSocketClientStompOverSockJs_W5500)
@@ -481,7 +523,7 @@ typedef enum
 8. [Generic_WebSocketServer_LEDcontrol_W5500](examples/Generic/W5500/Generic_WebSocketServer_LEDcontrol_W5500)
 9. [Generic_WebSocketServer_W5500](examples/Generic/W5500/Generic_WebSocketServer_W5500)
 
-##### For Generic boards using WiFiNINA
+#### For Generic boards using WiFiNINA
 
 1. [Generic_WebSocketClientSocketIO_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClientSocketIO_WiFiNINA)
 2. [Generic_WebSocketClientStompOverSockJs_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClientStompOverSockJs_WiFiNINA)
@@ -493,7 +535,7 @@ typedef enum
 8. [Generic_WebSocketServer_LEDcontrol_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServer_LEDcontrol_WiFiNINA)
 9. [Generic_WebSocketServer_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServer_WiFiNINA)
 
-##### For Generic boards using ENC28J60 Ethernet shield using EthernetENC library
+#### For Generic boards using ENC28J60 Ethernet shield using EthernetENC library
 
 1. [Generic_WebSocketClientSocketIO_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientSocketIO_EthernetENC)
 2. [Generic_WebSocketClientStompOverSockJs_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientStompOverSockJs_EthernetENC)
@@ -505,7 +547,7 @@ typedef enum
 8. [Generic_WebSocketServer_LEDcontrol_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketServer_LEDcontrol_EthernetENC)
 9. [Generic_WebSocketServer_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketServer_EthernetENC)
 
-##### For WiFiNINA
+#### For WiFiNINA
 
 1. [nRF52_Blynk_NINA_Alexa](examples/WiFiNINA/nRF52_Blynk_NINA_Alexa)
 2. [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa)
@@ -514,7 +556,7 @@ typedef enum
 5. [WebSocketClientStomp_NINA](examples/WiFiNINA/WebSocketClientStomp_NINA)
 6. [WebSocketClientStompOverSockJs_NINA](examples/WiFiNINA/WebSocketClientStompOverSockJs_NINA)
 
-##### For W5x00 Ethernet shield
+#### For W5x00 Ethernet shield
 
 1. [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa)
 2. [SAMD_Blynk_W5500_Alexa](examples/W5500/SAMD_Blynk_W5500_Alexa)
@@ -523,7 +565,7 @@ typedef enum
 5. [WebSocketClientStomp_W5500](examples/W5500/WebSocketClientStomp_W5500)
 6. [WebSocketClientStompOverSockJs_W5500](examples/W5500/WebSocketClientStompOverSockJs_W5500)
 
-##### For ENC28J60 Ethernet shield using UIPEthernet library
+#### For ENC28J60 Ethernet shield using UIPEthernet library
 
 1. [nRF52_Blynk_ENC_Alexa](examples/ENC28J60/nRF52_Blynk_ENC_Alexa)
 2. [SAMD_Blynk_ENC_Alexa](examples/ENC28J60/SAMD_Blynk_ENC_Alexa)
@@ -533,13 +575,13 @@ typedef enum
 6. [WebSocketClientStompOverSockJs_ENC](examples/ENC28J60/WebSocketClientStompOverSockJs_ENC)
 
 
-##### For ESP32 board
+#### For ESP32 board
 
 1. [ESP32_WebSocketClient](examples/esp32/ESP32_WebSocketClient)
 2. [ESP32_WebSocketClientSSL](examples/esp32/ESP32_WebSocketClientSSL)
 3. [ESP32_WebSocketServer](examples/esp32/ESP32_WebSocketServer)
 
-##### For ESP8266 board
+#### For ESP8266 board
 
  1. [ESP8266_WebSocketClient](examples/esp8266/ESP8266_WebSocketClient)
  2. [ESP8266_WebSocketClientSocketIO](examples/esp8266/ESP8266_WebSocketClientSocketIO)
@@ -739,9 +781,9 @@ void loop()
 
 #### 1. Debug Terminal Output when running [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa) on NRF52840_FEATHER
 
-You can see the **Adafruit NRF52840_FEATHER Express** board, with W5500 Ethernet shield, connects to Blynk using [BlynkEthernet_WM library](https://github.com/khoih-prog/BlynkEthernet_WM). 
+You can see the **Adafruit NRF52840_FEATHER Express** board, with W5500 Ethernet shield, connects to Blynk using [**BlynkEthernet_WM** library](https://github.com/khoih-prog/BlynkEthernet_WM). 
 
-It also uses [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with `SINRIC` skills, and `Alexa`, to control a relay using Alexa voice control of a `Amazon Alexa` phone APP
+It also uses [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with `SINRIC` skills, and `Alexa`, to control a relay using Alexa voice control via the `Amazon Alexa` phone APP
 
 ```
 Start nRF52_Blynk_W5500_Alexa using W5x00_Shield on NRF52840_FEATHER
@@ -828,9 +870,9 @@ Turn off Device ID: ****
 
 #### 2. Debug Terminal Output when running [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa) on SAMD NANO_33_IOT
 
-You can see the **Arduino SAMD NANO_33_IoT** board, with built-in WiFiNINA, connects to Blynk using [Blynk_WiFiNINA_WM library](https://github.com/khoih-prog/Blynk_WiFiNINA_WM). 
+You can see the **Arduino SAMD NANO_33_IoT** board, with built-in WiFiNINA, connects to Blynk using [**Blynk_WiFiNINA_WM** library](https://github.com/khoih-prog/Blynk_WiFiNINA_WM). 
 
-It also uses [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with `SINRIC` skills, and `Alexa`, to control a relay using Alexa voice control of a `Amazon Alexa` phone APP
+It also uses [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with `SINRIC` skills, and `Alexa`, to control a relay using Alexa voice control via the `Amazon Alexa` phone APP
 
 ```
 Start Blynk_WiFiNINA_WM using WiFiNINA_Shield on SAMD NANO_33_IOT
@@ -946,9 +988,9 @@ Connecting to WebSockets Server @ IP address: 192.168.2.140
 
 #### 4. Debug Terminal Output when running [Generic_Ethernet_Blinds](https://github.com/khoih-prog/SinricPro_Generic/tree/master/examples/Generic/Blinds/Generic_Ethernet_Blinds) on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
 
-You can see the **NRF52840_FEATHER** board, with NC28J60 using EthernetENC Library, connects to SinricPro service using [**SinricPro_Generic library**](https://github.com/khoih-prog/SinricPro_Generic). 
+You can see the **NRF52840_FEATHER** board, with NC28J60 using EthernetENC Library, connects to SinricPro service using [**SinricPro_Generic** library](https://github.com/khoih-prog/SinricPro_Generic). 
 
-It also uses this [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with [**SinricPro service**](https://sinric.pro/), to control Blinds a `Sinric Pro` phone APP
+It also uses this [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with [**SinricPro** service](https://sinric.pro/), to control Blinds via the `Sinric Pro` phone APP
 
 
 ```
@@ -1192,8 +1234,8 @@ Device 123456789012345678901234 set position to 0
 
 ### New in v2.3.1
 
-1. Sync with v2.3.1 of original [WebSockets Library](https://github.com/Links2004/arduinoWebSockets). 
-2. Add support to ENC28J60 using [EthernetENC library](https://github.com/jandrassy/EthernetENC).
+1. Sync with v2.3.1 of original [**WebSockets library**](https://github.com/Links2004/arduinoWebSockets). 
+2. Add support to ENC28J60 using [**EthernetENC library**](https://github.com/jandrassy/EthernetENC).
 3. Add and update examples
 
 #### New in v2.2.3
@@ -1249,13 +1291,13 @@ Device 123456789012345678901234 set position to 0
 
 ### Issues ###
 
-Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebSockets_Generic/issues)
+Submit issues to: [**WebSockets_Generic issues**](https://github.com/khoih-prog/WebSockets_Generic/issues)
 
 ---
 
 ### Contributions and thanks
 
-1. Based on and modified from [Markus Sattler's WebSockets](https://github.com/Links2004/arduinoWebSockets)
+1. Based on and modified from [Markus Sattler's **arduinoWebSockets** library](https://github.com/Links2004/arduinoWebSockets)
 
 <table>
   <tr>
@@ -1280,6 +1322,6 @@ If you want to contribute to this project:
 
 - Most of the credits go to original author [**Markus Sattler**](https://github.com/Links2004).
 
-- The library is licensed under [LGPLv2.1](https://github.com/Links2004/arduinoWebSockets/blob/master/LICENSE) and [MIT](https://github.com/khoih-prog/WebSockets_Generic/blob/master/LICENSE)
+- The library is licensed under [**LGPLv2.1**](https://github.com/Links2004/arduinoWebSockets/blob/master/LICENSE) and [**MIT**](https://github.com/khoih-prog/WebSockets_Generic/blob/master/LICENSE)
 
 - [libb64](http://libb64.sourceforge.net/) written by Chris Venter. It is distributed under Public Domain see [LICENSE](https://github.com/Links2004/arduinoWebSockets/blob/master/src/libb64/LICENSE).
