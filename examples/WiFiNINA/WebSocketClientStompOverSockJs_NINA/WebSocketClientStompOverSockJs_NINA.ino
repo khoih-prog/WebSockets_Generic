@@ -18,7 +18,7 @@
   Created on: 18.07.2017
   Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
 
-  Version: 2.2.3
+  Version: 2.3.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -26,7 +26,9 @@
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
-  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.  
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
+                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
+  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
  *****************************************************************************************************************************/
 
 #define _WEBSOCKETS_LOGLEVEL_     3
@@ -56,15 +58,24 @@ const char* ws_baseurl            = "/socketentry/"; // don't forget leading and
 
 // FUNCTIONS
 
+bool alreadyConnected = false;
+
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.println("[WSc] Disconnected!");
+      if (alreadyConnected)
+      {
+        Serial.println("[WSc] Disconnected!");
+        alreadyConnected = false;
+      }
+      
       break;
     case WStype_CONNECTED:
       {
+        alreadyConnected = true;
+        
         Serial.print("[WSc] Connected to url: ");
         Serial.println((char *) payload);
       }
@@ -141,7 +152,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WebSocketClientStompOverSockJs_NINA");
+  Serial.println("\nStart WebSocketClientStompOverSockJs_NINA on " + String(BOARD_NAME));
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");

@@ -14,7 +14,7 @@
   Originally Created on: 24.05.2015
   Original Author: Markus Sattler
   
-  Version: 2.2.3
+  Version: 2.3.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -24,33 +24,113 @@
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
+  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
  *****************************************************************************************************************************/
+
 #define _WEBSOCKETS_LOGLEVEL_     3
 
-#define WEBSOCKETS_NETWORK_TYPE   NETWORK_W5100
+#define USE_UIP_ETHERNET        false
+
+// Only one if the following to be true
+#define USE_ETHERNET            false
+#define USE_ETHERNET2           false
+#define USE_ETHERNET3           false
+#define USE_ETHERNET_LARGE      true
+#define USE_ETHERNET_ESP8266    false
+#define USE_ETHERNET_ENC        false
+
+#if ( USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE || USE_ETHERNET )
+  #define WEBSOCKETS_NETWORK_TYPE   NETWORK_W5100
+#elif (USE_ETHERNET_ENC)
+  #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
+#endif
+
+#if USE_ETHERNET3
+  #include "Ethernet3.h"
+  #warning Using Ethernet3 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet3 Library"
+#elif USE_ETHERNET2
+  #include "Ethernet2.h"
+  #warning Using Ethernet2 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet2 Library"
+#elif USE_ETHERNET_LARGE
+  #include "EthernetLarge.h"
+  #warning Using EthernetLarge lib
+  #define SHIELD_TYPE           "W5x00 using EthernetLarge Library"
+#elif USE_ETHERNET_ESP8266
+  #include "Ethernet_ESP8266.h"
+  #warning Using Ethernet_ESP8266 lib 
+  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library" 
+#elif USE_ETHERNET_ENC
+  #include "EthernetENC.h"
+  #warning Using EthernetENC lib
+  #define SHIELD_TYPE           "ENC28J60 using EthernetENC Library"
+#else
+  #define USE_ETHERNET          true
+  #include "Ethernet.h"
+  #warning Using Ethernet lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet Library"
+#endif
+
+// Default pin 10 to SS/CS
+#define USE_THIS_SS_PIN         10
 
 #include <WebSocketsClient_Generic.h>
 
 WebSocketsClient webSocketClient;
 
-uint8_t mac[6] =  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x09 };
+// Enter a MAC address and IP address for your controller below.
+#define NUMBER_OF_MAC      20
+
+byte mac[][NUMBER_OF_MAC] =
+{
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x01 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x02 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x03 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x04 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x05 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x06 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x07 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x08 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x09 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0A },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0B },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0C },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0D },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0E },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0F },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x10 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x11 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x12 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x13 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x14 },
+};
 
 // Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 222);
+IPAddress clientIP(192, 168, 2, 226);
+IPAddress serverIP(192, 168, 2, 140);
 
 // Only for W5100
 #define SDCARD_CS       4
+
+bool alreadyConnected = false;
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.println("[WSc] Disconnected!");
+      if (alreadyConnected)
+      {
+        Serial.println("[WSc] Disconnected!");
+        alreadyConnected = false;
+      }
+      
       break;
     case WStype_CONNECTED:
       {
+        alreadyConnected = true;
+        
         Serial.print("[WSc] Connected to url: ");
         Serial.println((char *) payload);
 
@@ -59,23 +139,40 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       break;
     case WStype_TEXT:
-      Serial.print("[WSc] get text: ");
-      Serial.println((char *) payload);
 
-      // send message to server
-      // webSocketClient.sendTXT("message here");
+      if (alreadyConnected)
+      {
+        Serial.print("[WSc] get text: ");
+        Serial.println((char *) payload);
+  
+        // send message to server
+        // webSocketClient.sendTXT("message here");
+      }
       break;
     case WStype_BIN:
-      Serial.print("[WSc] get binary length: ");
-      Serial.println(length);
-      
-      // KH, To check
-      // hexdump(payload, length);
 
-      // send data to server
-      webSocketClient.sendBIN(payload, length);
+      if (alreadyConnected)
+      {
+        Serial.print("[WSc] get binary length: ");
+        Serial.println(length);
+        
+        // KH, To check
+        // hexdump(payload, length);
+  
+        // send data to server
+        webSocketClient.sendBIN(payload, length);
+      }
       break;
 
+    case WStype_PING:
+      // pong will be send automatically
+      Serial.println("[WSc] get ping");
+      break;
+    case WStype_PONG:
+      // answer to a ping we send
+      Serial.println("[WSc] get pong");
+      break;
+      
     default:
       break;
   }
@@ -90,7 +187,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart Generic_WebSocketClient_W5500");
+  Serial.print("\nStart Generic_WebSocketClient_W5500 on " + String(BOARD_NAME));
+  Serial.println(" with " + String(SHIELD_TYPE));
 
   for (uint8_t t = 4; t > 0; t--)
   {
@@ -99,19 +197,47 @@ void setup()
     delay(1000);
   }
 
+  WS_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
+
+  WS_LOGWARN(F("Default SPI pinout:"));
+  WS_LOGWARN1(F("MOSI:"), MOSI);
+  WS_LOGWARN1(F("MISO:"), MISO);
+  WS_LOGWARN1(F("SCK:"),  SCK);
+  WS_LOGWARN1(F("SS:"),   SS);
+  WS_LOGWARN(F("========================="));
+
+  #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+    // For other boards, to change if necessary
+    #if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2  || USE_ETHERNET_ENC )
+      // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+      Ethernet.init (USE_THIS_SS_PIN);
+    
+    #elif USE_ETHERNET3
+      // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
+      #ifndef ETHERNET3_MAX_SOCK_NUM
+        #define ETHERNET3_MAX_SOCK_NUM      4
+      #endif
+    
+      Ethernet.setCsPin (USE_THIS_SS_PIN);
+      Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
+       
+    #endif  //( ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2  || USE_ETHERNET_ENC )
+  #endif
+
   // start the ethernet connection and the server:
+  // Use DHCP dynamic IP and random mac
+  uint16_t index = millis() % NUMBER_OF_MAC;
   // Use Static IP
-  Ethernet.begin(mac, clientIP);
-  //Configure IP address via DHCP
-  //Ethernet.begin(mac);
+  //Ethernet.begin(mac[index], clientIP);
+  Ethernet.begin(mac[index]);
+ 
   Serial.print("WebSockets Client IP address: ");
   Serial.println(Ethernet.localIP());
 
   // server address, port and URL
-  Serial.print("WebSockets Server IP address: ");
+  Serial.print("Connecting to WebSockets Server @ IP address: ");
   Serial.println(serverIP);
   webSocketClient.begin(serverIP, 81, "/");
-
 
   // event handler
   webSocketClient.onEvent(webSocketEvent);
@@ -122,6 +248,11 @@ void setup()
   // try ever 5000 again if connection has failed
   webSocketClient.setReconnectInterval(5000);
 
+  // start heartbeat (optional)
+  // ping server every 15000 ms
+  // expect pong from server within 3000 ms
+  // consider connection disconnected if pong is not received 2 times
+  webSocketClient.enableHeartbeat(15000, 3000, 2);  
 }
 
 void loop() 

@@ -11,77 +11,91 @@
   Created on: 06.06.2016
   Original Author: Markus Sattler
   
-  Version: 2.2.3
--
+  Version: 2.3.1
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
-  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
+                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
+  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
  *****************************************************************************************************************************/
 
 #define _WEBSOCKETS_LOGLEVEL_     3
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
+#include <ArduinoJson.h>
+
 #include <WebSocketsClient_Generic.h>
+#include <SocketIOclient_Generic.h>
 
-WebSocketsClient webSocket;
-
-#define MESSAGE_INTERVAL 30000
-#define HEARTBEAT_INTERVAL 25000
-
-uint64_t messageTimestamp   = 0;
-uint64_t heartbeatTimestamp = 0;
-bool isConnected            = false;
+SocketIOclient socketIO;
 
 // Select the IP address according to your local network
 IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 222);
+
+// Select the IP address according to your local network
+IPAddress serverIP(10, 11, 100, 100);
+
+uint16_t  serverPort = 8880;
 
 int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
-char ssid[] = "****";        // your network SSID (name)
-char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+char ssid[] = "your_ssid";        // your network SSID (name)
+char pass[] = "12345678";    // your network password (use for WPA, or use as key for WEP), length must be 8+
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
 {
-  switch (type)
+  switch (type) 
   {
-    case WStype_DISCONNECTED:
-      Serial.println("[WSc] Disconnected!");
+    case sIOtype_DISCONNECT:
+      Serial.println("[IOc] Disconnected");
       break;
-    case WStype_CONNECTED:
-      {
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
-
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
+    case sIOtype_CONNECT:
+      Serial.print("[IOc] Connected to url: ");
+      Serial.println((char*) payload);
+      
       break;
-    case WStype_TEXT:
-      Serial.print("[WSc] get text: ");
-      Serial.println((char *) payload);
-
-      // send message to server
-      webSocket.sendTXT("message here");
+    case sIOtype_EVENT:
+      Serial.print("[IOc] Get event: ");
+      Serial.println((char*) payload);
+      
       break;
-    case WStype_BIN:
-      Serial.print("[WSc] get binary length: ");
+    case sIOtype_ACK:
+      Serial.print("[IOc] Get ack: ");
       Serial.println(length);
-
-      // KH, To check
-      // hexdump(payload, length);
-
-      // send data to server
-      webSocket.sendBIN(payload, length);
+      
+      //hexdump(payload, length);
       break;
+    case sIOtype_ERROR:
+      Serial.print("[IOc] Get error: ");
+      Serial.println(length);
+      
+      //hexdump(payload, length);
+      break;
+    case sIOtype_BINARY_EVENT:
+      Serial.print("[IOc] Get binary: ");
+      Serial.println(length);
+      
+      //hexdump(payload, length);
+      break;
+    case sIOtype_BINARY_ACK:
+       Serial.print("[IOc] Get binary ack: ");
+      Serial.println(length);
+      
+      //hexdump(payload, length);
+      break;
+      
+    default:
+      break;  
   }
 }
+
 
 void printWifiStatus()
 {
@@ -108,7 +122,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart Generic_WebSocketClientSocketIO_WiFiNINA");
+  Serial.println("\nStart Generic_WebSocketClientSocketIO_WiFiNINA on " + String(BOARD_NAME));
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");
@@ -156,33 +170,47 @@ void setup()
   printWifiStatus();
 
   // server address, port and URL
-  Serial.print("WebSockets Server IP address: ");
-  Serial.println(serverIP);
+  Serial.print("Connecting to WebSockets Server @ IP address: ");
+  Serial.print(serverIP);
+  Serial.print(", port: ");
+  Serial.println(serverPort);
 
-  webSocket.beginSocketIO(serverIP, 81);
-  //webSocket.setAuthorization("user", "Password"); // HTTP Basic Authorization
-  webSocket.onEvent(webSocketEvent);
+  // event handler
+  socketIO.onEvent(socketIOEvent);
 }
 
-void loop()
+unsigned long messageTimestamp = 0;
+
+void loop() 
 {
-  webSocket.loop();
+  socketIO.loop();
 
-  if (isConnected)
+  uint64_t now = millis();
+
+  if (now - messageTimestamp > 2000) 
   {
-    uint64_t now = millis();
+    messageTimestamp = now;
 
-    if (now - messageTimestamp > MESSAGE_INTERVAL)
-    {
-      messageTimestamp = now;
-      // example socket.io message with type "messageType" and JSON payload
-      webSocket.sendTXT("42[\"messageType\",{\"greeting\":\"hello\"}]");
-    }
-    if ((now - heartbeatTimestamp) > HEARTBEAT_INTERVAL)
-    {
-      heartbeatTimestamp = now;
-      // socket.io heartbeat message
-      webSocket.sendTXT("2");
-    }
+    // creat JSON message for Socket.IO (event)
+    DynamicJsonDocument doc(1024);
+    JsonArray array = doc.to<JsonArray>();
+
+    // add evnet name
+    // Hint: socket.on('event_name', ....
+    array.add("event_name");
+
+    // add payload (parameters) for the event
+    JsonObject param1 = array.createNestedObject();
+    param1["now"]     = (uint32_t) now;
+
+    // JSON to String (serializion)
+    String output;
+    serializeJson(doc, output);
+
+    // Send event
+    socketIO.sendEVENT(output);
+
+    // Print JSON for debugging
+    Serial.println(output);
   }
 }

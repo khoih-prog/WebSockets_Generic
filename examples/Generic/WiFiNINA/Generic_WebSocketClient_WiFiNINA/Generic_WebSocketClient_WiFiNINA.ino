@@ -14,15 +14,17 @@
   Originally Created on: 24.05.2015
   Original Author: Markus Sattler
   
-  Version: 2.2.3
--
+  Version: 2.3.1
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
-  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
+                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
+  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
  *****************************************************************************************************************************/
 
 #define _WEBSOCKETS_LOGLEVEL_     3
@@ -34,24 +36,33 @@ WebSocketsClient webSocket;
 
 // Select the IP address according to your local network
 IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 222);
+IPAddress serverIP(192, 168, 2, 140);
 
 int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
-char ssid[] = "****";        // your network SSID (name)
-char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+char ssid[] = "your_ssid";        // your network SSID (name)
+char pass[] = "12345678";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+
+bool alreadyConnected = false;
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.println("[WSc] Disconnected!");
+      if (alreadyConnected)
+      {
+        Serial.println("[WSc] Disconnected!");
+        alreadyConnected = false;
+      }
+      
       break;
     case WStype_CONNECTED:
       {
+        alreadyConnected = true;
+        
         Serial.print("[WSc] Connected to url: ");
         Serial.println((char *) payload);
 
@@ -77,6 +88,15 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       webSocket.sendBIN(payload, length);
       break;
 
+    case WStype_PING:
+      // pong will be send automatically
+      Serial.println("[WSc] get ping");
+      break;
+    case WStype_PONG:
+      // answer to a ping we send
+      Serial.println("[WSc] get pong");
+      break;
+      
     default:
       break;
   }
@@ -90,7 +110,7 @@ void printWifiStatus()
 
   // print your board's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("WebSockets Client IP Address: ");
+  Serial.print("WebSockets Client @ IP Address: ");
   Serial.println(ip);
 
   // print the received signal strength:
@@ -106,7 +126,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart Generic_WebSocketClient_WiFiNINA");
+  Serial.println("\nStart Generic_WebSocketClient_WiFiNINA on " + String(BOARD_NAME));
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");
@@ -164,6 +184,12 @@ void setup()
 
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
+
+  // start heartbeat (optional)
+  // ping server every 15000 ms
+  // expect pong from server within 3000 ms
+  // consider connection disconnected if pong is not received 2 times
+  webSocket.enableHeartbeat(15000, 3000, 2);
 
 }
 

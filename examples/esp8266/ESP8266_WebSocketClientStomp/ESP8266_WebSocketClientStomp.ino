@@ -14,7 +14,7 @@
   Originally Created on: 25.09.2017
   Original Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
 
-  Version: 2.2.3
+  Version: 2.3.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -22,7 +22,9 @@
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
   2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
-  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries.
+  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
+                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
+  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
 *****************************************************************************************************************************/
 
 #if !defined(ESP8266)
@@ -134,7 +136,7 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
 
-  Serial.println("\nStart ESP8266_WebSocketClientStomp");
+  Serial.println("\nStart ESP8266_WebSocketClientStomp on " + String(ARDUINO_BOARD));
   
   // connect to WiFi
   Serial.print("Logging into WLAN: "); Serial.print(wlan_ssid); Serial.print(" ...");
@@ -156,6 +158,9 @@ void setup()
   webSocket.setExtraHeaders(); // remove "Origin: file://" header because it breaks the connection with Spring's default websocket config
   //webSocket.setExtraHeaders("foo: I am so funny\r\nbar: not"); // some headers, in case you feel funny
   webSocket.onEvent(webSocketEvent);
+
+  // server address, port and URL
+  Serial.println("Connecting to WebSockets Server @ : " + String(ws_host) + ":" + ws_port + stompUrl );
 }
 
 void loop() 
