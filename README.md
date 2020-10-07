@@ -21,13 +21,19 @@ WebSocket Server and Client for Arduino based on RFC6455.
 
 ### Why do we need this [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic)
 
-Many Web services require WebSockets library, which is so far written only for ESP8266/ESP32 boards. The ESP boards rely on this [Markus Sattler's WebSockets Library](https://github.com/Links2004/arduinoWebSockets) to connect to Alexa via Sinric or SinricPro skills.
+Many Web services require WebSockets library, which is so far written only for ESP8266/ESP32 boards. The ESP boards rely on this [Markus Sattler's **WebSockets Library**](https://github.com/Links2004/arduinoWebSockets) to connect to Alexa via Sinric or SinricPro skills.
 
-This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) is based on and modified from [Markus Sattler's WebSockets Library](https://github.com/Links2004/arduinoWebSockets) to provide support to many more boards, such as **Arduino SAMD21, Adafruit SAMD21/SAMD51, nRF52, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, etc.** and enable those boards to use WebSockets services, including voice-control Alexa along with Blynk. Those supported boards can also run **WebSockets Server.** The WebSockets can be used with **ESP’s WiFi, WiFiNINA, W5x00 and ENC28J60 Ethernet.**
+This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) is based on and modified from [Markus Sattler's **WebSockets Library**](https://github.com/Links2004/arduinoWebSockets) to provide support to many more boards, such as **Arduino SAMD21, Adafruit SAMD21/SAMD51, nRF52, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, etc.** and enable those boards to use WebSockets services, including voice-control Alexa along with Blynk. Those supported boards can also run **WebSockets Server.** The WebSockets can be used with **ESP’s WiFi, WiFiNINA, W5x00 and ENC28J60 Ethernet.**
 
 Please see illustrating examples.
 
 ---
+
+### New in v2.3.1
+
+1. Sync with v2.3.1 of original [WebSockets Library](https://github.com/Links2004/arduinoWebSockets). 
+2. Add support to ENC28J60 using [EthernetENC library](https://github.com/jandrassy/EthernetENC).
+3. Add and update examples
 
 #### New in v2.2.3
 
@@ -56,6 +62,7 @@ Please see illustrating examples.
 
 
 ##### Supported features of RFC6455 #####
+
  - text frame
  - binary frame
  - connection close
@@ -347,7 +354,11 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
  - ATmega328 with ENC28J60 (ATmega branch)
  - ATmega2560 with Ethernet Shield (ATmega branch)
  - ATmega2560 with ENC28J60 (ATmega branch)
- 
+
+#### New support from v2.3.1
+
+1. **ENC28J60's EthernetENC Library.**
+
 #### New support from v2.2.3
 
 1. **STM32F/L/H/G/WB/MP1 (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.)**
@@ -369,7 +380,9 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
 
 ##### Note: #####
 
-  Version 2.0 and up is not compatible with AVR/ATmega, check ATmega branch.
+  Version 2.0.0 and up is not compatible with AVR/ATmega, check ATmega branch.
+  
+  Version 2.3.0 has API changes for the ESP8266 BearSSL (may brakes existing code)
 
   Arduino for AVR not supports std namespace of c++.
 
@@ -398,10 +411,11 @@ In your code, select one of the currently supported network connection from the 
 
 1. **NETWORK_ESP8266_ASYNC** for ESP8266 Async
 2. **NETWORK_W5100** for W5x00 Ethernet
-3. **NETWORK_ENC28J60** for ENC28J60 Ethernet
+3. **NETWORK_ENC28J60** for ENC28J60 Ethernet using UIPEthernet library
 4. **NETWORK_ESP32** for ESP32 WiFi
 5. **NETWORK_ESP32_ETH** for ESP32 Ethernet
 6. **NETWORK_WIFININA** for WiFiNINA
+7. **NETWORK_ETHERNET_ENC** for ENC28J60 Ethernet using EthernetENC library
 
 then add `#define WEBSOCKETS_NETWORK_TYPE`  before `#include <WebSocketsClient_Generic.h>`
 
@@ -446,6 +460,8 @@ typedef enum
   WStype_FRAGMENT_BIN_START,
   WStype_FRAGMENT,
   WStype_FRAGMENT_FIN,
+  WStype_PING,
+  WStype_PONG,
 } WStype_t;
 ```
 
@@ -477,6 +493,18 @@ typedef enum
 8. [Generic_WebSocketServer_LEDcontrol_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServer_LEDcontrol_WiFiNINA)
 9. [Generic_WebSocketServer_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketServer_WiFiNINA)
 
+##### For Generic boards using ENC28J60 Ethernet shield using EthernetENC library
+
+1. [Generic_WebSocketClientSocketIO_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientSocketIO_EthernetENC)
+2. [Generic_WebSocketClientStompOverSockJs_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientStompOverSockJs_EthernetENC)
+3. [Generic_WebSocketClientStomp_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientStomp_EthernetENC)
+4. [Generic_WebSocketClient_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClient_EthernetENC)
+5. [Generic_WebSocketServerAllFunctionsDemo_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketServerAllFunctionsDemo_EthernetENC)
+6. [Generic_WebSocketServerFragmentation_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketServerFragmentation_EthernetENC)
+7. [Generic_WebSocketServerHttpHeaderValidation_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketServerHttpHeaderValidation_EthernetENC)
+8. [Generic_WebSocketServer_LEDcontrol_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketServer_LEDcontrol_EthernetENC)
+9. [Generic_WebSocketServer_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketServer_EthernetENC)
+
 ##### For WiFiNINA
 
 1. [nRF52_Blynk_NINA_Alexa](examples/WiFiNINA/nRF52_Blynk_NINA_Alexa)
@@ -495,7 +523,7 @@ typedef enum
 5. [WebSocketClientStomp_W5500](examples/W5500/WebSocketClientStomp_W5500)
 6. [WebSocketClientStompOverSockJs_W5500](examples/W5500/WebSocketClientStompOverSockJs_W5500)
 
-##### For ENC28J60 Ethernet shield
+##### For ENC28J60 Ethernet shield using UIPEthernet library
 
 1. [nRF52_Blynk_ENC_Alexa](examples/ENC28J60/nRF52_Blynk_ENC_Alexa)
 2. [SAMD_Blynk_ENC_Alexa](examples/ENC28J60/SAMD_Blynk_ENC_Alexa)
@@ -504,9 +532,6 @@ typedef enum
 5. [WebSocketClientStomp_ENC](examples/ENC28J60/WebSocketClientStomp_ENC)
 6. [WebSocketClientStompOverSockJs_ENC](examples/ENC28J60/WebSocketClientStompOverSockJs_ENC)
 
-##### For AVR board
-
-1. [WebSocketClientAVR](examples/avr/WebSocketClientAVR)
 
 ##### For ESP32 board
 
@@ -518,18 +543,16 @@ typedef enum
 
  1. [ESP8266_WebSocketClient](examples/esp8266/ESP8266_WebSocketClient)
  2. [ESP8266_WebSocketClientSocketIO](examples/esp8266/ESP8266_WebSocketClientSocketIO)
- 3. [ESP8266_WebSocketClientSSL](examples/esp8266/ESP8266_WebSocketClientSSL)
- 4. [ESP8266_WebSocketClientStomp](examples/esp8266/ESP8266_WebSocketClientStomp)
- 5. [ESP8266_WebSocketClientStompOverSockJs](examples/esp8266/ESP8266_WebSocketClientStompOverSockJs)
- 6. [ESP8266_WebSocketServer](examples/esp8266/ESP8266_WebSocketServer)
- 7. [ESP8266_WebSocketServerAllFunctionsDemo](examples/esp8266/ESP8266_WebSocketServerAllFunctionsDemo)
- 8. [ESP8266_WebSocketServerFragmentation](examples/esp8266/ESP8266_WebSocketServerFragmentation)
- 9. [ESP8266_WebSocketServerHttpHeaderValidation](examples/esp8266/ESP8266_WebSocketServerHttpHeaderValidation)
-10. [ESP8266_WebSocketServer_LEDcontrol](examples/esp8266/ESP8266_WebSocketServer_LEDcontrol)
+ 3. [ESP8266_WebSocketClientSocketIOack](examples/esp8266/ESP8266_WebSocketClientSocketIOack)
+ 4. [ESP8266_WebSocketClientSSL](examples/esp8266/ESP8266_WebSocketClientSSL)
+ 5. [ESP8266_WebSocketClientStomp](examples/esp8266/ESP8266_WebSocketClientStomp)
+ 6. [ESP8266_WebSocketClientStompOverSockJs](examples/esp8266/ESP8266_WebSocketClientStompOverSockJs)
+ 7. [ESP8266_WebSocketServer](examples/esp8266/ESP8266_WebSocketServer)
+ 8. [ESP8266_WebSocketServerAllFunctionsDemo](examples/esp8266/ESP8266_WebSocketServerAllFunctionsDemo)
+ 9. [ESP8266_WebSocketServerFragmentation](examples/esp8266/ESP8266_WebSocketServerFragmentation)
+10. [ESP8266_WebSocketServerHttpHeaderValidation](examples/esp8266/ESP8266_WebSocketServerHttpHeaderValidation)
+11. [ESP8266_WebSocketServer_LEDcontrol](examples/esp8266/ESP8266_WebSocketServer_LEDcontrol)
 
-##### For Particle board
-
-1. [ParticleWebSocketClient](examples/particle/ParticleWebSocketClient)
 
 ---
 ---
@@ -546,24 +569,33 @@ WebSocketsClient webSocket;
 
 // Select the IP address according to your local network
 IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 222);
+IPAddress serverIP(192, 168, 2, 140);
 
 int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
-char ssid[] = "****";        // your network SSID (name)
-char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+char ssid[] = "your_ssid";        // your network SSID (name)
+char pass[] = "12345678";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+
+bool alreadyConnected = false;
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.println("[WSc] Disconnected!");
+      if (alreadyConnected)
+      {
+        Serial.println("[WSc] Disconnected!");
+        alreadyConnected = false;
+      }
+      
       break;
     case WStype_CONNECTED:
       {
+        alreadyConnected = true;
+        
         Serial.print("[WSc] Connected to url: ");
         Serial.println((char *) payload);
 
@@ -589,6 +621,15 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       webSocket.sendBIN(payload, length);
       break;
 
+    case WStype_PING:
+      // pong will be send automatically
+      Serial.println("[WSc] get ping");
+      break;
+    case WStype_PONG:
+      // answer to a ping we send
+      Serial.println("[WSc] get pong");
+      break;
+      
     default:
       break;
   }
@@ -602,7 +643,7 @@ void printWifiStatus()
 
   // print your board's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("WebSockets Client IP Address: ");
+  Serial.print("WebSockets Client @ IP Address: ");
   Serial.println(ip);
 
   // print the received signal strength:
@@ -618,7 +659,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart Generic_WebSocketClient_WiFiNINA");
+  Serial.println("\nStart Generic_WebSocketClient_WiFiNINA on " + String(BOARD_NAME));
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");
@@ -677,17 +718,26 @@ void setup()
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
 
+  // start heartbeat (optional)
+  // ping server every 15000 ms
+  // expect pong from server within 3000 ms
+  // consider connection disconnected if pong is not received 2 times
+  webSocket.enableHeartbeat(15000, 3000, 2);
+
 }
 
-void loop() 
+void loop()
 {
   webSocket.loop();
 }
 ```
 
 ---
+---
 
-### Debug Terminal Output when running [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa)
+### Debug Termimal Output Samples
+
+#### 1. Debug Terminal Output when running [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa) on NRF52840_FEATHER
 
 You can see the **Adafruit NRF52840_FEATHER Express** board, with W5500 Ethernet shield, connects to Blynk using [BlynkEthernet_WM library](https://github.com/khoih-prog/BlynkEthernet_WM). 
 
@@ -776,7 +826,7 @@ Turn off Device ID: ****
 ```
 ---
 
-### Debug Terminal Output when running [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa)
+#### 2. Debug Terminal Output when running [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa) on SAMD NANO_33_IOT
 
 You can see the **Arduino SAMD NANO_33_IoT** board, with built-in WiFiNINA, connects to Blynk using [Blynk_WiFiNINA_WM library](https://github.com/khoih-prog/Blynk_WiFiNINA_WM). 
 
@@ -847,11 +897,304 @@ Turn on device id: ****
 [WSc] get text: {"deviceId":"****","action":"setPowerState","value":"OFF"}
 Turn off Device ID: ****
 ```
+
+---
+
+#### 3. Debug Terminal Output when running [Generic_WebSocketClient_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClient_EthernetENC) on NRF52840_FEATHER
+
+```
+Start Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER
+
+[SETUP] BOOT WAIT 4
+[SETUP] BOOT WAIT 3
+[SETUP] BOOT WAIT 2
+[SETUP] BOOT WAIT 1
+[WS] Board : NRF52840_FEATHER , setCsPin: 10
+[WS] Default SPI pinout:
+[WS] MOSI: 25
+[WS] MISO: 24
+[WS] SCK: 26
+[WS] SS: 5
+[WS] =========================
+WebSockets Client @ IP address: 192.168.2.93
+Connecting to WebSockets Server @ IP address: 192.168.2.140
+[WS] [WS-Client][handleHeader] RX: HTTP/1.1 101 Switching Protocols
+[WS] [WS-Client][handleHeader] RX: Server: arduino-WebSocketsServer
+[WS] [WS-Client][handleHeader] RX: Upgrade: websocket
+[WS] [WS-Client][handleHeader] RX: Connection: Upgrade
+[WS] [WS-Client][handleHeader] RX: Sec-WebSocket-Version: 13
+[WS] [WS-Client][handleHeader] RX: Sec-WebSocket-Accept: PJIpSp/QBZPtgaA5LIeNbtWz710=
+[WS] [WS-Client][handleHeader] RX: Sec-WebSocket-Protocol: arduino
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL: /
+[WS] [WS-Client][handleHeader] - cKey: XAtxzzeVt0HiQZ3cu85Y3A==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode: 101
+[WS] [WS-Client][handleHeader] - cIsUpgrade: 1
+[WS] [WS-Client][handleHeader] - cIsWebsocket: 1
+[WS] [WS-Client][handleHeader] - cAccept: PJIpSp/QBZPtgaA5LIeNbtWz710=
+[WS] [WS-Client][handleHeader] - cProtocol: arduino
+[WS] [WS-Client][handleHeader] - cExtensions: 
+[WS] [WS-Client][handleHeader] - cVersion: 13
+[WS] [WS-Client][handleHeader] - cSessionId: 
+[WSc] Connected to url: /
+[WSc] get text: Connected
+
+```
+---
+
+#### 4. Debug Terminal Output when running [Generic_Ethernet_Blinds](https://github.com/khoih-prog/SinricPro_Generic/tree/master/examples/Generic/Blinds/Generic_Ethernet_Blinds) on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
+
+You can see the **NRF52840_FEATHER** board, with NC28J60 using EthernetENC Library, connects to SinricPro service using [**SinricPro_Generic library**](https://github.com/khoih-prog/SinricPro_Generic). 
+
+It also uses this [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Generic) to communicate with [**SinricPro service**](https://sinric.pro/), to control Blinds a `Sinric Pro` phone APP
+
+
+```
+Starting Generic_Ethernet_Blinds on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
+[SRP] =========================
+[SRP] Default SPI pinout:
+[SRP] MOSI: 25
+[SRP] MISO: 24
+[SRP] SCK: 26
+[SRP] SS: 5
+[SRP] =========================
+[SRP] Use default CS/SS pin :  10
+Index = 6
+Connected!
+[Ethernet]: IP-Address is 192.168.2.97
+[SRP] Creating new device. No current DeviceId = 123456789012345678901234
+[SRP] add(): Adding DeviceId = 123456789012345678901234
+[SRP] begin(): App-Key = 12345678-1234-1234-1234-123456789012
+[SRP] begin(): App-Secret = 12345678-1234-1234-1234-123456789012-12345678-1234-1234-1234-123456789012
+[SRP] Websocket: Connecting to WebSocket Server:  ws.sinric.pro
+Websocket: headers:
+appkey:12345678-1234-1234-1234-123456789012
+deviceids:123456789012345678901234
+restoredevicestates:false
+platform:NRF52840_FEATHER
+version:2.7.0
+Connected to SinricPro
+[SRP] handleReceiveQueue(): Message(s) in receiveQueue = 1
+[SRP] handleReceiveQueue(): Valid Signature. Processing message...
+[SRP] extractTimestamp(): Got Timestamp = 1602031564
+[SRP] handleReceiveQueue(): Message(s) in receiveQueue = 1
+[SRP] handleReceiveQueue(): Valid Signature. Processing message...
+[SRP] extractTimestamp(): Got Timestamp = 1602031575
+[SRP] handleRequest(): handling request
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setPowerState",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031575,
+    "deviceAttributes": [],
+    "deviceId": "123456789012345678901234",
+    "replyToken": "4a2080b4-ca92-4fb7-aec1-3aa8d108a818",
+    "type": "request",
+    "value": {
+      "state": "Off"
+    }
+  },
+  "signature": {
+    "HMAC": "PttsGuF4w4xfwzJHA6C5WDOmQmBgHXv9eTMSg8hYHXM="
+  }
+}
+Device 123456789012345678901234 power turned off
+[SRP] handleSendQueue(): Sending Number of Message(s) in sendQueue = 1
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setPowerState",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031575,
+    "deviceId": "123456789012345678901234",
+    "message": "OK",
+    "replyToken": "4a2080b4-ca92-4fb7-aec1-3aa8d108a818",
+    "success": true,
+    "type": "response",
+    "value": {
+      "state": "Off"
+    }
+  },
+  "signature": {
+    "HMAC": "42vn7js8X+KvuHHPZSrGeJt7dtwP8VVl9Y3cZsYtXOA="
+  }
+}
+[SRP] handleSendQueue: Sending to WebSocket
+[SRP] handleSendQueue(): Message sent.
+[SRP] handleReceiveQueue(): Message(s) in receiveQueue = 1
+[SRP] handleReceiveQueue(): Valid Signature. Processing message...
+[SRP] extractTimestamp(): Got Timestamp = 1602031577
+[SRP] handleRequest(): handling request
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setPowerState",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031577,
+    "deviceAttributes": [],
+    "deviceId": "123456789012345678901234",
+    "replyToken": "81a2433d-957d-481e-a9f7-2dea5c2e6c78",
+    "type": "request",
+    "value": {
+      "state": "On"
+    }
+  },
+  "signature": {
+    "HMAC": "ir18LAhlUVCWHY5hA8QdGY8bzHE/s4XBeX8cwHTaPQI="
+  }
+}
+Device 123456789012345678901234 power turned on
+[SRP] handleSendQueue(): Sending Number of Message(s) in sendQueue = 1
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setPowerState",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031577,
+    "deviceId": "123456789012345678901234",
+    "message": "OK",
+    "replyToken": "81a2433d-957d-481e-a9f7-2dea5c2e6c78",
+    "success": true,
+    "type": "response",
+    "value": {
+      "state": "On"
+    }
+  },
+  "signature": {
+    "HMAC": "9Z1uVUjeaCf1T2Ol6Fv4wXkz8gaJvEYmmIRfRcDnOgA="
+  }
+}
+[SRP] handleSendQueue: Sending to WebSocket
+[SRP] handleSendQueue(): Message sent.
+[SRP] handleReceiveQueue(): Message(s) in receiveQueue = 1
+[SRP] handleReceiveQueue(): Valid Signature. Processing message...
+[SRP] extractTimestamp(): Got Timestamp = 1602031578
+[SRP] handleRequest(): handling request
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setRangeValue",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031578,
+    "deviceAttributes": [],
+    "deviceId": "123456789012345678901234",
+    "replyToken": "16d6fd59-dfd1-4017-ab51-ff8bb85fc806",
+    "type": "request",
+    "value": {
+      "rangeValue": 100
+    }
+  },
+  "signature": {
+    "HMAC": "KfAwQ6z5XGvoZaspBVBP+CXnryW0YsEILqyxesHDhJo="
+  }
+}
+Device 123456789012345678901234 set position to 100
+[SRP] handleSendQueue(): Sending Number of Message(s) in sendQueue = 1
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setRangeValue",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031578,
+    "deviceId": "123456789012345678901234",
+    "message": "OK",
+    "replyToken": "16d6fd59-dfd1-4017-ab51-ff8bb85fc806",
+    "success": true,
+    "type": "response",
+    "value": {
+      "rangeValue": 100
+    }
+  },
+  "signature": {
+    "HMAC": "CNYG9Or+ZH+R2S1Ouvd2bqX8lT/8Siu23T8LycZVtTk="
+  }
+}
+[SRP] handleSendQueue: Sending to WebSocket
+[SRP] handleSendQueue(): Message sent.
+[SRP] handleReceiveQueue(): Message(s) in receiveQueue = 1
+[SRP] handleReceiveQueue(): Valid Signature. Processing message...
+[SRP] extractTimestamp(): Got Timestamp = 1602031579
+[SRP] handleRequest(): handling request
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setRangeValue",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031579,
+    "deviceAttributes": [],
+    "deviceId": "123456789012345678901234",
+    "replyToken": "864b1a6b-d539-49e0-bad8-48fa27d80d7f",
+    "type": "request",
+    "value": {
+      "rangeValue": 0
+    }
+  },
+  "signature": {
+    "HMAC": "8CsQ57297F9lzrKBopsE8Xga2RdT9pgJpA8moGQFBTs="
+  }
+}
+Device 123456789012345678901234 set position to 0
+[SRP] handleSendQueue(): Sending Number of Message(s) in sendQueue = 1
+{
+  "header": {
+    "payloadVersion": 2,
+    "signatureVersion": 1
+  },
+  "payload": {
+    "action": "setRangeValue",
+    "clientId": "sinricpro-web",
+    "createdAt": 1602031579,
+    "deviceId": "123456789012345678901234",
+    "message": "OK",
+    "replyToken": "864b1a6b-d539-49e0-bad8-48fa27d80d7f",
+    "success": true,
+    "type": "response",
+    "value": {
+      "rangeValue": 0
+    }
+  },
+  "signature": {
+    "HMAC": "AF7bO1deIYIh3VLvVuLaRx6n1ACVYgk2Evl3NgiZ0pg="
+  }
+}
+[SRP] handleSendQueue: Sending to WebSocket
+[SRP] handleSendQueue(): Message sent.
+```
+
 ---
 ---
 
 ### Releases
 
+### New in v2.3.1
+
+1. Sync with v2.3.1 of original [WebSockets Library](https://github.com/Links2004/arduinoWebSockets). 
+2. Add support to ENC28J60 using [EthernetENC library](https://github.com/jandrassy/EthernetENC).
+3. Add and update examples
 
 #### New in v2.2.3
 
@@ -879,6 +1222,30 @@ Turn off Device ID: ****
 3. Add support to **SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)**.
 
 ---
+---
+
+### TO DO
+
+1. Bug Searching and Killing
+2. Support more types of boards using WiFi/Ethernet shields (Teensy, etc.)
+3. Support more non-compatible Ethernet Libraries such as Ethernet_Shield_W5200, EtherCard, EtherSia
+
+
+### DONE
+
+ 1. Add support to Arduino SAMD21 (ZERO, MKR, NANO_33_IOT, etc.)
+ 2. Add support to Adafruit SAMD21 (Itsy-Bitsy M0, Metro M0, Feather M0 Express, etc.).
+ 3. Add support to Adafruit SAMD51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.).
+ 4. Add support to Adafruit nRF52 ( Feather nRF52832, nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, NINA_B302_ublox, NINA_B112_ublox, etc.
+ 5. Add support to Seeeduino SAMD21/SAMD51 boards (SEEED_WIO_TERMINAL, SEEED_FEMTO_M0, SEEED_XIAO_M0, Wio_Lite_MG126, WIO_GPS_BOARD, SEEEDUINO_ZERO, SEEEDUINO_LORAWAN, SEEED_GROVE_UI_WIRELESS, etc.)
+ 6. Add support to STM32F/L/H/G/WB/MP1 (Nucleo-144, Nucleo-64, Nucleo-32, Discovery, STM32Fx, STM32H7, STM32Lx, STM32Gx, STM32WB, STM32MP1, etc.) having 64K+ Flash program memory.
+ 7. Add support to Ethernet W5x00, using either [`Ethernet`](https://www.arduino.cc/en/Reference/Ethernet), [`Ethernet2`](https://github.com/khoih-prog/Ethernet2), [`Ethernet3`](https://github.com/sstaub/Ethernet3) or [`EthernetLarge`](https://github.com/OPEnSLab-OSU/EthernetLarge) library
+ 8. Add support to WiFiNINA using WiFiNINA or [**WiFiNINA_Generic library**](https://github.com/khoih-prog/WiFiNINA_Generic).
+ 9. Add support to ENC28J60 using [`UIPEthernet`](https://github.com/UIPEthernet/UIPEthernet)
+10. Add support to ENC28J60 using [`EthernetENC`](https://github.com/jandrassy/EthernetENC)
+
+
+---
 
 ### Issues ###
 
@@ -901,6 +1268,7 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 ## Contributing
 
 If you want to contribute to this project:
+
 - Report bugs and errors
 - Ask for enhancements
 - Create issues and pull requests
@@ -910,7 +1278,7 @@ If you want to contribute to this project:
 
 ### License and credits ###
 
-- All credits go to original author [**Markus Sattler**](https://github.com/Links2004).
+- Most of the credits go to original author [**Markus Sattler**](https://github.com/Links2004).
 
 - The library is licensed under [LGPLv2.1](https://github.com/Links2004/arduinoWebSockets/blob/master/LICENSE) and [MIT](https://github.com/khoih-prog/WebSockets_Generic/blob/master/LICENSE)
 

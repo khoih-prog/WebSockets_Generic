@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.2.3
+  Version: 2.3.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -38,6 +38,7 @@
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
+  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
  *****************************************************************************************************************************/
 
 #ifndef WEBSOCKETSSERVER_GENERIC_H_
@@ -113,6 +114,8 @@ class WebSocketsServer : protected WebSockets
     void setAuthorization(const char * auth);
 
     int connectedClients(bool ping = false);
+    
+    bool clientIsConnected(uint8_t num);
 
     void enableHeartbeat(uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount);
     void disableHeartbeat();
@@ -126,14 +129,14 @@ class WebSocketsServer : protected WebSockets
   
     // KH Debug
     uint8_t currentActiveClient = 0xFF;
-    
+    //////
     
     uint16_t _port;
-    String _origin;
-    String _protocol;
-    String _base64Authorization;    ///< Base64 encoded Auth request
-    String * _mandatoryHttpHeaders;
-    size_t _mandatoryHttpHeaderCount;
+    String     _origin;
+    String    _protocol;
+    String    _base64Authorization;    ///< Base64 encoded Auth request
+    String *  _mandatoryHttpHeaders;
+    size_t    _mandatoryHttpHeaderCount;
 
     WEBSOCKETS_NETWORK_SERVER_CLASS * _server;
 
@@ -144,9 +147,9 @@ class WebSocketsServer : protected WebSockets
 
     bool _runnning;
 
-    uint32_t _pingInterval;
-    uint32_t _pongTimeout;
-    uint8_t _disconnectTimeoutCount;
+    uint32_t  _pingInterval;
+    uint32_t  _pongTimeout;
+    uint8_t   _disconnectTimeoutCount;
 
     bool newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient);
 
@@ -171,8 +174,7 @@ class WebSocketsServer : protected WebSockets
     */
     virtual void handleNonWebsocketConnection(WSclient_t * client)
     {
-      //DEBUG_WEBSOCKETS("[WS-Server][%d][handleHeader] no Websocket connection close.\n", client->num);
-      LOGDEBUG1(client->num, "[WS-Server handleHeader] no Websocket connection close."); 
+      WS_LOGDEBUG1("[WS-Server handleHeader] no Websocket connection close. Client =", client->num); 
       
       client->tcp->write(
         "HTTP/1.1 400 Bad Request\r\n"
@@ -183,6 +185,7 @@ class WebSocketsServer : protected WebSockets
         "Sec-WebSocket-Version: 13\r\n"
         "\r\n"
         "This is a Websocket server only!");
+        
       clientDisconnect(client);
     }
 
@@ -203,6 +206,7 @@ class WebSocketsServer : protected WebSockets
         "WWW-Authenticate: Basic realm=\"WebSocket Server\""
         "\r\n"
         "This Websocket server requires Authorization!");
+        
       clientDisconnect(client);
     }
 
@@ -236,6 +240,7 @@ class WebSocketsServer : protected WebSockets
         //return the value of the custom http header validation function
         return _httpHeaderValidationFunc(headerName, headerValue);
       }
+      
       //no custom http header validation so just assume all is good
       return true;
     }

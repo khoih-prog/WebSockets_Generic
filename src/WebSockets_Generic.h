@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.2.3
+  Version: 2.3.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -38,6 +38,7 @@
   2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
+  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
  *****************************************************************************************************************************/
 
 #ifndef WEBSOCKETS_GENERIC_H_
@@ -113,10 +114,12 @@
 
   #if defined(ESP8266)
     #warning Use ESP8266 in WebSockets_Generic
-    #define WEBSOCKETS_YIELD() delay(0)
+    #define WEBSOCKETS_YIELD()      delay(0)
+    #define WEBSOCKETS_YIELD_MORE() delay(1)
   #elif defined(ESP32)
     #warning Use ESP32 in WebSockets_Generic
-    #define WEBSOCKETS_YIELD() yield()
+    #define WEBSOCKETS_YIELD()      yield()
+    #define WEBSOCKETS_YIELD_MORE() delay(1)
   #endif
 
 #elif ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
@@ -132,6 +135,7 @@
   #define WEBSOCKETS_SAVE_RAM
   //#define GET_FREE_HEAP System.freeMemory()
   #define WEBSOCKETS_YIELD()
+  #define WEBSOCKETS_YIELD_MORE()
 
 #elif defined(STM32_DEVICE)
   #warning Use STM32_DEVICE in WebSockets_Generic
@@ -140,6 +144,7 @@
   #define WEBSOCKETS_USE_BIG_MEM
   #define GET_FREE_HEAP System.freeMemory()
   #define WEBSOCKETS_YIELD()
+  #define WEBSOCKETS_YIELD_MORE()
   
 #elif ( defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
         defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
@@ -157,7 +162,8 @@
   // moves all Header strings to Flash (~300 Byte)
   #define WEBSOCKETS_SAVE_RAM
 
-  #define WEBSOCKETS_YIELD() yield()
+  #define WEBSOCKETS_YIELD()        yield()
+  #define WEBSOCKETS_YIELD_MORE()   delay(1)
   //#define WEBSOCKETS_YIELD()
 
 #elif  ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
@@ -179,7 +185,8 @@
   // moves all Header strings to Flash (~300 Byte)
   #define WEBSOCKETS_SAVE_RAM
 
-  #define WEBSOCKETS_YIELD() yield()
+  #define WEBSOCKETS_YIELD()        yield()
+  #define WEBSOCKETS_YIELD_MORE()   delay(1)
   //#define WEBSOCKETS_YIELD()
 
 #elif ( defined(ARDUINO_SAM_DUE) || defined(__SAM3X8E__) )
@@ -197,7 +204,8 @@
   // moves all Header strings to Flash (~300 Byte)
   #define WEBSOCKETS_SAVE_RAM
 
-  #define WEBSOCKETS_YIELD() yield()
+  #define WEBSOCKETS_YIELD()        yield()
+  #define WEBSOCKETS_YIELD_MORE()   delay(1)
 
 #elif defined(TEENSYDUINO)
 
@@ -214,7 +222,8 @@
   // moves all Header strings to Flash (~300 Byte)
   #define WEBSOCKETS_SAVE_RAM
 
-  #define WEBSOCKETS_YIELD() yield()
+  #define WEBSOCKETS_YIELD()        yield()
+  #define WEBSOCKETS_YIELD_MORE()   delay(1)
   
 #else
   #warning Use atmega328p in WebSockets_Generic
@@ -223,7 +232,9 @@
   #define WEBSOCKETS_MAX_DATA_SIZE (1024)
   // moves all Header strings to Flash
   #define WEBSOCKETS_SAVE_RAM
+  
   #define WEBSOCKETS_YIELD()
+  #define WEBSOCKETS_YIELD_MORE()
 
 #endif
 
@@ -237,6 +248,7 @@
 #define NETWORK_ESP32_ETH     (5)
 //KH
 #define NETWORK_WIFININA      (6)
+#define NETWORK_ETHERNET_ENC  (7)
 
 // max size of the WS Message Header
 #define WEBSOCKETS_MAX_HEADER_SIZE (14)
@@ -293,6 +305,11 @@
   #elif defined(ESP32)
     #include <WiFi.h>
     #include <WiFiClientSecure.h>
+    
+    // From v2.3.1
+    #define SSL_AXTLS
+    //////
+    
   #elif defined(ESP31B)
     #include <ESP31BWiFi.h>
   #else
@@ -301,10 +318,10 @@
 
   #include <ESPAsyncTCP.h>
   #include <ESPAsyncTCPbuffer.h>
-  #define WEBSOCKETS_NETWORK_CLASS AsyncTCPbuffer
-  #define WEBSOCKETS_NETWORK_SERVER_CLASS AsyncServer
+  #define WEBSOCKETS_NETWORK_CLASS          AsyncTCPbuffer
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS   AsyncServer
 
-#elif(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)
 
   #if !defined(ESP8266) && !defined(ESP31B)
     #error "network type ESP8266 only possible on the ESP mcu!"
@@ -312,15 +329,25 @@
 
   #ifdef ESP8266
     #include <ESP8266WiFi.h>
+    
+    // From v2.3.1
+    #if defined(wificlientbearssl_h) && !defined(USING_AXTLS) && !defined(wificlientsecure_h)
+      #define SSL_BARESSL
+      #define SSL_BEARSSL
+    #else
+      #define SSL_AXTLS
+    #endif
+    //////
+    
   #else
     #include <ESP31BWiFi.h>
   #endif
 
-  #define WEBSOCKETS_NETWORK_CLASS WiFiClient
-  #define WEBSOCKETS_NETWORK_SSL_CLASS WiFiClientSecure
-  #define WEBSOCKETS_NETWORK_SERVER_CLASS WiFiServer
+  #define WEBSOCKETS_NETWORK_CLASS          WiFiClient
+  #define WEBSOCKETS_NETWORK_SSL_CLASS      WiFiClientSecure
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS   WiFiServer
 
-#elif(WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100)
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100)
 
   #ifdef STM32_DEVICE
     #define WEBSOCKETS_NETWORK_CLASS TCPClient
@@ -346,36 +373,50 @@
     #endif
     //////
     
-    #define WEBSOCKETS_NETWORK_CLASS EthernetClient
-    #define WEBSOCKETS_NETWORK_SERVER_CLASS EthernetServer
+    #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
+    #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
   #endif
 
-#elif(WEBSOCKETS_NETWORK_TYPE == NETWORK_ENC28J60)
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ENC28J60)
 
   #include <UIPEthernet.h>
   #define WEBSOCKETS_NETWORK_CLASS UIPClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS UIPServer
 
-#elif(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
 
   #include <WiFi.h>
   #include <WiFiClientSecure.h>
-  #define WEBSOCKETS_NETWORK_CLASS WiFiClient
-  #define WEBSOCKETS_NETWORK_SSL_CLASS WiFiClientSecure
-  #define WEBSOCKETS_NETWORK_SERVER_CLASS WiFiServer
+  
+  // From v2.3.1
+  #define SSL_AXTLS
+  //////
+  
+  #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
-#elif(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ETH)
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ETH)
 
   #include <ETH.h>
-  #define WEBSOCKETS_NETWORK_CLASS WiFiClient
-  #define WEBSOCKETS_NETWORK_SERVER_CLASS WiFiServer
+  #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
 
   //KH
   #include <WiFiNINA_Generic.h>
-  #define WEBSOCKETS_NETWORK_CLASS        WiFiClient
-  #define WEBSOCKETS_NETWORK_SERVER_CLASS WiFiServer
+  #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
+
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ETHERNET_ENC)
+
+  //KH
+  #include <EthernetENC.h>
+  #warning Using ENC28J60 EthernetENC Library
+  
+  #define WEBSOCKETS_NETWORK_CLASS            EthernetClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     EthernetServer
 
 #else
   #error "no network type selected!"
