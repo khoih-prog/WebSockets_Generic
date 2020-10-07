@@ -107,7 +107,7 @@ byte mac[][NUMBER_OF_MAC] =
 };
 
 // Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 226);
+IPAddress clientIP(192, 168, 2, 222);
 IPAddress serverIP(192, 168, 2, 140);
 
 // Only for W5100
