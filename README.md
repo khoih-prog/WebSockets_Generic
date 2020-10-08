@@ -1228,6 +1228,178 @@ Device 123456789012345678901234 set position to 0
 ```
 
 ---
+
+#### 5. Debug Terminal Output when running [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5500 using Ethernet2 Library
+
+```
+Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet2 Library
+[SETUP] BOOT WAIT 4
+[SETUP] BOOT WAIT 3
+[SETUP] BOOT WAIT 2
+[SETUP] BOOT WAIT 1
+[WS] Board : NRF52840_FEATHER , setCsPin: 10
+[WS] Default SPI pinout:
+[WS] MOSI: 25
+[WS] MISO: 24
+[WS] SCK: 26
+[WS] SS: 5
+[WS] =========================
+WebSockets Client @ IP address: 192.168.2.108
+Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
+["event_name",{"now":6671}]
+[WS] [WS-Client][handleHeader] RX: HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX: Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX: Content-Length: 103
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Credentials: true
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Origin: file://
+[WS] [WS-Client][handleHeader] RX: Set-Cookie: io=ivB-kiMefQhNrlkgAAAd; Path=/; HttpOnly; SameSite=Strict
+[WS] [WS-Client][handleHeader] RX: Date: Thu, 08 Oct 2020 00:32:59 GMT
+[WS] [WS-Client][handleHeader] RX: Connection: keep-alive
+[WS] [WS-Client][handleHeader] RX: Keep-Alive: timeout=5
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL: /socket.io/?EIO=3
+[WS] [WS-Client][handleHeader] - cKey: DT1hYS8BbVNsE++xI7B82A==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode: 200
+[WS] [WS-Client][handleHeader] - cIsUpgrade: 0
+[WS] [WS-Client][handleHeader] - cIsWebsocket: 1
+[WS] [WS-Client][handleHeader] - cAccept: 
+[WS] [WS-Client][handleHeader] - cProtocol: arduino
+[WS] [WS-Client][handleHeader] - cExtensions: 
+[WS] [WS-Client][handleHeader] - cVersion: 0
+[WS] [WS-Client][handleHeader] - cSessionId: ivB-kiMefQhNrlkgAAAd
+[IOc] Disconnected
+[WS] [WS-Client][handleHeader] RX: HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX: Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX: Content-Length: 103
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Credentials: true
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Origin: file://
+[WS] [WS-Client][handleHeader] RX: Set-Cookie: io=Lq1IQW-WBtymSZzzAAAe; Path=/; HttpOnly; SameSite=Strict
+[WS] [WS-Client][handleHeader] RX: Date: Thu, 08 Oct 2020 00:32:59 GMT
+[WS] [WS-Client][handleHeader] RX: Connection: keep-alive
+[WS] [WS-Client][handleHeader] RX: Keep-Alive: timeout=5
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL: /socket.io/?EIO=3
+[WS] [WS-Client][handleHeader] - cKey: onWidNpa6PhedJSy60Az5A==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode: 200
+[WS] [WS-Client][handleHeader] - cIsUpgrade: 0
+[WS] [WS-Client][handleHeader] - cIsWebsocket: 0
+[WS] [WS-Client][handleHeader] - cAccept: 
+[WS] [WS-Client][handleHeader] - cProtocol: arduino
+[WS] [WS-Client][handleHeader] - cExtensions: 
+[WS] [WS-Client][handleHeader] - cVersion: 0
+[WS] [WS-Client][handleHeader] - cSessionId: Lq1IQW-WBtymSZzzAAAe
+[WS] [WS-Client][handleHeader] RX: HTTP/1.1 101 Switching Protocols
+[WS] [WS-Client][handleHeader] RX: Upgrade: websocket
+[WS] [WS-Client][handleHeader] RX: Connection: Upgrade
+[WS] [WS-Client][handleHeader] RX: Sec-WebSocket-Accept: 92pjBGiagarYGjMy1FsUcKOzrSk=
+[WS] [WS-Client][handleHeader] RX: Sec-WebSocket-Protocol: arduino
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL: /socket.io/?EIO=3
+[WS] [WS-Client][handleHeader] - cKey: i6rJQeEER2+zCTjRW4OjLg==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode: 101
+[WS] [WS-Client][handleHeader] - cIsUpgrade: 1
+[WS] [WS-Client][handleHeader] - cIsWebsocket: 1
+[WS] [WS-Client][handleHeader] - cAccept: 92pjBGiagarYGjMy1FsUcKOzrSk=
+[WS] [WS-Client][handleHeader] - cProtocol: arduino
+[WS] [WS-Client][handleHeader] - cExtensions: 
+[WS] [WS-Client][handleHeader] - cVersion: 0
+[WS] [WS-Client][handleHeader] - cSessionId: Lq1IQW-WBtymSZzzAAAe
+[IOc] Connected to url: /socket.io/?EIO=3
+```
+
+---
+
+#### 6. Debug Terminal Output when running [Generic_WebSocketClientSocketIO_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientSocketIO_EthernetENC) on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
+
+```
+Start Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
+[SETUP] BOOT WAIT 4
+[SETUP] BOOT WAIT 3
+[SETUP] BOOT WAIT 2
+[SETUP] BOOT WAIT 1
+[WS] Board : NRF52840_FEATHER , setCsPin: 10
+[WS] Default SPI pinout:
+[WS] MOSI: 25
+[WS] MISO: 24
+[WS] SCK: 26
+[WS] SS: 5
+[WS] =========================
+WebSockets Client @ IP address: 192.168.2.86
+Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
+["event_name",{"now":9577}]
+[WS] [WS-Client][handleHeader] RX: HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX: Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX: Content-Length: 103
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Credentials: true
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Origin: file://
+[WS] [WS-Client][handleHeader] RX: Set-Cookie: io=W5HMvbfTz5Nbn2SgAAAV; Path=/; HttpOnly; SameSite=Strict
+[WS] [WS-Client][handleHeader] RX: Date: Thu, 08 Oct 2020 00:23:11 GMT
+[WS] [WS-Client][handleHeader] RX: Connection: keep-alive
+[WS] [WS-Client][handleHeader] RX: Keep-Alive: timeout=5
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL: /socket.io/?EIO=3
+[WS] [WS-Client][handleHeader] - cKey: tTIoy547t0bFK6IwotJ0Ww==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode: 200
+[WS] [WS-Client][handleHeader] - cIsUpgrade: 0
+[WS] [WS-Client][handleHeader] - cIsWebsocket: 1
+[WS] [WS-Client][handleHeader] - cAccept: 
+[WS] [WS-Client][handleHeader] - cProtocol: arduino
+[WS] [WS-Client][handleHeader] - cExtensions: 
+[WS] [WS-Client][handleHeader] - cVersion: 0
+[WS] [WS-Client][handleHeader] - cSessionId: W5HMvbfTz5Nbn2SgAAAV
+[IOc] Disconnected
+[WS] [WS-Client][handleHeader] RX: HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX: Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX: Content-Length: 103
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Credentials: true
+[WS] [WS-Client][handleHeader] RX: Access-Control-Allow-Origin: file://
+[WS] [WS-Client][handleHeader] RX: Set-Cookie: io=r1Kx0T7wZNQ9BHk9AAAW; Path=/; HttpOnly; SameSite=Strict
+[WS] [WS-Client][handleHeader] RX: Date: Thu, 08 Oct 2020 00:23:11 GMT
+[WS] [WS-Client][handleHeader] RX: Connection: keep-alive
+[WS] [WS-Client][handleHeader] RX: Keep-Alive: timeout=5
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL: /socket.io/?EIO=3
+[WS] [WS-Client][handleHeader] - cKey: BgGmlEiRrKzeEDEHHE48qA==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode: 200
+[WS] [WS-Client][handleHeader] - cIsUpgrade: 0
+[WS] [WS-Client][handleHeader] - cIsWebsocket: 0
+[WS] [WS-Client][handleHeader] - cAccept: 
+[WS] [WS-Client][handleHeader] - cProtocol: arduino
+[WS] [WS-Client][handleHeader] - cExtensions: 
+[WS] [WS-Client][handleHeader] - cVersion: 0
+[WS] [WS-Client][handleHeader] - cSessionId: r1Kx0T7wZNQ9BHk9AAAW
+[WS] [WS-Client][handleHeader] RX: HTTP/1.1 101 Switching Protocols
+[WS] [WS-Client][handleHeader] RX: Upgrade: websocket
+[WS] [WS-Client][handleHeader] RX: Connection: Upgrade
+[WS] [WS-Client][handleHeader] RX: Sec-WebSocket-Accept: P76KK/oGpRX1UE1cAtk5jp31+Aw=
+[WS] [WS-Client][handleHeader] RX: Sec-WebSocket-Protocol: arduino
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL: /socket.io/?EIO=3
+[WS] [WS-Client][handleHeader] - cKey: 1uSPYGC/Asnl0DfyQcW5NQ==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode: 101
+[WS] [WS-Client][handleHeader] - cIsUpgrade: 1
+[WS] [WS-Client][handleHeader] - cIsWebsocket: 1
+[WS] [WS-Client][handleHeader] - cAccept: P76KK/oGpRX1UE1cAtk5jp31+Aw=
+[WS] [WS-Client][handleHeader] - cProtocol: arduino
+[WS] [WS-Client][handleHeader] - cExtensions: 
+[WS] [WS-Client][handleHeader] - cVersion: 0
+[WS] [WS-Client][handleHeader] - cSessionId: r1Kx0T7wZNQ9BHk9AAAW
+[IOc] Connected to url: /socket.io/?EIO=3
+```
+
+---
 ---
 
 ### Releases

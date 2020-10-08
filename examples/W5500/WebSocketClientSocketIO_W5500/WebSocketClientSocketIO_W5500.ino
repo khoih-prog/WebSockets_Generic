@@ -26,9 +26,9 @@
 
 // Only one if the following to be true
 #define USE_ETHERNET            false
-#define USE_ETHERNET2           false
+#define USE_ETHERNET2           true
 #define USE_ETHERNET3           false
-#define USE_ETHERNET_LARGE      true
+#define USE_ETHERNET_LARGE      false
 #define USE_ETHERNET_ESP8266    false
 #define USE_ETHERNET_ENC        false
 
@@ -107,9 +107,11 @@ byte mac[][NUMBER_OF_MAC] =
 IPAddress clientIP(192, 168, 2, 225);
 
 // Select the IP address according to your local network
-IPAddress serverIP(10, 11, 100, 100);
+IPAddress serverIP(192, 168, 2, 51);
+uint16_t  serverPort = 3000;
 
-uint16_t  serverPort = 8880;
+//IPAddress serverIP(10, 11, 100, 100);
+//uint16_t  serverPort = 8880;
 
 #define SDCARD_CS       4
 
@@ -221,6 +223,9 @@ void setup()
   Serial.print(serverIP);
   Serial.print(", port: ");
   Serial.println(serverPort);
+
+  // server address, port and URL
+  socketIO.begin(serverIP, serverPort);
 
   // event handler
   socketIO.onEvent(socketIOEvent);

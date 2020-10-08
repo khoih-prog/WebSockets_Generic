@@ -44,9 +44,11 @@ ESP8266WiFiMulti WiFiMulti;
 SocketIOclient socketIO;
 
 // Select the IP address according to your local network
-IPAddress serverIP(10, 11, 100, 100);
+IPAddress serverIP(192, 168, 2, 51);
+uint16_t  serverPort = 3000;
 
-uint16_t  serverPort = 8880;
+//IPAddress serverIP(10, 11, 100, 100);
+//uint16_t  serverPort = 8880;
 
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
 {
@@ -131,6 +133,9 @@ void setup()
   Serial.print(serverIP);
   Serial.print(", port: ");
   Serial.println(serverPort);
+
+  // server address, port and URL
+  socketIO.begin(serverIP, serverPort);
 
   // event handler
   socketIO.onEvent(socketIOEvent);
