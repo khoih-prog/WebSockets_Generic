@@ -83,9 +83,9 @@ Please see illustrating examples.
  6. [`Teensy core 1.53+`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.1, 4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards.
  7. [`Arduino SAM DUE core 1.6.12+`](https://www.arduino.cc/en/Guide/ArduinoDue) for SAM DUE ARM Cortex-M3 boards
  8. [`Arduino SAMD core 1.8.9+`](https://www.arduino.cc/en/Guide/ArduinoM0) for SAMD ARM Cortex-M0+ boards (Nano 33 IoT, etc.).
- 9. [`Adafruit SAMD core 1.6.3+`](https://www.adafruit.com/) for SAMD ARM Cortex-M0+ and M4 boards (Itsy-Bitsy M4, etc.)
-10. [`Adafruit nRF52 v0.21.0+`](https://www.adafruit.com/) for nRF52 boards such as AdaFruit Feather nRF52840 Express, NINA_B302_ublox, etc.
-11. [`Seeeduino SAMD core 1.7.9+`](https://www.seeedstudio.com/) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.) 
+ 9. [`Adafruit SAMD core 1.6.4+`](https://www.adafruit.com/) for SAMD ARM Cortex-M0+ and M4 boards (Itsy-Bitsy M4, etc.)
+10. [`Seeeduino SAMD core 1.8.1+`](https://www.seeedstudio.com/) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.) 
+11. [`Adafruit nRF52 v0.21.0+`](https://www.adafruit.com/) for nRF52 boards such as AdaFruit Feather nRF52840 Express, NINA_B302_ublox, etc.
 12. [`Arduino Core for STM32 v1.9.0+`](https://github.com/khoih-prog/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. To install go to Arduino IDE, select Boards Manager, search for **`STM32`**
 13. [`EthernetWebServer library v1.0.13+`](https://github.com/khoih-prog/EthernetWebServer) if necessary to use certain Ethernet features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer.svg?)](https://www.ardu-badge.com/EthernetWebServer)
 14. Depending on which Ethernet card you're using:
@@ -125,7 +125,8 @@ Another way to install is to:
 
 1. Install [VS Code](https://code.visualstudio.com/)
 2. Install [PlatformIO](https://platformio.org/platformio-ide)
-3. Install [**WebSockets_Generic** library v2.3.1+](https://platformio.org/lib/show/11283/WebSockets_Generic) by using [**Library Manager**](https://platformio.org/lib/show/11283/WebSockets_Generic/installation). Install [**WebSockets_Generic** library v2.2.2-](https://platformio.org/lib/show/7375/WebSockets_Generic) by using [Library Manager](https://platformio.org/lib/show/7375/WebSockets_Generic/installation). Search for [**WebSockets_Generic**](https://platformio.org/lib/show/11283/WebSockets_Generic) in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
+3. Install [**WebSockets_Generic** library v2.3.1+](https://platformio.org/lib/show/11283/WebSockets_Generic) by using [**Library Manager**](https://platformio.org/lib/show/11283/WebSockets_Generic/installation). 
+Install [**WebSockets_Generic** library v2.2.2-](https://platformio.org/lib/show/7375/WebSockets_Generic) by using [Library Manager](https://platformio.org/lib/show/7375/WebSockets_Generic/installation). Search for [**WebSockets_Generic**](https://platformio.org/lib/show/11283/WebSockets_Generic) in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
 4. Use included [platformio.ini](platformio/platformio.ini) file from examples to ensure that all dependent libraries will installed automatically. Please visit documentation for the other options and examples at [Project Configuration File](https://docs.platformio.org/page/projectconf.html)
 
 ---
@@ -198,22 +199,22 @@ These files must be copied into the directory:
 
 Whenever the above-mentioned compiler error issue is fixed with the new Arduino SAMD release, you don't need to copy the `Arduino.h` file anymore.
 
- 5. **To be able to automatically detect and display BOARD_NAME on Adafruit SAMD (Itsy-Bitsy M4, etc) boards**, you have to copy the file [Adafruit SAMD platform.txt](Packages_Patches/adafruit/hardware/samd/1.6.3) into Adafruit samd directory (~/.arduino15/packages/adafruit/hardware/samd/1.6.3). 
+ 5. ***To be able to automatically detect and display BOARD_NAME on Adafruit SAMD (Itsy-Bitsy M4, etc) boards***, you have to copy the file [Adafruit SAMD platform.txt](Packages_Patches/adafruit/hardware/samd/1.6.4) into Adafruit samd directory (~/.arduino15/packages/adafruit/hardware/samd/1.6.4). 
 
-Supposing the Adafruit SAMD core version is 1.6.3. This file must be copied into the directory:
+Supposing the Adafruit SAMD core version is 1.6.4. This file must be copied into the directory:
 
-- `~/.arduino15/packages/adafruit/hardware/samd/1.6.3/platform.txt`
+- `~/.arduino15/packages/adafruit/hardware/samd/1.6.4/platform.txt`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
 This file must be copied into the directory:
 
 - `~/.arduino15/packages/adafruit/hardware/samd/x.yy.zz/platform.txt`
 
- 6. **To be able to automatically detect and display BOARD_NAME on Seeeduino SAMD (XIAO M0, Wio Terminal, etc) boards**, you have to copy the file [Seeeduino SAMD platform.txt](Packages_Patches/Seeeduino/hardware/samd/1.7.9) into Adafruit samd directory (~/.arduino15/packages/Seeeduino/hardware/samd/1.7.9). 
+ 6. ***To be able to automatically detect and display BOARD_NAME on Seeeduino SAMD (XIAO M0, Wio Terminal, etc) boards***, you have to copy the file [Seeeduino SAMD platform.txt](Packages_Patches/Seeeduino/hardware/samd/1.8.1) into Adafruit samd directory (~/.arduino15/packages/Seeeduino/hardware/samd/1.8.1). 
 
-Supposing the Seeeduino SAMD core version is 1.7.9. This file must be copied into the directory:
+Supposing the Seeeduino SAMD core version is 1.8.1. This file must be copied into the directory:
 
-- `~/.arduino15/packages/Seeeduino/hardware/samd/1.7.9/platform.txt`
+- `~/.arduino15/packages/Seeeduino/hardware/samd/1.8.1/platform.txt`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
 This file must be copied into the directory:
