@@ -31,7 +31,7 @@ Please see illustrating examples.
 
 ### New in v2.3.2
 
-1. Add support to **Realtek RTL8720DN WiFi** using [**Seeed_Arduino_rpcWiFi**](https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi) and [Seeed_Arduino_rpcUnified](https://github.com/khoih-prog/Seeed_Arduino_rpcUnified) libraries. This RTL8720DN supports Dual-Band 2.4GHz / 5GHz Wi-Fi (802.11 a/b/g/n) as well as BLE/BLE 5.0 and is currently used in SeeedStudio **SEEED_WIO_TERMINAL**.
+1. Add support to **Realtek RTL8720DN WiFi** using [**Seeed_Arduino_rpcWiFi**](https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi) and [**Seeed_Arduino_rpcUnified**](https://github.com/khoih-prog/Seeed_Arduino_rpcUnified) libraries. This RTL8720DN supports Dual-Band 2.4GHz / 5GHz Wi-Fi (802.11 a/b/g/n) as well as BLE/BLE 5.0 and is currently used in SeeedStudio **SEEED_WIO_TERMINAL**.
 2. Add examples for SeeedStudio **SEEED_WIO_TERMINAL** and update all examples
 3. Add Version string definition
 
@@ -640,7 +640,12 @@ typedef enum
 10. [ESP8266_WebSocketServerHttpHeaderValidation](examples/esp8266/ESP8266_WebSocketServerHttpHeaderValidation)
 11. [ESP8266_WebSocketServer_LEDcontrol](examples/esp8266/ESP8266_WebSocketServer_LEDcontrol)
 
+#### For SeeedStudio WIO Terminal using Realtek RTL8720DN WiFi
 
+ 1. [ESP8266_WebSocketClient](examples/WIO_Terminal/WIOTerminal_WebSocketClient)
+ 2. [WIOTerminal_WebSocketClientSSL](examples/WIO_Terminal/WIOTerminal_WebSocketClientSSL)
+ 3. [WIOTerminal_WebSocketServer](examples/WIO_Terminal/WIOTerminal_WebSocketServer)
+ 
 ---
 ---
 
@@ -1451,7 +1456,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 
 ### New in v2.3.2
 
-1. Add support to **Realtek RTL8720DN WiFi** using [**Seeed_Arduino_rpcWiFi**](https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi) and [Seeed_Arduino_rpcUnified](https://github.com/khoih-prog/Seeed_Arduino_rpcUnified) libraries. This RTL8720DN supports Dual-Band 2.4GHz / 5GHz Wi-Fi (802.11 a/b/g/n) as well as BLE/BLE 5.0 and is currently used in SeeedStudio **SEEED_WIO_TERMINAL**.
+1. Add support to **Realtek RTL8720DN WiFi** using [**Seeed_Arduino_rpcWiFi**](https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi) and [**Seeed_Arduino_rpcUnified**](https://github.com/khoih-prog/Seeed_Arduino_rpcUnified) libraries. This RTL8720DN supports Dual-Band 2.4GHz / 5GHz Wi-Fi (802.11 a/b/g/n) as well as BLE/BLE 5.0 and is currently used in SeeedStudio **SEEED_WIO_TERMINAL**.
 2. Add examples for SeeedStudio **SEEED_WIO_TERMINAL** and update all examples
 3. Add Version string definition
 
