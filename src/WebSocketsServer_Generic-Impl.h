@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.1
+  Version: 2.3.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -39,10 +39,10 @@
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
+  2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
  *****************************************************************************************************************************/
 
-#ifndef WEBSOCKETSSERVER_GENERIC_IMPL_H_
-#define WEBSOCKETSSERVER_GENERIC_IMPL_H_
+#pragma once
 
 WebSocketsServer::WebSocketsServer(uint16_t port, String origin, String protocol)
 {
@@ -147,7 +147,8 @@ void WebSocketsServer::begin(void)
     client->status = WSC_NOT_CONNECTED;
     client->tcp    = NULL;
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
     client->isSSL = false;
     client->ssl   = NULL;
 #endif
@@ -196,7 +197,8 @@ void WebSocketsServer::close(void)
 
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)
   _server->close();
-#elif(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || \
+      (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
   _server->end();
 #else
   // TODO how to close server?
@@ -591,8 +593,8 @@ bool WebSocketsServer::clientIsConnected(uint8_t num)
   return clientIsConnected(client);
 }
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)\
-     || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
 /**
    get an IP for a client
    @param num uint8_t client id
@@ -640,7 +642,8 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
     {
       client->tcp = TCPclient;
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
       client->isSSL = false;
       client->tcp->setNoDelay(true);
 #endif
@@ -655,7 +658,7 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
       //client->status = WSC_NOT_CONNECTED;
 
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)\
-     || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+     || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
 
   #ifndef NODEBUG_WEBSOCKETS
       IPAddress ip = client->tcp->remoteIP();
@@ -745,7 +748,8 @@ void WebSocketsServer::messageReceived(WSclient_t * client, WSopcode_t opcode, u
 */
 void WebSocketsServer::clientDisconnect(WSclient_t * client)
 {
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
   if (client->isSSL && client->ssl)
   {
     if (client->ssl->connected())
@@ -922,14 +926,16 @@ void WebSocketsServer::handleNewClients(void)
   //  return;
 
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
   // || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
   while (_server->hasClient())
   {
 #endif
     bool ok = false;
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
     // || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
     // store new connection
     WEBSOCKETS_NETWORK_CLASS * tcpClient = new WEBSOCKETS_NETWORK_CLASS(_server->available());
@@ -949,7 +955,8 @@ void WebSocketsServer::handleNewClients(void)
     if (!ok)
     {
       // no free space to handle client
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
 
       IPAddress ip = tcpClient->remoteIP();
       
@@ -967,7 +974,8 @@ void WebSocketsServer::handleNewClients(void)
 
     WEBSOCKETS_YIELD();
     
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
     // || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
   }
 #endif
@@ -1348,4 +1356,3 @@ void WebSocketsServer::disableHeartbeat()
   }
 }
 
-#endif  //WEBSOCKETSSERVER_GENERIC_IMPL_H_

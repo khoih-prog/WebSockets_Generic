@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.1
+  Version: 2.3.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -39,10 +39,10 @@
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
+  2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
  *****************************************************************************************************************************/
 
-#ifndef WEBSOCKETSSERVER_GENERIC_H_
-#define WEBSOCKETSSERVER_GENERIC_H_
+#pragma once
 
 #include "WebSockets_Generic.h"
 
@@ -121,7 +121,7 @@ class WebSocketsServer : protected WebSockets
     void disableHeartbeat();
 
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)\
-     || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+     || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
     IPAddress remoteIP(uint8_t num);
 #endif
 
@@ -255,4 +255,3 @@ class WebSocketsServer : protected WebSockets
 
 #include "WebSocketsServer_Generic-Impl.h"
 
-#endif /* WEBSOCKETSSERVER_GENERIC_H_ */

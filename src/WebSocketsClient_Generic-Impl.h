@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.1
+  Version: 2.3.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -39,10 +39,10 @@
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
+  2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
  *****************************************************************************************************************************/
 
-#ifndef WEBSOCKETSCLIENT_GENERIC_IMPL_H_
-#define WEBSOCKETSCLIENT_GENERIC_IMPL_H_
+#pragma once
 
 WebSocketsClient::WebSocketsClient()
 {
@@ -324,6 +324,11 @@ void WebSocketsClient::loop(void)
         _client.ssl->setCACert((const uint8_t *)_CA_cert, strlen(_CA_cert) + 1);
 #elif defined(ESP8266) && ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
         _client.ssl->setTrustAnchors(_CA_cert);
+        
+#elif defined(SEEED_WIO_TERMINAL)
+        
+        _client.ssl->setCACert(_CA_cert);
+        
 #else
 #error setCACert not implemented
 #endif
@@ -618,7 +623,8 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
 {
   bool event = false;
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
   if (client->isSSL && client->ssl)
   {
     if (client->ssl->connected())
@@ -1067,7 +1073,8 @@ void WebSocketsClient::connectedCb()
   _client.tcp->setTimeout(WEBSOCKETS_TCP_TIMEOUT);
 #endif
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
   _client.tcp->setNoDelay(true);
 #endif
 
@@ -1200,4 +1207,3 @@ void WebSocketsClient::disableHeartbeat()
   _client.pingInterval = 0;
 }
 
-#endif  //WEBSOCKETSCLIENT_GENERIC_IMPL_H_

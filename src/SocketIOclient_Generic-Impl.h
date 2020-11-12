@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.1
+  Version: 2.3.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -39,10 +39,10 @@
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
+  2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
  *****************************************************************************************************************************/
 
-#ifndef SOCKETIOCLIENT_GENERIC_IMPL_H_
-#define SOCKETIOCLIENT_GENERIC_IMPL_H_
+#pragma once
 
 #include "WebSocketsClient_Generic.h"
 
@@ -298,4 +298,3 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
   }
 }
 
-#endif    //SOCKETIOCLIENT_GENERIC_IMPL_H_

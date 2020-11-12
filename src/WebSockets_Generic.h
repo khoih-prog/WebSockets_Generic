@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.1
+  Version: 2.3.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -39,10 +39,12 @@
   2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
+  2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
  *****************************************************************************************************************************/
 
-#ifndef WEBSOCKETS_GENERIC_H_
-#define WEBSOCKETS_GENERIC_H_
+#pragma once
+
+#define WEBSOCKETS_GENERIC_VERSION        "2.3.2"
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -249,6 +251,8 @@
 //KH
 #define NETWORK_WIFININA      (6)
 #define NETWORK_ETHERNET_ENC  (7)
+#define NETWORK_RTL8720DN     (8)
+////////////////////////////////
 
 // max size of the WS Message Header
 #define WEBSOCKETS_MAX_HEADER_SIZE (14)
@@ -280,10 +284,17 @@
        || defined(ARDUINO_SAMD_MKRGSM1400) || defined(ARDUINO_SAMD_MKRNB1500) || defined(ARDUINO_SAMD_MKRVIDOR4000) || defined(__SAMD21G18A__) \
        || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) || defined(__SAMD21E18A__) || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) \
        || defined(__SAMD51G19A__) || defined(__SAMD51P19A__) || defined(__SAMD21G18A__) )
-    //KH
-    #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
-    #define WEBSOCKETS_NETWORK_TYPE NETWORK_WIFININA
-
+       
+    #if defined(SEEED_WIO_TERMINAL)
+      //KH, from v2.3.2
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN
+      #define WEBSOCKETS_NETWORK_TYPE     NETWORK_RTL8720DN
+    #else  
+      //KH
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
+      #define WEBSOCKETS_NETWORK_TYPE     NETWORK_WIFININA
+    #endif
+    
   #else
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100
@@ -417,6 +428,20 @@
   
   #define WEBSOCKETS_NETWORK_CLASS            EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     EthernetServer
+
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
+
+  //KH, from v2.3.2
+  #include <rpcWiFi.h>
+  #include <WiFiClientSecure.h>
+  #warning Using RTL8720DN Seeed_Arduino_rpcWiFi Library
+  
+  #define SSL_AXTLS
+  
+  #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
+
 
 #else
   #error "no network type selected!"
@@ -595,4 +620,3 @@ String WS_IPAddressToString(IPAddress _address)
 
 #include "WebSockets_Generic-Impl.h"
 
-#endif /* WEBSOCKETS_GENERIC_H_ */
