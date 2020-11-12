@@ -20,6 +20,8 @@
 #define _WEBSOCKETS_LOGLEVEL_     3
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ENC28J60
 
+#define SHIELD_TYPE               "ENC28J60 using UIPEthernet Library"
+
 #include <WebSocketsClient_Generic.h>
 
 WebSocketsClient webSocket;
@@ -120,6 +122,10 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
+  Serial.print("\nStart WebSocketClientStomp_ENC on " + String(BOARD_NAME));
+  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");
   Serial.println(MOSI);
@@ -129,8 +135,6 @@ void setup()
   Serial.println(SCK);
   Serial.print("SS:");
   Serial.println(SS);
-
-  Serial.println("\nStart WebSocketClientStomp_ENC");
 
   for (uint8_t t = 4; t > 0; t--)
   {

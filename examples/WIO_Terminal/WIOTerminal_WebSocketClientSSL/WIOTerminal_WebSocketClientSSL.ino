@@ -1,6 +1,6 @@
 /****************************************************************************************************************************
-  ESP32_WebSocketServer.ino
-  For ESP32
+  WIOTerminal_WebSocketClientSSL.ino
+  For SeeedStudio WIO Terminal
 
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
@@ -8,24 +8,38 @@
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
 
-  Originally Created on: 22.05.2015
+  Originally Created on: 24.05.2015
   Original Author: Markus Sattler
 *****************************************************************************************************************************/
 
-#if !defined(ESP32)
-  #error This code is intended to run only on the ESP32 boards ! Please check your Tools->Board setting.
+#if !defined(SEEED_WIO_TERMINAL)
+  #error This code is intended to run on the SEEED_WIO_TERMINAL ! Please check your Tools->Board setting.
 #endif
+
+#warning Using SEEED_WIO_TERMINAL
 
 #define _WEBSOCKETS_LOGLEVEL_     3
 
-#include <WiFi.h>
+#define WEBSOCKETS_NETWORK_TYPE           NETWORK_RTL8720DN
+
+#define BOARD_TYPE      "SAMD SEEED_WIO_TERMINAL"
+
+#ifndef BOARD_NAME
+  #define BOARD_NAME    BOARD_TYPE
+#endif
+
+#include <rpcWiFi.h>
 #include <WiFiMulti.h>
 #include <WiFiClientSecure.h>
 
-#include <WebSocketsServer_Generic.h>
+#include <WebSocketsClient_Generic.h>
 
-WiFiMulti         WiFiMulti;
-WebSocketsServer  webSocket = WebSocketsServer(81);
+WiFiMulti WiFiMulti;
+WebSocketsClient webSocket;
+
+// Select the IP address according to your local network
+IPAddress clientIP(192, 168, 2, 225);
+IPAddress serverIP(192, 168, 2, 140);
 
 void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
 {
@@ -46,37 +60,31 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
   Serial.printf("\n");
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) 
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
-  switch (type) 
+  switch (type)
   {
     case WStype_DISCONNECTED:
-      Serial.printf("[%u] Disconnected!\n", num);
+      Serial.printf("[WSc] Disconnected!\n");
       break;
     case WStype_CONNECTED:
-      {
-        IPAddress ip = webSocket.remoteIP(num);
-        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+      Serial.printf("[WSc] Connected to url: %s\n", payload);
 
-        // send message to client
-        webSocket.sendTXT(num, "Connected");
-      }
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
       break;
     case WStype_TEXT:
-      Serial.printf("[%u] get Text: %s\n", num, payload);
+      Serial.printf("[WSc] get text: %s\n", payload);
 
-      // send message to client
-      webSocket.sendTXT(num, "message here");
-
-      // send data to all connected clients
-      // webSocket.broadcastTXT("message here");
+      // send message to server
+      webSocket.sendTXT("message here");
       break;
     case WStype_BIN:
-      Serial.printf("[%u] get binary length: %u\n", num, length);
+      Serial.printf("[WSc] get binary length: %u\n", length);
       hexdump(payload, length);
 
-      // send message to client
-      webSocket.sendBIN(num, payload, length);
+      // send data to server
+      webSocket.sendBIN(payload, length);
       break;
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
@@ -88,7 +96,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     default:
       break;  
   }
-
 }
 
 void setup()
@@ -97,10 +104,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart ESP32_WebSocketServer on " + String(ARDUINO_BOARD));
+  Serial.println("\nStart WIOTerminal_WebSocketClientSSL on " + String(BOARD_NAME));
   Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
-
-  //Serial.setDebugOutput(true);
 
   for (uint8_t t = 4; t > 0; t--)
   {
@@ -120,12 +125,16 @@ void setup()
   
   Serial.println();
 
-  webSocket.begin();
-  webSocket.onEvent(webSocketEvent);
+  // Client address
+  Serial.print("WebSockets Client started @ IP address: ");
+  Serial.println(WiFi.localIP());
 
   // server address, port and URL
-  Serial.print("WebSockets Server started @ IP address: ");
-  Serial.println(WiFi.localIP());
+  Serial.print("Connecting to WebSockets Server @ IP address: ");
+  Serial.println(serverIP);
+
+  webSocket.beginSSL(serverIP, 81);
+  webSocket.onEvent(webSocketEvent);
 }
 
 void loop() 

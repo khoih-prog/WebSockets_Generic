@@ -1,6 +1,6 @@
 /****************************************************************************************************************************
-  ESP8266_WebSocketClient.ino
-  For ESP8266
+  WIOTerminal_WebSocketClient.ino
+  For SeeedStudio WIO Terminal
 
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
@@ -12,24 +12,53 @@
   Original Author: Markus Sattler
 *****************************************************************************************************************************/
 
-#if !defined(ESP8266)
-#error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
+#if !defined(SEEED_WIO_TERMINAL)
+  #error This code is intended to run on the SEEED_WIO_TERMINAL ! Please check your Tools->Board setting.
 #endif
+
+#warning Using SEEED_WIO_TERMINAL
 
 #define _WEBSOCKETS_LOGLEVEL_     3
 
-#include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
+#define WEBSOCKETS_NETWORK_TYPE           NETWORK_RTL8720DN
+
+#define BOARD_TYPE      "SAMD SEEED_WIO_TERMINAL"
+
+#ifndef BOARD_NAME
+  #define BOARD_NAME    BOARD_TYPE
+#endif
+
+#include <rpcWiFi.h>
+#include <WiFiMulti.h>
+#include <WiFiClientSecure.h>
 
 #include <WebSocketsClient_Generic.h>
 
-#include <Hash.h>
-
-ESP8266WiFiMulti WiFiMulti;
-WebSocketsClient webSocket;
+WiFiMulti         WiFiMulti;
+WebSocketsClient  webSocket;
 
 // Select the IP address according to your local network
+IPAddress clientIP(192, 168, 2, 225);
 IPAddress serverIP(192, 168, 2, 140);
+
+void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
+{
+  const uint8_t* src = (const uint8_t*) mem;
+
+  Serial.printf("\n[HEXDUMP] Address: 0x%08X len: 0x%X (%d)", (ptrdiff_t)src, len, len);
+
+  for (uint32_t i = 0; i < len; i++)
+  {
+    if (i % cols == 0)
+    {
+      Serial.printf("\n[0x%08X] 0x%08X: ", (ptrdiff_t)src, i);
+    }
+
+    Serial.printf("%02X ", *src);
+    src++;
+  }
+  Serial.printf("\n");
+}
 
 bool alreadyConnected = false;
 
@@ -77,8 +106,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");
-      break;
-      
+      break;      
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
@@ -95,11 +123,10 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+  while (!Serial);
 
-  Serial.println("\nStart ESP8266_WebSocketClient on " + String(ARDUINO_BOARD));
+  Serial.println("\nStart WIOTerminal_WebSocketClient on " + String(BOARD_NAME));
   Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
-
-  //Serial.setDebugOutput(true);
 
   for (uint8_t t = 4; t > 0; t--)
   {
@@ -116,7 +143,7 @@ void setup()
     Serial.print(".");
     delay(100);
   }
-
+  
   Serial.println();
 
   // Client address
@@ -126,10 +153,9 @@ void setup()
   // server address, port and URL
   Serial.print("Connecting to WebSockets Server @ IP address: ");
   Serial.println(serverIP);
-
+  
   // server address, port and URL
   webSocket.begin(serverIP, 81, "/");
-
 
   // event handler
   webSocket.onEvent(webSocketEvent);

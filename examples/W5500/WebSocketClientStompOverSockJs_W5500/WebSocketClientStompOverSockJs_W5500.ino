@@ -13,18 +13,6 @@
   
   Created on: 18.07.2017
   Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
-  
-  Version: 2.3.1
-
-  Version Modified By   Date      Comments
-  ------- -----------  ---------- -----------
-  2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
-                                  nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
-  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
-                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
-  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
  *****************************************************************************************************************************/
 
 #define _WEBSOCKETS_LOGLEVEL_     3
@@ -207,6 +195,7 @@ void setup()
 
   Serial.print("\nStart WebSocketClientStompOverSockJs_W5500 on " + String(BOARD_NAME));
   Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
 
   for (uint8_t t = 4; t > 0; t--)
   {
