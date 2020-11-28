@@ -5,19 +5,22 @@
   For details, see http://sourceforge.net/projects/libb64
 */
 
+#pragma once
+
 #ifndef BASE64_CDECODE_IMPL_H
 #define BASE64_CDECODE_IMPL_H
 
 #ifdef ESP8266
-#include <core_esp8266_features.h>
+  #include <core_esp8266_features.h>
 #endif
 
 #if defined(ESP32) || defined(WIO_TERMINAL)
-#define CORE_HAS_LIBB64
+  #ifndef CORE_HAS_LIBB64
+    #define CORE_HAS_LIBB64
+  #endif
 #endif
 
 #ifndef CORE_HAS_LIBB64
-//#include "cdecode_inc.h"
 
 int base64_decode_value(char value_in)
 {
@@ -119,3 +122,4 @@ int base64_decode_block(const char* code_in, const int length_in, char* plaintex
 #endif    //CORE_HAS_LIBB64
 
 #endif    //BASE64_CDECODE_IMPL_H
+

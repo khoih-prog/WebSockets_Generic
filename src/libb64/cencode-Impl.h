@@ -5,6 +5,8 @@
   For details, see http://sourceforge.net/projects/libb64
 */
 
+#pragma once
+
 #ifndef BASE64_CENCODE_IMPL_H
 #define BASE64_CENCODE_IMPL_H
 
@@ -13,11 +15,12 @@
 #endif
 
 #if defined(ESP32) || defined(WIO_TERMINAL)
-#define CORE_HAS_LIBB64
+  #ifndef CORE_HAS_LIBB64
+    #define CORE_HAS_LIBB64
+  #endif
 #endif
 
 #ifndef CORE_HAS_LIBB64
-#include "cencode_inc.h"
 
 const int CHARS_PER_LINE = 72;
 
@@ -129,3 +132,4 @@ int base64_encode_blockend(char* code_out, base64_encodestate* state_in)
 #endif    //CORE_HAS_LIBB64
 
 #endif    //BASE64_CENCODE_IMPL_H
+

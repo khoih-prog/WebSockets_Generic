@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.2
+  Version: 2.3.3
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -40,6 +40,7 @@
                                   Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
+  2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
  *****************************************************************************************************************************/
 
 #pragma once
@@ -174,7 +175,7 @@ class WebSocketsServer : protected WebSockets
     */
     virtual void handleNonWebsocketConnection(WSclient_t * client)
     {
-      WS_LOGDEBUG1("[WS-Server handleHeader] no Websocket connection close. Client =", client->num); 
+      WSK_LOGDEBUG1("[WS-Server handleHeader] no Websocket connection close. Client =", client->num); 
       
       client->tcp->write(
         "HTTP/1.1 400 Bad Request\r\n"

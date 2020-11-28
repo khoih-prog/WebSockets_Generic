@@ -29,6 +29,14 @@ Please see illustrating examples.
 
 ---
 
+### New in v2.3.3
+
+1. Fix compile errors for boards (nRF52, SAMD, etc.) using libraries with lib64, such as [**EthernetWebServer**](https://github.com/khoih-prog/EthernetWebServer)
+2. Fix SeeedStudio **SEEED_WIO_TERMINAL** compile errors. See [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5)
+3. Add file to SeeedStudio SAMD Packages' Patches.
+4. Fix compiler warnings for duplications in WS_LOG with [WiFiWebServer Library](https://github.com/khoih-prog/WiFiWebServer)
+
+
 ### New in v2.3.2
 
 1. Add support to **Realtek RTL8720DN WiFi** using [**Seeed_Arduino_rpcWiFi**](https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi) and [**Seeed_Arduino_rpcUnified**](https://github.com/khoih-prog/Seeed_Arduino_rpcUnified) libraries. This RTL8720DN supports Dual-Band 2.4GHz / 5GHz Wi-Fi (802.11 a/b/g/n) as well as BLE/BLE 5.0 and is currently used in SeeedStudio **SEEED_WIO_TERMINAL**.
@@ -90,7 +98,7 @@ Please see illustrating examples.
  7. [`Arduino SAM DUE core 1.6.12+`](https://www.arduino.cc/en/Guide/ArduinoDue) for SAM DUE ARM Cortex-M3 boards
  8. [`Arduino SAMD core 1.8.9+`](https://www.arduino.cc/en/Guide/ArduinoM0) for SAMD ARM Cortex-M0+ boards (Nano 33 IoT, etc.).
  9. [`Adafruit SAMD core 1.6.4+`](https://www.adafruit.com/) for SAMD ARM Cortex-M0+ and M4 boards (Itsy-Bitsy M4, etc.)
-10. [`Seeeduino SAMD core 1.8.1+`](https://www.seeedstudio.com/) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.) 
+10. [`Seeeduino SAMD core 1.8.1+`](https://github.com/Seeed-Studio/ArduinoCore-samd) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.) 
 11. [`Adafruit nRF52 v0.21.0+`](https://www.adafruit.com/) for nRF52 boards such as AdaFruit Feather nRF52840 Express, NINA_B302_ublox, etc.
 12. [`Arduino Core for STM32 v1.9.0+`](https://github.com/khoih-prog/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. To install go to Arduino IDE, select Boards Manager, search for **`STM32`**
 13. [`EthernetWebServer library v1.1.0+`](https://github.com/khoih-prog/EthernetWebServer) if necessary to use certain Ethernet features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer.svg?)](https://www.ardu-badge.com/EthernetWebServer)
@@ -216,16 +224,18 @@ This file must be copied into the directory:
 
 - `~/.arduino15/packages/adafruit/hardware/samd/x.yy.zz/platform.txt`
 
- 6. ***To be able to automatically detect and display BOARD_NAME on Seeeduino SAMD (XIAO M0, Wio Terminal, etc) boards***, you have to copy the file [Seeeduino SAMD platform.txt](Packages_Patches/Seeeduino/hardware/samd/1.8.1) into Adafruit samd directory (~/.arduino15/packages/Seeeduino/hardware/samd/1.8.1). 
+ 6. ***To be able to automatically detect and display BOARD_NAME on Seeeduino SAMD (XIAO M0, Wio Terminal, etc) boards***, you have to copy the files in [Seeeduino SAMD core](Packages_Patches/Seeeduino/hardware/samd/1.8.1) into Adafruit samd directory (~/.arduino15/packages/Seeeduino/hardware/samd/1.8.1). 
 
 Supposing the Seeeduino SAMD core version is 1.8.1. This file must be copied into the directory:
 
 - `~/.arduino15/packages/Seeeduino/hardware/samd/1.8.1/platform.txt`
+- `~/.arduino15/packages/Seeeduino/hardware/samd/1.8.1/cores/arduino/Arduino.h`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
 This file must be copied into the directory:
 
 - `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/platform.txt`
+- `~/.arduino15/packages/Seeeduino/hardware/samd/x.yy.zz/cores/arduino/Arduino.h`
 
 7. **To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/1.9.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/1.9.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
 
@@ -242,7 +252,7 @@ theses files must be copied into the corresponding directory:
 
 ---
 
-### Libraries' Patches
+### Optional Libraries' Patches
 
 1. If your application requires 2K+ HTML page, the current [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet) must be modified if you are using W5200/W5500 Ethernet shields. W5100 is not supported for 2K+ buffer. If you use boards requiring different CS/SS pin for W5x00 Ethernet shield, for example ESP32, ESP8266, nRF52, etc., you also have to modify the following libraries to be able to specify the CS/SS pin correctly.
 
@@ -1453,6 +1463,18 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 ---
 
 ### Releases
+
+### New in v2.3.3
+
+1. Fix compile errors for boards (nRF52, SAMD, etc.) using libraries with lib64, such as [**EthernetWebServer**](https://github.com/khoih-prog/EthernetWebServer)
+2. Fix SeeedStudio **SEEED_WIO_TERMINAL** compile errors. See [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5)
+3. Add file to SeeedStudio SAMD Packages' Patches.
+4. Fix compiler warnings for duplications in WS_LOG with [WiFiWebServer Library](https://github.com/khoih-prog/WiFiWebServer)
+
+### New in v2.3.3
+
+1. Fix SeeedStudio **SEEED_WIO_TERMINAL** compile error. See [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5)
+2. Add file to SeeedStudio SAMD Packages' Patches.
 
 ### New in v2.3.2
 
