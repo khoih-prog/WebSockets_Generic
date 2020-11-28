@@ -1548,10 +1548,12 @@ Submit issues to: [**WebSockets_Generic issues**](https://github.com/khoih-prog/
 ### Contributions and thanks
 
 1. Based on and modified from [Markus Sattler's **arduinoWebSockets** library](https://github.com/Links2004/arduinoWebSockets)
+2. Thanks to [Anson He](https://github.com/ansonhe97) for the PR [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5) to fix SeeedStudio **SEEED_WIO_TERMINAL** compile errors and leading to new version v2.3.3.
 
 <table>
   <tr>
     <td align="center"><a href="https://github.com/Links2004"><img src="https://github.com/Links2004.png" width="100px;" alt="Links2004"/><br /><sub><b>⭐️ Markus Sattler</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/ansonhe97"><img src="https://github.com/ansonhe97.png" width="100px;" alt="ansonhe97"/><br /><sub><b>Anson He</b></sub></a><br /></td>
   </tr> 
 </table>
 
