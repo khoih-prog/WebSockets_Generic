@@ -207,14 +207,14 @@ void setup()
     delay(1000);
   }
 
-  WS_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
+  WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
 
-  WS_LOGWARN(F("Default SPI pinout:"));
-  WS_LOGWARN1(F("MOSI:"), MOSI);
-  WS_LOGWARN1(F("MISO:"), MISO);
-  WS_LOGWARN1(F("SCK:"),  SCK);
-  WS_LOGWARN1(F("SS:"),   SS);
-  WS_LOGWARN(F("========================="));
+  WSK_LOGWARN(F("Default SPI pinout:"));
+  WSK_LOGWARN1(F("MOSI:"), MOSI);
+  WSK_LOGWARN1(F("MISO:"), MISO);
+  WSK_LOGWARN1(F("SCK:"),  SCK);
+  WSK_LOGWARN1(F("SS:"),   SS);
+  WSK_LOGWARN(F("========================="));
 
   #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
     // For other boards, to change if necessary
