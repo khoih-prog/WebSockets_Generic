@@ -70,7 +70,7 @@
       "owner": "khoih-prog",
       "name": "EthernetWebServer_STM32",
       "version": "^1.1.0",
-      "platforms": ["*"]
+      "platforms": ["ststm32"]
     },
     {
       "owner": "stm32duino",
@@ -88,7 +88,7 @@
       "owner": "uipethernet",
       "name": "UIPEthernet",
       "version": "^2.0.8",
-      "platforms": ["*"]
+      "platforms": ["atmelavr", "atmelmegaavr", "atmelsam", "espressif8266", "intel_arc32", "nordicnrf51", "nxplpc", "ststm32", "teensy"]
     },
     {
       "owner": "jandrassy",
