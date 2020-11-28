@@ -12,7 +12,7 @@
 #include <core_esp8266_features.h>
 #endif
 
-#if defined(ESP32)
+#if defined(ESP32) || defined(WIO_TERMINAL)
 #define CORE_HAS_LIBB64
 #endif
 
