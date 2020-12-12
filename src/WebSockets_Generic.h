@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.3
+  Version: 2.3.4
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -41,11 +41,12 @@
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
   2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
+  2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
  *****************************************************************************************************************************/
 
 #pragma once
 
-#define WEBSOCKETS_GENERIC_VERSION        "v2.3.3"
+#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.3.4"
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -183,8 +184,10 @@
   // Try to use GET_FREE_HEAP and large mem
   // only for ESP since AVR has less HEAP
   // try to send data in one TCP package (only if some free Heap is there)
-  //#define WEBSOCKETS_USE_BIG_MEM
-
+  #if defined(SEEED_WIO_TERMINAL)
+    //#define WEBSOCKETS_USE_BIG_MEM
+    //#define GET_FREE_HEAP 10000
+  #endif
   // moves all Header strings to Flash (~300 Byte)
   #define WEBSOCKETS_SAVE_RAM
 
@@ -387,6 +390,10 @@
     
     #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
     #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
+    
+    // KH, test SSL
+    //#define WEBSOCKETS_NETWORK_SSL_CLASS      EthernetSSLClient
+    
   #endif
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ENC28J60)
@@ -418,7 +425,12 @@
 
   //KH
   #include <WiFiNINA_Generic.h>
+  #include <WiFiSSLClient_Generic.h>
+  
+  #define SSL_AXTLS
+  
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ETHERNET_ENC)
@@ -449,6 +461,7 @@
 #endif
 
 #ifdef WEBSOCKETS_NETWORK_SSL_CLASS
+  #warning This network type Supporting SSL for WebSockets
   #define HAS_SSL
 #endif
 

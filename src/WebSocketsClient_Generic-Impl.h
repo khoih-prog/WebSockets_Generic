@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.3
+  Version: 2.3.4
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -41,6 +41,7 @@
   2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
   2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
+  2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
  *****************************************************************************************************************************/
 
 #pragma once
@@ -129,7 +130,7 @@ void WebSocketsClient::begin(String host, uint16_t port, String url, String prot
 
 void WebSocketsClient::begin(IPAddress host, uint16_t port, const char * url, const char * protocol)
 {
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266) || defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
   return begin(host.toString().c_str(), port, url, protocol);
 #else  
   return begin(WS_IPAddressToString(host).c_str(), port, url, protocol);
@@ -139,7 +140,6 @@ void WebSocketsClient::begin(IPAddress host, uint16_t port, const char * url, co
 //KH
 void WebSocketsClient::begin(IPAddress host, uint16_t port, String url, String protocol)
 {
-  // KH
   return begin(WS_IPAddressToString(host).c_str(), port, url.c_str(), protocol.c_str());
 }
 
@@ -303,7 +303,7 @@ void WebSocketsClient::loop(void)
 #if defined(HAS_SSL)
     if (_client.isSSL)
     {
-      WSK_LOGDEBUG("[WS-Client] Connect wss...");
+      WSK_LOGINFO("[WS-Client] Connect wss...");
 
       if (_client.ssl)
       {
@@ -311,27 +311,30 @@ void WebSocketsClient::loop(void)
         _client.ssl = NULL;
         _client.tcp = NULL;
       }
-
+     
       _client.ssl = new WEBSOCKETS_NETWORK_SSL_CLASS();
       _client.tcp = _client.ssl;
-
+     
       if (_CA_cert)
       {
-        WSK_LOGDEBUG("[WS-Client] Setting CA certificate");
+        WSK_LOGINFO("[WS-Client] Setting CA certificate");
 
-#if defined(ESP32)
+#if defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
         _client.ssl->setCACert(_CA_cert);
 #elif defined(ESP8266) && defined(SSL_AXTLS)
         _client.ssl->setCACert((const uint8_t *)_CA_cert, strlen(_CA_cert) + 1);
 #elif defined(ESP8266) && ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
         _client.ssl->setTrustAnchors(_CA_cert);
         
-#elif defined(SEEED_WIO_TERMINAL)
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)    //defined(SEEED_WIO_TERMINAL)
         
-        _client.ssl->setCACert(_CA_cert);
+        _client.ssl->setCACert(_CA_cert); 
+   
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
+  // Do something here for WiFiNINA
         
 #else
-#error setCACert not implemented
+  #error setCACert not implemented
 #endif
       }
 #if ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
@@ -347,7 +350,7 @@ void WebSocketsClient::loop(void)
     }
     else
     {
-      WSK_LOGDEBUG("[WS-Client] Connect ws...");
+      WSK_LOGINFO("[WS-Client] Connect ws...");
 
       if (_client.tcp)
       {
@@ -364,29 +367,42 @@ void WebSocketsClient::loop(void)
 
     if (!_client.tcp)
     {
-      WSK_LOGDEBUG("[WS-Client] Creating Network class failed!");
+      WSK_LOGINFO("[WS-Client] Creating Network class failed!");
       return;
     }
 
     WEBSOCKETS_YIELD();
-
-#if defined(ESP32)
-    if (_client.tcp->connect(_host.c_str(), _port, WEBSOCKETS_TCP_TIMEOUT))
+       
+#if defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
+    // KH test SSL
+    WSK_LOGDEBUG3("[WS-Client] Calling _client.tcp->connect, _host =", _host, ", port =", _port); 
+    //WSK_LOGDEBUG1("[WS-Client] Address _client.tcp = 0x", String((uint32_t) _client.tcp, HEX));
+    
+    //if (_client.tcp->connect(_host.c_str(), _port, WEBSOCKETS_TCP_TIMEOUT))
+    int _connectResult = _client.tcp->connect(_host.c_str(), _port, WEBSOCKETS_TCP_TIMEOUT);
+    
+    WSK_LOGDEBUG1("[WS-Client] Calling _client.tcp->connect, _connectResult =", _connectResult);
+    
+    if (_connectResult)
+    //////
 #else
     if (_client.tcp->connect(_host.c_str(), _port))
 #endif
     {
+      WSK_LOGINFO("[WS-Client] connectedCb");
       connectedCb();
       _lastConnectionFail = 0;
     }
     else
     {
+      WSK_LOGINFO("[WS-Client] connectFailedCb");
       connectFailedCb();
       _lastConnectionFail = millis();
     }
   }
   else
   {
+    //WSK_LOGDEBUG("[WS-Client] handleClientData");
     handleClientData();
     WEBSOCKETS_YIELD();
 
@@ -625,7 +641,7 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
   bool event = false;
 
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
-    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
   if (client->isSSL && client->ssl)
   {
     if (client->ssl->connected())
@@ -670,7 +686,7 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
 
   client->status = WSC_NOT_CONNECTED;
 
-  WSK_LOGDEBUG("[WS-Client] client disconnected.");
+  WSK_LOGINFO("[WS-Client] client disconnected.");
 
   if (event)
   {
@@ -701,7 +717,7 @@ bool WebSocketsClient::clientIsConnected(WSclient_t * client)
     // client lost
     if (client->status != WSC_NOT_CONNECTED)
     {
-      WSK_LOGDEBUG("[WS-Client] connection lost.");
+      WSK_LOGINFO("[WS-Client] connection lost.");
 
       // do cleanup
       clientDisconnect(client);
@@ -724,7 +740,7 @@ void WebSocketsClient::handleClientData(void)
 {
   if (_client.status == WSC_HEADER && _lastHeaderSent + WEBSOCKETS_TCP_TIMEOUT < millis())
   {
-    WSK_LOGDEBUG("[WS-Client][handleClientData] Header response timeout.. Disconnecting!");
+    WSK_LOGINFO("[WS-Client][handleClientData] Header response timeout.. Disconnecting!");
     clientDisconnect(&_client);
     WEBSOCKETS_YIELD();
     return;
@@ -763,7 +779,7 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
 {
   static const char * NEW_LINE = "\r\n";
 
-  WSK_LOGDEBUG("[WS-Client] [sendHeader] Sending header...");
+  WSK_LOGINFO("[WS-Client] [sendHeader] Sending header...");
 
   uint8_t randomKey[16] = { 0 };
 
@@ -848,7 +864,7 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
 
   handshake += NEW_LINE;
 
-  WSK_LOGDEBUG1("[WS-Client] [sendHeader] Handshake:", handshake);
+  WSK_LOGINFO1("[WS-Client] [sendHeader] Handshake:", handshake);
 
   write(client, (uint8_t *)handshake.c_str(), handshake.length());
 
@@ -857,7 +873,7 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
                                this, client, &(client->cHttpLine)));
 #endif
 
-  WSK_LOGDEBUG1("[WS-Client] [sendHeader] Sending header... Done (us):", (micros() - start));
+  WSK_LOGINFO1("[WS-Client] [sendHeader] Sending header... Done (us):", (micros() - start));
 
   _lastHeaderSent = millis();
 }
@@ -977,10 +993,10 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
           }
         case 403:    ///< Forbidden
         // todo handle login
-        default:    ///< Server dont unterstand requrst
+        default:    ///< Server dont unterstand request
           ok = false;
 
-          WSK_LOGDEBUG1("[WS-Client][handleHeader] serverCode is not 101 :", client->cCode);
+          WSK_LOGINFO1("[WS-Client][handleHeader] serverCode is not 101 :", client->cCode);
 
           clientDisconnect(client);
           _lastConnectionFail = millis();
@@ -1001,7 +1017,7 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
 
         if (sKey != client->cAccept)
         {
-          WSK_LOGDEBUG("[WS-Client][handleHeader] Sec-WebSocket-Accept is wrong");
+          WSK_LOGINFO("[WS-Client][handleHeader] Sec-WebSocket-Accept is wrong");
 
           ok = false;
         }
@@ -1010,7 +1026,7 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
 
     if (ok)
     {
-      WSK_LOGDEBUG("[WS-Client][handleHeader] Websocket connection init done.");
+      WSK_LOGINFO("[WS-Client][handleHeader] Websocket connection init done.");
 
       headerDone(client);
 
@@ -1034,7 +1050,7 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
 #endif
     else
     {
-      WSK_LOGDEBUG("[WS-Client][handleHeader] no Websocket connection close.");
+      WSK_LOGINFO("[WS-Client][handleHeader] no Websocket connection close.");
 
       _lastConnectionFail = millis();
 
@@ -1050,12 +1066,12 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
 
 void WebSocketsClient::connectedCb()
 {
-  WSK_LOGDEBUG3("[WS-Client][connectedCb] Connected to Host:",  _host, ", Port:", _port);
+  WSK_LOGINFO3("[WS-Client][connectedCb] Connected to Host:",  _host, ", Port:", _port);
 
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
   _client.tcp->onDisconnect(std::bind([](WebSocketsClient * c, AsyncTCPbuffer * obj, WSclient_t * client) -> bool
   {
-    WSK_LOGDEBUG1("[WS-Client][connectedCb] Disconnect client :", client->num);
+    WSK_LOGINFO1("[WS-Client][connectedCb] Disconnect client :", client->num);
 
     client->status = WSC_NOT_CONNECTED;
     client->tcp    = NULL;
@@ -1080,12 +1096,16 @@ void WebSocketsClient::connectedCb()
 #endif
 
 #if defined(HAS_SSL)
-#if defined(SSL_AXTLS) || defined(ESP32)
+
+#if (defined(SSL_AXTLS) || defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFININA)
+//#if (defined(SSL_AXTLS) || defined(ESP32)) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFININA) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_RTL8720DN)
+//////
+
   if (_client.isSSL && _fingerprint.length())
   {
     if (!_client.ssl->verify(_fingerprint.c_str(), _host.c_str()))
     {
-      WSK_LOGDEBUG("[WS-Client][connectedCb] Certificate mismatch");
+      WSK_LOGINFO("[WS-Client][connectedCb] Certificate mismatch");
 
       WebSockets::clientDisconnect(&_client, 1000);
       return;
@@ -1111,20 +1131,20 @@ void WebSocketsClient::connectedCb()
 
 void WebSocketsClient::connectFailedCb()
 {
-  WSK_LOGDEBUG3("[WS-Client][connectFailedCb] Failed connection to host:",  _host, ", port:", _port);
+  WSK_LOGINFO3("[WS-Client][connectFailedCb] Failed connection to host:",  _host, ", port:", _port);
 }
 
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
 void WebSocketsClient::asyncConnect()
 {
-  WSK_LOGDEBUG("[WS-Client] asyncConnect...");
+  WSK_LOGINFO("[WS-Client] asyncConnect...");
 
   AsyncClient * tcpclient = new AsyncClient();
 
   if (!tcpclient)
   {
-    WSK_LOGDEBUG("[WS-Client] Creating AsyncClient class failed!");
+    WSK_LOGINFO("[WS-Client] Creating AsyncClient class failed!");
 
     return;
   }
@@ -1141,7 +1161,7 @@ void WebSocketsClient::asyncConnect()
 
     if (!ws->_client.tcp)
     {
-      WSK_LOGDEBUG("[WS-Client] Creating Network class failed!");
+      WSK_LOGINFO("[WS-Client] Creating Network class failed!");
 
       ws->connectFailedCb();
       return;
@@ -1179,7 +1199,7 @@ void WebSocketsClient::handleHBPing()
 
   if (pi > _client.pingInterval)
   {
-    WSK_LOGDEBUG("[WS-Client] Sending HB ping");
+    WSK_LOGINFO("[WS-Client] Sending HB ping");
 
     if (sendPing())
     {
