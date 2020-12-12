@@ -22,16 +22,22 @@
 
 WebSocketsClient webSocket;
 
-// Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 140);
+#define USE_SSL               false
+
+#if USE_SSL
+  #define WS_SERVER           "wss://echo.websocket.org"
+  #define WS_PORT             443
+#else  
+  #define WS_SERVER           "ws://echo.websocket.org"
+  #define WS_PORT             80
+#endif
 
 int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
 char ssid[] = "your_ssid";        // your network SSID (name)
-char pass[] = "12345678";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+char pass[] = "12345678";         // your network password (use for WPA, or use as key for WEP), length must be 8+
 
 bool alreadyConnected = false;
 
@@ -163,13 +169,21 @@ void setup()
   printWifiStatus();
 
   // server address, port and URL
-  webSocket.begin(serverIP, 81, "/");
+  Serial.print("WebSockets Server : ");
+  Serial.println(WS_SERVER);
+
+  // server address, port and URL
+#if USE_SSL
+  webSocket.beginSSL(WS_SERVER, WS_PORT);
+#else  
+  webSocket.begin(WS_SERVER, WS_PORT, "/");
+#endif
 
   // event handler
   webSocket.onEvent(webSocketEvent);
 
   // use HTTP Basic Authorization this is optional remove if not needed
-  webSocket.setAuthorization("user", "Password");
+  //webSocket.setAuthorization("user", "Password");
 
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);

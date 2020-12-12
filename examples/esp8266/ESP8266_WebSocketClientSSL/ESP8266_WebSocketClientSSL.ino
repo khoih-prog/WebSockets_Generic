@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     4
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -28,8 +28,8 @@
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
-// Select the IP address according to your local network
-IPAddress serverIP(192, 168, 2, 222);
+#define WS_SERVER           "wss://echo.websocket.org"
+#define SSL_PORT            443
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
@@ -73,6 +73,7 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+  while (!Serial);
 
   Serial.println("\nStart ESP8266_WebSocketClientSSL on " + String(ARDUINO_BOARD));
   Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
@@ -102,15 +103,16 @@ void setup()
   Serial.println(WiFi.localIP());
 
   // server address, port and URL
-  webSocket.beginSSL(serverIP, 81);
+  webSocket.beginSSL(WS_SERVER, SSL_PORT);
   webSocket.onEvent(webSocketEvent);
 
   // server address, port and URL
   Serial.print("Connecting to WebSockets Server @ IP address: ");
-  Serial.println(serverIP);
+  Serial.println(WS_SERVER);
 }
 
 void loop() 
 {
   webSocket.loop();
+  delay(10000);
 }

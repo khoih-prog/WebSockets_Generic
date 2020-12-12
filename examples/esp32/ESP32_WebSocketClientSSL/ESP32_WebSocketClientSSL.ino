@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP32 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     4
 
 #include <WiFi.h>
 #include <WiFiMulti.h>
@@ -27,9 +27,8 @@
 WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
-// Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 140);
+#define WS_SERVER           "wss://echo.websocket.org"
+#define SSL_PORT            443
 
 void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
 {
@@ -122,14 +121,19 @@ void setup()
   Serial.println(WiFi.localIP());
 
   // server address, port and URL
-  Serial.print("Connecting to WebSockets Server @ IP address: ");
-  Serial.println(serverIP);
+  Serial.print("Connecting to WebSockets Server @ ");
+  Serial.println(WS_SERVER);
 
-  webSocket.beginSSL(serverIP, 81);
+  webSocket.beginSSL(WS_SERVER, SSL_PORT);
   webSocket.onEvent(webSocketEvent);
+
+  // server address, port and URL
+  Serial.print("Connected to WebSockets Server @ ");
+  Serial.println(WS_SERVER);
 }
 
 void loop() 
 {
   webSocket.loop();
+  delay(10000);
 }

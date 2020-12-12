@@ -27,15 +27,8 @@ WebSocketsClient webSocket;
 
 int status = WL_IDLE_STATUS;
 
-#define USE_SSL         false
-
-#if USE_SSL
-  #define WS_SERVER           "wss://echo.websocket.org"
-  #define WS_PORT             443
-#else  
-  #define WS_SERVER           "ws://echo.websocket.org"
-  #define WS_PORT             80
-#endif
+#define WS_SERVER           "wss://echo.websocket.org"
+#define SSL_PORT            443
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
@@ -176,17 +169,13 @@ void setup()
   Serial.println(WS_SERVER);
 
   // server address, port and URL
-#if USE_SSL
-  webSocket.beginSSL(WS_SERVER, WS_PORT);
-#else  
-  webSocket.begin(WS_SERVER, WS_PORT, "/");
-#endif
+  webSocket.beginSSL(WS_SERVER, SSL_PORT);
 
   // event handler
   webSocket.onEvent(webSocketEvent);
 
   // server address, port and URL
-  Serial.print("Connected to WebSockets Server @ ");
+  Serial.print("Connecting to WebSockets Server @ ");
   Serial.println(WS_SERVER);
 }
 

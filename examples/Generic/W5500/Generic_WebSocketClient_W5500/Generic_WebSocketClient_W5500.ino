@@ -94,9 +94,16 @@ byte mac[][NUMBER_OF_MAC] =
   { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x14 },
 };
 
-// Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 226);
-IPAddress serverIP(192, 168, 2, 140);
+// SSL not working here yet.
+#define USE_SSL         false
+
+#if USE_SSL
+  #define WS_SERVER           "wss://echo.websocket.org"
+  #define WS_PORT             443
+#else
+  #define WS_SERVER           "ws://echo.websocket.org"
+  #define WS_PORT             80
+#endif
 
 // Only for W5100
 #define SDCARD_CS       4
@@ -224,15 +231,17 @@ void setup()
   Serial.println(Ethernet.localIP());
 
   // server address, port and URL
-  Serial.print("Connecting to WebSockets Server @ IP address: ");
-  Serial.println(serverIP);
-  webSocketClient.begin(serverIP, 81, "/");
+#if USE_SSL
+  webSocketClient.beginSSL(WS_SERVER, WS_PORT);
+#else
+  webSocketClient.begin(WS_SERVER, WS_PORT, "/");
+#endif
 
   // event handler
   webSocketClient.onEvent(webSocketEvent);
 
   // use HTTP Basic Authorization this is optional remove if not needed
-  //webSocketClient.setAuthorization("user", "Password");
+  //webSocket.setAuthorization("user", "Password");
 
   // try ever 5000 again if connection has failed
   webSocketClient.setReconnectInterval(5000);
@@ -241,10 +250,15 @@ void setup()
   // ping server every 15000 ms
   // expect pong from server within 3000 ms
   // consider connection disconnected if pong is not received 2 times
-  webSocketClient.enableHeartbeat(15000, 3000, 2);  
+  webSocketClient.enableHeartbeat(15000, 3000, 2);
+
+  // server address, port and URL
+  Serial.print("Connected to WebSockets Server @ ");
+  Serial.println(WS_SERVER);
 }
 
 void loop() 
 {
   webSocketClient.loop();
+  delay(5000);
 }

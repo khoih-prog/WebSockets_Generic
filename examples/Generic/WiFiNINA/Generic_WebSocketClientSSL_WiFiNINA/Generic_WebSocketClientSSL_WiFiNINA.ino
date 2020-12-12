@@ -1,33 +1,28 @@
 /****************************************************************************************************************************
-  WebSocketClient_NINA.ino
-  For boards using WiFiNINA Shield/Module
-
-  Blynk_WiFiNINA_WM is a library for the Mega, Teensy, SAM DUE, nRF52, STM32 and SAMD boards
-  (https://github.com/khoih-prog/Blynk_WiFiNINA_WM) to enable easy configuration/reconfiguration and
-  autoconnect/autoreconnect of WiFiNINA/Blynk
-
+  Generic_WebSocketClientSSL_WiFiNINA.ino
+  For Generic boards using WiFiNINA Shield/Module
+  
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-
+  
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-
-  Created on: 24.05.2015
-  Author: Markus Sattler
+  
+  Example for connecting and maintining a connection with a SockJS+STOMP websocket connection.
+  In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
+  
+  Originally Created on: 24.05.2015
+  Original Author: Markus Sattler
  *****************************************************************************************************************************/
 
-#define _WEBSOCKETS_LOGLEVEL_     4
+#define _WEBSOCKETS_LOGLEVEL_     3
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
-
-#include <WiFiNINA_Generic.h>
 
 #include <WebSocketsClient_Generic.h>
 
 WebSocketsClient webSocket;
 
-int status = WL_IDLE_STATUS;
-
-#define USE_SSL         false
+#define USE_SSL               true
 
 #if USE_SSL
   #define WS_SERVER           "wss://echo.websocket.org"
@@ -36,6 +31,8 @@ int status = WL_IDLE_STATUS;
   #define WS_SERVER           "ws://echo.websocket.org"
   #define WS_PORT             80
 #endif
+
+int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
@@ -72,12 +69,12 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       Serial.println((char *) payload);
 
       // send message to server
-       webSocket.sendTXT("message here");
+      // webSocket.sendTXT("message here");
       break;
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
-      
+
       // KH, To check
       // hexdump(payload, length);
 
@@ -93,7 +90,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       // answer to a ping we send
       Serial.println("[WSc] get pong");
       break;
-
+      
     default:
       break;
   }
@@ -107,7 +104,7 @@ void printWifiStatus()
 
   // print your board's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("WebSockets Client IP Address: ");
+  Serial.print("WebSockets Client @ IP Address: ");
   Serial.println(ip);
 
   // print the received signal strength:
@@ -119,11 +116,11 @@ void printWifiStatus()
 
 void setup()
 {
-  //Initialize serial and wait for port to open:
+  // Serial.begin(921600);
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WebSocketClient_NINA on " + String(BOARD_NAME));
+  Serial.println("\nStart Generic_WebSocketClientSSL_WiFiNINA on " + String(BOARD_NAME));
   Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
 
   Serial.println("Used/default SPI pinout:");
@@ -185,13 +182,21 @@ void setup()
   // event handler
   webSocket.onEvent(webSocketEvent);
 
-  // server address, port and URL
-  Serial.print("Connected to WebSockets Server @ ");
-  Serial.println(WS_SERVER);
+  // use HTTP Basic Authorization this is optional remove if not needed
+  //webSocket.setAuthorization("user", "Password");
+
+  // try ever 5000 again if connection has failed
+  webSocket.setReconnectInterval(5000);
+
+  // start heartbeat (optional)
+  // ping server every 15000 ms
+  // expect pong from server within 3000 ms
+  // consider connection disconnected if pong is not received 2 times
+  webSocket.enableHeartbeat(15000, 3000, 2);
+
 }
 
 void loop()
 {
   webSocket.loop();
-  delay(10000);
 }

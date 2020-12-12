@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP32 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     4
 
 #include <WiFi.h>
 #include <WiFiMulti.h>
@@ -27,9 +27,15 @@
 WiFiMulti         WiFiMulti;
 WebSocketsClient  webSocket;
 
-// Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 140);
+#define USE_SSL         false
+
+#if USE_SSL
+  #define WS_SERVER           "wss://echo.websocket.org"
+  #define WS_PORT             443
+#else  
+  #define WS_SERVER           "ws://echo.websocket.org"
+  #define WS_PORT             80
+#endif
 
 void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
 {
@@ -118,15 +124,7 @@ void setup()
   Serial.println("\nStart ESP32_WebSocketClient on " + String(ARDUINO_BOARD));
   Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
 
-  //Serial.setDebugOutput(true);
   Serial.setDebugOutput(true);
-
-  for (uint8_t t = 4; t > 0; t--)
-  {
-    Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
-    Serial.flush();
-    delay(1000);
-  }
 
   WiFiMulti.addAP("SSID", "passpasspass");
 
@@ -144,11 +142,15 @@ void setup()
   Serial.println(WiFi.localIP());
 
   // server address, port and URL
-  Serial.print("Connecting to WebSockets Server @ IP address: ");
-  Serial.println(serverIP);
+  Serial.print("Connecting to WebSockets Server @ ");
+  Serial.println(WS_SERVER);
   
   // server address, port and URL
-  webSocket.begin(serverIP, 81, "/");
+#if USE_SSL
+  webSocket.beginSSL(WS_SERVER, WS_PORT);
+#else  
+  webSocket.begin(WS_SERVER, WS_PORT, "/");
+#endif
 
   // event handler
   webSocket.onEvent(webSocketEvent);
@@ -164,9 +166,14 @@ void setup()
   // expect pong from server within 3000 ms
   // consider connection disconnected if pong is not received 2 times
   webSocket.enableHeartbeat(15000, 3000, 2);
+
+  // server address, port and URL
+  Serial.print("Connected to WebSockets Server @ IP address: ");
+  Serial.println(WS_SERVER);
 }
 
 void loop()
 {
   webSocket.loop();
+  delay(10000);
 }

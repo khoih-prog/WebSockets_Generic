@@ -12,7 +12,7 @@
   Author: Markus Sattler
  *****************************************************************************************************************************/
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     4
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ENC28J60
 
 #define SHIELD_TYPE               "ENC28J60 using UIPEthernet Library"
@@ -23,9 +23,16 @@ WebSocketsClient webSocket;
 
 uint8_t mac[6] =  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x08 };
 
-// Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 140);
+// SSL not working here yet.
+#define USE_SSL         false
+
+#if USE_SSL
+  #define WS_SERVER           "wss://echo.websocket.org"
+  #define WS_PORT             443
+#else
+  #define WS_SERVER           "ws://echo.websocket.org"
+  #define WS_PORT             80
+#endif
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
@@ -92,7 +99,7 @@ void setup()
 
   // start the ethernet connection and the server:
   // Use Static IP
-  Ethernet.begin(mac, clientIP);
+  //Ethernet.begin(mac, clientIP);
   //Configure IP address via DHCP
   Ethernet.begin(mac);
 
@@ -100,7 +107,15 @@ void setup()
   Serial.println(Ethernet.localIP());
 
   // server address, port and URL
-  webSocket.begin(serverIP, 81, "/");
+  Serial.print("Connecting to WebSockets Server @ ");
+  Serial.println(WS_SERVER);
+
+  // server address, port and URL
+#if USE_SSL
+  webSocket.beginSSL(WS_SERVER, WS_PORT);
+#else
+  webSocket.begin(WS_SERVER, WS_PORT, "/");
+#endif
 
   // event handler
   webSocket.onEvent(webSocketEvent);
@@ -110,9 +125,14 @@ void setup()
 
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
+
+  // server address, port and URL
+  Serial.print("Connected to WebSockets Server @ ");
+  Serial.println(WS_SERVER);
 }
 
 void loop()
 {
   webSocket.loop();
+  delay(10000);
 }
