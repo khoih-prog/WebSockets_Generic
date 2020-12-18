@@ -9,6 +9,68 @@
 ---
 ---
 
+## Table of Contents
+
+* [Important Notes](#important-notes)
+* [RFC6455-based WebSocket Server and Client for Arduino boards.](#rfc6455-based-websocket-server-and-client-for-arduino-boards)
+  * [Why do we need this WebSockets_Generic library](#why-do-we-need-this-websockets_generic-library)
+* [Changelog](#changelog)
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+  * [Use Arduino Library Manager](#use-arduino-library-manager)
+  * [Manual Install](#manual-install)
+  * [VS Code & PlatformIO](#vs-code--platformio)
+* [Packages' Patches](#packages-patches)
+* [Optional Libraries' Patches](#optional-libraries-patches)
+* [HOWTO Use analogRead() with ESP32 running WiFi and/or BlueTooth (BT/BLE)](#howto-use-analogread-with-esp32-running-wifi-andor-bluetooth-btble)
+* [Important Notes](#important-notes-1)
+  * [Limitations](#limitations)
+  * [Limitations for Async](#limitations-for-async)
+  * [Originally Supported Hardware](#originally-supported-hardware)
+  * [New support from v2.3.1](#new-support-from-v231)
+  * [New support from v2.2.3](#new-support-from-v223)
+  * [New support from v2.2.2](#new-support-from-v222)
+  * [New support from v2.1.3](#new-support-from-v213)
+  * [wss / SSL](#wss--ssl)
+  * [ESP Async TCP](#esp-async-tcp)
+* [How to use](#how-to-use)
+* [High Level Client API](#high-level-client-api)
+* [Examples](#examples)
+  * [For Generic boards using W5x00 Ethernet shield](#for-generic-boards-using-w5x00-ethernet-shield)
+  * [For Generic boards using WiFiNINA](#for-generic-boards-using-wifinina)
+  * [For Generic boards using ENC28J60 Ethernet shield using EthernetENC library](#for-generic-boards-using-enc28j60-ethernet-shield-using-ethernetenc-library)
+  * [For WiFiNINA](#for-wifinina)
+  * [For W5x00 Ethernet shield](#for-w5x00-ethernet-shield)
+  * [For ENC28J60 Ethernet shield using UIPEthernet library](#for-enc28j60-ethernet-shield-using-uipethernet-library)
+  * [For ESP32 board](#for-esp32-board)
+  * [For ESP8266 board](#for-esp8266-board)
+  * [For SeeedStudio WIO Terminal using Realtek RTL8720DN WiFi](#for-seeedstudio-wio-terminal-using-realtek-rtl8720dn-wifi) 
+* [Example Generic_WebSocketClient_WiFiNINA](#example-generic_websocketclient_wifinina)
+* [Debug Termimal Output Samples](#debug-termimal-output-samples)
+  * [1. Debug Terminal Output when running nRF52_Blynk_W5500_Alexa on NRF52840_FEATHER](#1-debug-terminal-output-when-running-nrf52_blynk_w5500_alexa-on-nrf52840_feather)
+  * [2. Debug Terminal Output when running SAMD_Blynk_NINA_Alexa on SAMD NANO_33_IOT](#2-debug-terminal-output-when-running-samd_blynk_nina_alexa-on-samd-nano_33_iot)
+  * [3. Debug Terminal Output when running Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER](#3-debug-terminal-output-when-running-generic_websocketclient_ethernetenc-on-nrf52840_feather)
+  * [4. Debug Terminal Output when running Generic_Ethernet_Blinds on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#4-debug-terminal-output-when-running-generic_ethernet_blinds-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library)
+  * [5. Debug Terminal Output when running WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5500 using Ethernet2 Library](#5-debug-terminal-output-when-running-websocketclientsocketio_w5500-on-nrf52840_feather-with-w5500-using-ethernet2-library)
+  * [6. Debug Terminal Output when running Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#6-debug-terminal-output-when-running-generic_websocketclientsocketio_ethernetenc-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library) 
+  * [7. Debug Terminal Output when running WIOTerminal_WebSocketClientSSL on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library](#7-debug-terminal-output-when-running-wioterminal_websocketclientssl-on-seeedstudio-samd51-wio_terminal-with-realtek-rtl8720dn-wifi-using-seeed_arduino_rpcwifi-library 
+  * [8. Debug Terminal Output when running Generic_WebSocketClientSSL_WiFiNINA on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library](#8-debug-terminal-output-when-running-generic_websocketclientssl_wifinina-on-arduino-samd21-nano-33-iot-with-wifinina-using-wifinina_generic-library)
+* [Releases](#releases)
+  * [New in v2.3.4](#new-in-v234-1)
+  * [New in v2.3.3](#new-in-v233-1)
+  * [New in v2.3.2](#new-in-v232-1)
+  * [New in v2.3.1](#new-in-v231-1)
+  * [New in v2.2.3](#new-in-v223-1)
+  * [New in v2.2.2](#new-in-v222-1)
+  * [New in v2.2.1](#new-in-v221-1)
+  * [New in v2.1.3](#new-in-v213-1)
+* [TO DO](#to-do)
+* [DONE](#done)
+* [Issues](#issues)
+* [Contributions and Thanks](#contributions-and-thanks)
+* [Contributing](#contributing)
+* [License and credits](#license-and-credits)
+
 ## Important Notes
 
 1. Currently, the WebSocketServer feature is usable only for ESP8266/ESP32.
@@ -28,6 +90,8 @@ This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Gener
 Please see illustrating examples.
 
 ---
+
+## Changelog
 
 ### New in v2.3.4
 
@@ -93,7 +157,7 @@ Please see illustrating examples.
 ---
 ---
  
-## Prerequisite
+## Prerequisites
 
  1. [`Arduino IDE 1.8.13+`](https://www.arduino.cc/en/Main/Software)
  2. [`Blynk library 0.6.1 or later`](https://github.com/blynkkk/blynk-library/releases) if use Blynk examples.
@@ -102,7 +166,7 @@ Please see illustrating examples.
  5. [`Arduino AVR core 1.8.3+`](https://github.com/arduino/ArduinoCore-avr) for Arduino AVR boards. Use Arduino Board Manager to install.
  6. [`Teensy core 1.53+`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.1, 4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards.
  7. [`Arduino SAM DUE core 1.6.12+`](https://www.arduino.cc/en/Guide/ArduinoDue) for SAM DUE ARM Cortex-M3 boards
- 8. [`Arduino SAMD core 1.8.9+`](https://www.arduino.cc/en/Guide/ArduinoM0) for SAMD ARM Cortex-M0+ boards (Nano 33 IoT, etc.).
+ 8. [`Arduino SAMD core 1.8.10+`](https://www.arduino.cc/en/Guide/ArduinoM0) for SAMD ARM Cortex-M0+ boards (Nano 33 IoT, etc.).
  9. [`Adafruit SAMD core 1.6.4+`](https://www.adafruit.com/) for SAMD ARM Cortex-M0+ and M4 boards (Itsy-Bitsy M4, etc.)
 10. [`Seeeduino SAMD core 1.8.1+`](https://github.com/Seeed-Studio/ArduinoCore-samd) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.) 
 11. [`Adafruit nRF52 v0.21.0+`](https://www.adafruit.com/) for nRF52 boards such as AdaFruit Feather nRF52840 Express, NINA_B302_ublox, etc.
@@ -199,9 +263,24 @@ This file must be copied into the directory:
 
 - `~/.arduino15/packages/arduino/hardware/sam/x.yy.zz/platform.txt`
 
- 4. ***To be able to compile without error and automatically detect and display BOARD_NAME on Arduino SAMD (Nano-33-IoT, etc) boards***, you have to copy the whole [Arduino SAMD cores 1.8.9](Packages_Patches/arduino/hardware/samd/1.8.9) directory into Arduino SAMD directory (~/.arduino15/packages/arduino/hardware/samd/1.8.9).
+ 4. ***To be able to compile without error and automatically detect and display BOARD_NAME on Arduino SAMD (Nano-33-IoT, etc) boards***, you have to copy the whole [Arduino SAMD cores 1.8.10](Packages_Patches/arduino/hardware/samd/1.8.10) directory into Arduino SAMD directory (~/.arduino15/packages/arduino/hardware/samd/1.8.10).
  
+#### For core version v1.8.10+
+
+Supposing the Arduino SAMD version is 1.8.10. Now only one file must be copied into the directory:
+
+- `~/.arduino15/packages/arduino/hardware/samd/1.8.10/platform.txt`
+
+Whenever a new version is installed, remember to copy this files into the new version directory. For example, new version is x.yy.zz
+
+This file must be copied into the directory:
+
+- `~/.arduino15/packages/arduino/hardware/samd/x.yy.zz/platform.txt`
+ 
+#### For core version v1.8.9-
+
 Supposing the Arduino SAMD version is 1.8.9. These files must be copied into the directory:
+
 - `~/.arduino15/packages/arduino/hardware/samd/1.8.9/platform.txt`
 - ***`~/.arduino15/packages/arduino/hardware/samd/1.8.9/cores/arduino/Arduino.h`***
 
@@ -1563,11 +1642,6 @@ User-Agent: arduino-WebSocket-Client
 2. Fix SeeedStudio **SEEED_WIO_TERMINAL** compile errors. See [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5)
 3. Add file to SeeedStudio SAMD Packages' Patches.
 4. Fix compiler warnings for duplications in WS_LOG with [WiFiWebServer Library](https://github.com/khoih-prog/WiFiWebServer)
-
-### New in v2.3.3
-
-1. Fix SeeedStudio **SEEED_WIO_TERMINAL** compile error. See [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5)
-2. Add file to SeeedStudio SAMD Packages' Patches.
 
 ### New in v2.3.2
 
