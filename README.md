@@ -53,7 +53,7 @@
   * [4. Debug Terminal Output when running Generic_Ethernet_Blinds on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#4-debug-terminal-output-when-running-generic_ethernet_blinds-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library)
   * [5. Debug Terminal Output when running WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5500 using Ethernet2 Library](#5-debug-terminal-output-when-running-websocketclientsocketio_w5500-on-nrf52840_feather-with-w5500-using-ethernet2-library)
   * [6. Debug Terminal Output when running Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#6-debug-terminal-output-when-running-generic_websocketclientsocketio_ethernetenc-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library) 
-  * [7. Debug Terminal Output when running WIOTerminal_WebSocketClientSSL on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library](#7-debug-terminal-output-when-running-wioterminal_websocketclientssl-on-seeedstudio-samd51-wio_terminal-with-realtek-rtl8720dn-wifi-using-seeed_arduino_rpcwifi-library 
+  * [7. Debug Terminal Output when running WIOTerminal_WebSocketClientSSL on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library](#7-debug-terminal-output-when-running-wioterminal_websocketclientssl-on-seeedstudio-samd51-wio_terminal-with-realtek-rtl8720dn-wifi-using-seeed_arduino_rpcwifi-library)
   * [8. Debug Terminal Output when running Generic_WebSocketClientSSL_WiFiNINA on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library](#8-debug-terminal-output-when-running-generic_websocketclientssl_wifinina-on-arduino-samd21-nano-33-iot-with-wifinina-using-wifinina_generic-library)
 * [Releases](#releases)
   * [New in v2.3.4](#new-in-v234-1)
@@ -70,6 +70,9 @@
 * [Contributions and Thanks](#contributions-and-thanks)
 * [Contributing](#contributing)
 * [License and credits](#license-and-credits)
+
+---
+---
 
 ## Important Notes
 
