@@ -8,7 +8,10 @@ WSMessageHeader_t	KEYWORD1
 WSclient_t	KEYWORD1
 WebSockets	KEYWORD1
 WebSocketsClient	KEYWORD1
+WebSocketsServerCore  KEYWORD1
 WebSocketsServer	KEYWORD1
+WebSocketServerEvent  KEYWORD1
+WebSocketServerHttpHeaderValFunc  KEYWORD1
 engineIOmessageType_t	KEYWORD1
 SocketIOclient	KEYWORD1
 
@@ -50,6 +53,7 @@ onValidateHttpHeader KEYWORD2
 sendTXT KEYWORD2
 broadcastTXT KEYWORD2
 sendBIN  KEYWORD2
+broadcastBIN  KEYWORD2
 sendPing  KEYWORD2
 broadcastPing KEYWORD2
 disconnect KEYWORD2
@@ -59,6 +63,8 @@ clientIsConnected KEYWORD2
 enableHeartbeat  KEYWORD2
 disableHeartbeat KEYWORD2
 remoteIP KEYWORD2
+loop  KEYWORD2
+newClient KEYWORD2
 
 ##############################
 # SocketIOclient_Generic

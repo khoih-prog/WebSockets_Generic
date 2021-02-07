@@ -1,8 +1,8 @@
 {
   "name": "WebSockets_Generic",
-  "version": "2.3.4",
-  "description": "WebSocket Server and Client for Arduino based on RFC6455, ported to run on nRF52, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, etc. besides ESP8266/ESP32",
-  "keywords": "wifi, http, web, server, client, websocket",
+  "version": "2.4.0",
+  "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, etc. besides ESP8266/ESP32",
+  "keywords": "wifi, WiFiNINA, http, web, server, client, websocket, websockets-server,websockets-client, Mega, Teensy, SAM DUE, SAMD21, SAMD51, STM32, nRF52, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EtnernetENC, UIPEthernet, NativeEthernet, ESP32, ESP8266, W5100, W5200, W5500, ENC28J60",
   "authors": [
     {
       "name":  "Markus Sattler",
