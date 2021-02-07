@@ -11,8 +11,6 @@
 
 ## Table of Contents
 
-
-* [RFC6455-based WebSocket Server and Client for Arduino boards.](#rfc6455-based-websocket-server-and-client-for-arduino-boards)
 * [Why do we need this WebSockets_Generic library](#why-do-we-need-this-websockets_generic-library)
   * [Features](#features)
   * [Supported features of RFC6455](#supported-features-of-rfc6455)
@@ -598,21 +596,21 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
 ---
 ---
 
-##### Limitations #####
+#### Limitations
 
  - max input length is limited to the ram size and the `WEBSOCKETS_MAX_DATA_SIZE` define
  - max output length has no limit (the hardware is the limit)
  - Client send big frames with mask 0x00000000 (on AVR all frames)
  - continuation frame reassembly need to be handled in the application code
 
-##### Limitations for Async #####
+#### Limitations for Async
 
  - Functions called from within the context of the websocket event might not honor `yield()` and/or `delay()`.  See [this issue](https://github.com/Links2004/arduinoWebSockets/issues/58#issuecomment-192376395) for more info and a potential workaround.
  - wss / SSL is not possible.
 
 ---
 
-##### Originally Supported Hardware #####
+#### Originally Supported Hardware
 
  - ESP8266 [Arduino for ESP8266](https://github.com/esp8266/Arduino/)
  - ESP32 [Arduino for ESP32](https://github.com/espressif/arduino-esp32)
@@ -664,7 +662,7 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
 2. **SAM51 (Itsy-Bitsy M4, Metro M4, Grand Central M4, Feather M4 Express, etc.) and SAM DUE**.
 3. **SAMD21 (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit CIRCUITPLAYGROUND_EXPRESS, etc.)**
 
-##### Note: #####
+#### Note:
 
   Version 2.0.0 and up is not compatible with AVR/ATmega, check ATmega branch.
   
@@ -672,7 +670,7 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
 
   Arduino for AVR not supports std namespace of c++.
 
-### wss / SSL ###
+### wss / SS
 
  supported for:
  
@@ -681,7 +679,7 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
    by running the device behind an SSL proxy. See [Nginx](examples/Nginx/esp8266.ssl.reverse.proxy.conf) for a
    sample Nginx server configuration file to enable this.
 
-### ESP Async TCP ###
+### ESP Async TCP
 
 This libary can run in Async TCP mode on the ESP.
 
@@ -690,18 +688,22 @@ The mode can be activated in the [WebSockets_Generic.h](src/WebSockets_Generic.h
 [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) library is required.
 
 ---
+---
 
 ### How to use
 
 In your code, select one of the currently supported network connection from the following list:
 
-1. **NETWORK_ESP8266_ASYNC** for ESP8266 Async
-2. **NETWORK_W5100** for W5x00 Ethernet
-3. **NETWORK_ENC28J60** for ENC28J60 Ethernet using UIPEthernet library
-4. **NETWORK_ESP32** for ESP32 WiFi
-5. **NETWORK_ESP32_ETH** for ESP32 Ethernet
-6. **NETWORK_WIFININA** for WiFiNINA
-7. **NETWORK_ETHERNET_ENC** for ENC28J60 Ethernet using EthernetENC library
+ 1. **NETWORK_ESP8266_ASYNC** for ESP8266 Async
+ 2. **NETWORK_W5100** for W5x00 Ethernet
+ 3. **NETWORK_ENC28J60** for ENC28J60 Ethernet using UIPEthernet library
+ 4. **NETWORK_ESP32** for ESP32 WiFi
+ 5. **NETWORK_ESP32_ETH** for ESP32 Ethernet
+ 6. **NETWORK_WIFININA** for WiFiNINA
+ 7. **NETWORK_ETHERNET_ENC** for ENC28J60 Ethernet using EthernetENC library
+ 8. **NETWORK_RTL8720DN** for NETWORK_RTL8720DN Ethernet using [`Seeed_Arduino_rpcWiFi`](https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi) and [`Seeed_Arduino_rpcUnified`](https://github.com/khoih-prog/Seeed_Arduino_rpcUnified) libraries
+ 9. **NETWORK_NATIVEETHERNET** for Teeensy 4.1 NativeEthernet
+10. **NETWORK_LAN8742A** for STM32 with LAN8742A Ethernet using STM32Ethernet library
 
 then add `#define WEBSOCKETS_NETWORK_TYPE`  before `#include <WebSocketsClient_Generic.h>`
 
@@ -713,7 +715,7 @@ For example:
 #include <WebSocketsClient_Generic.h>
 ```
 
-### High Level Client API ###
+### High Level Client API
 
  - `begin` : Initiate connection sequence to the WebSocket host.
  
@@ -1851,7 +1853,7 @@ User-Agent: arduino-WebSocket-Client
 ---
 ---
 
-#### Debug
+### Debug
 
 Debug is enabled by default on Serial. To disable, add at the beginning of sketch
 
@@ -1862,7 +1864,7 @@ Debug is enabled by default on Serial. To disable, add at the beginning of sketc
 #define _WEBSOCKETS_LOGLEVEL_         4
 ```
 
-## Troubleshooting
+### Troubleshooting
 
 If you get compilation errors, more often than not, you may need to install a newer version of the board's core, dependent libraries or this library version.
 
@@ -1871,7 +1873,7 @@ Sometimes, the library will only work if you update the core to the newer or old
 ---
 ---
 
-### Releases
+## Releases
 
 ### Major Release v2.4.0
 
@@ -1982,7 +1984,7 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 
 ---
 
-## Contributing
+### Contributing
 
 If you want to contribute to this project:
 
