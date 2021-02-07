@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.4
+  Version: 2.3.5
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -42,144 +42,78 @@
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
   2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
+  2.3.5   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet. sync with v2.3.4 of original WebSockets library
  *****************************************************************************************************************************/
 
 #pragma once
 
-WebSocketsServer::WebSocketsServer(uint16_t port, String origin, String protocol)
+WebSocketsServerCore::WebSocketsServerCore(const String & origin, const String & protocol) 
+{
+    _origin                 = origin;
+    _protocol               = protocol;
+    _runnning               = false;
+    _pingInterval           = 0;
+    _pongTimeout            = 0;
+    _disconnectTimeoutCount = 0;
+
+    _cbEvent = NULL;
+
+    _httpHeaderValidationFunc = NULL;
+    _mandatoryHttpHeaders     = NULL;
+    _mandatoryHttpHeaderCount = 0;
+}
+
+//WebSocketsServer::WebSocketsServer(uint16_t port, String origin, String protocol)
+WebSocketsServer::WebSocketsServer(uint16_t port, const String & origin, const String & protocol)
+  : WebSocketsServerCore(origin, protocol)
 {
   _port                   = port;
-  _origin                 = origin;
-  _protocol               = protocol;
-  _runnning               = false;
-  _pingInterval           = 0;
-  _pongTimeout            = 0;
-  _disconnectTimeoutCount = 0;
 
   _server = new WEBSOCKETS_NETWORK_SERVER_CLASS(port);
 
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
-
-  _server->onClient([](void * s, AsyncClient * c)
-  {
-    ((WebSocketsServer *)s)->newClient(new AsyncTCPbuffer(c));
-  }, this);
-
+    _server->onClient([](void * s, AsyncClient * c) 
+    {
+        ((WebSocketsServerCore *)s)->newClient(new AsyncTCPbuffer(c));
+    },
+        this);
 #endif
-
-  _cbEvent = NULL;
-
-  _httpHeaderValidationFunc = NULL;
-  _mandatoryHttpHeaders     = NULL;
-  _mandatoryHttpHeaderCount = 0;
-
-  memset(&_clients[0], 0x00, (sizeof(WSclient_t) * WEBSOCKETS_SERVER_CLIENT_MAX));
 }
 
-WebSocketsServer::~WebSocketsServer()
+WebSocketsServerCore::~WebSocketsServerCore() 
 {
   // disconnect all clients
   close();
 
-  if (_mandatoryHttpHeaders)
+  if(_mandatoryHttpHeaders)
     delete[] _mandatoryHttpHeaders;
 
   _mandatoryHttpHeaderCount = 0;
 }
 
-/**
-   called to Display Client Data. Default to display only valid TCP Client
-*/
-void WebSocketsServer::displayClientData(WSclient_t *client, bool onlyTCPValid)
+WebSocketsServer::~WebSocketsServer() 
 {
-  if ( !onlyTCPValid || ( client->tcp && client->cHttpHeadersValid ) )
-  {
-    WSK_LOGINFO1("\n[displayClientData] Client:", client->num);
-
-    if (client->status == WSC_NOT_CONNECTED)
-    {
-      WSK_LOGINFO("Client status = WSC_NOT_CONNECTED");
-    }
-    else if (client->status == WSC_HEADER)
-    {
-      WSK_LOGINFO("Client status = WSC_HEADER");
-    }
-    else if (client->status == WSC_CONNECTED)
-    {
-      WSK_LOGINFO("Client status = WSC_CONNECTED");
-    }
-
-    WSK_LOGINFO1("tcp:",                     (uint32_t) client->tcp);
-    WSK_LOGINFO1("cUrl:",                    client->cUrl);
-    WSK_LOGINFO1("cIsUpgrade:",              client->cIsUpgrade);
-    WSK_LOGINFO1("cIsWebsocket:",            client->cIsWebsocket);
-    WSK_LOGINFO1("cCode:",                   client->cCode);
-    WSK_LOGINFO1("cSessionId:",              client->cSessionId);
-    WSK_LOGINFO1("cKey:",                    client->cKey);
-    WSK_LOGINFO1("cAccept:",                 client->cAccept);
-    WSK_LOGINFO1("cProtocol:",               client->cProtocol);
-    WSK_LOGINFO1("cExtensions:",             client->cExtensions);
-    WSK_LOGINFO1("cVersion:",                client->cVersion);
-    WSK_LOGINFO1("base64Authorization:",     client->base64Authorization);
-    WSK_LOGINFO1("cHttpHeadersValid:",       client->cHttpHeadersValid);
-    WSK_LOGINFO1("cMandatoryHeadersCount:",  client->cMandatoryHeadersCount);
-
-    WSK_LOGINFO1("cWsRXsize:",               client->cWsRXsize);
-    WSK_LOGINFO1("cWsHeader:",               (char*) client->cWsHeader);
-    WSK_LOGINFO1("pongReceived:",            client->pongReceived);
-    WSK_LOGINFO1("pingInterval:",            client->pingInterval);
-    WSK_LOGINFO1("lastPing:",                client->lastPing);
-    WSK_LOGINFO1("pongTimeout:",             client->pongTimeout);
-  }
 }
 
 /**
    called to initialize the Websocket server
 */
-void WebSocketsServer::begin(void)
+void WebSocketsServerCore::begin(void) 
 {
-  WSclient_t * client;
-
-  // init client storage
-  for (uint8_t i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX; i++)
+  // adjust clients storage:
+  // _clients[i]'s constructor are already called,
+  // all its members are initialized to their default value,
+  // except the ones explicitly detailed in WSclient_t() constructor.
+  // Then we need to initialize some members to non-trivial values:
+  for (int i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX; i++) 
   {
-    client = &_clients[i];
-
-    client->num    = i;
-    client->status = WSC_NOT_CONNECTED;
-    client->tcp    = NULL;
-
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
-    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-    client->isSSL = false;
-    client->ssl   = NULL;
-#endif
-
-    client->cUrl         = "";
-    client->cCode        = 0;
-    client->cKey         = "";
-    client->cProtocol    = "";
-    client->cVersion     = 0;
-    client->cIsUpgrade   = false;
-    client->cIsWebsocket = false;
-
-    client->base64Authorization = "";
-
-    client->cWsRXsize = 0;
-
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
-    client->cHttpLine = "";
-#endif
-
-    client->pingInterval           = _pingInterval;
-    client->pongTimeout            = _pongTimeout;
-    client->disconnectTimeoutCount = _disconnectTimeoutCount;
+    _clients[i].init(i, _pingInterval, _pongTimeout, _disconnectTimeoutCount);
   }
 
 #ifdef ESP8266
   randomSeed(RANDOM_REG32);
 #elif defined(ESP32)
-#define DR_REG_RNG_BASE 0x3ff75144
+  #define DR_REG_RNG_BASE 0x3ff75144
   randomSeed(READ_PERI_REG(DR_REG_RNG_BASE));
 #else
   // TODO find better seed
@@ -187,47 +121,28 @@ void WebSocketsServer::begin(void)
 #endif
 
   _runnning = true;
-  _server->begin();
 
-  WSK_LOGDEBUG("[WS-Server] Server Started.");
+  WSK_LOGDEBUG(WEBSOCKETS_GENERIC_VERSION);
 }
 
-void WebSocketsServer::close(void)
+void WebSocketsServerCore::close(void) 
 {
   _runnning = false;
   disconnect();
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)
-  _server->close();
-#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || \
-      (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-  _server->end();
-#else
-  // TODO how to close server?
-#endif
-}
-
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-/**
-   called in arduino loop
-*/
-void WebSocketsServer::loop(void)
-{
-  if (_runnning)
+  // restore _clients[] to their initial state
+  // before next call to ::begin()
+  for (int i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX; i++) 
   {
-    WEBSOCKETS_YIELD();
-    handleNewClients();
-    WEBSOCKETS_YIELD();
-    handleClientData();
+    _clients[i] = WSclient_t();
   }
 }
-#endif
 
 /**
-   set callback function
-   @param cbEvent WebSocketServerEvent
-*/
-void WebSocketsServer::onEvent(WebSocketServerEvent cbEvent)
+ * set callback function
+ * @param cbEvent WebSocketServerEvent
+ */
+void WebSocketsServerCore::onEvent(WebSocketServerEvent cbEvent) 
 {
   _cbEvent = cbEvent;
 }
@@ -238,8 +153,8 @@ void WebSocketsServer::onEvent(WebSocketServerEvent cbEvent)
    @param mandatoryHttpHeaders[] const char* ///< the array of named http headers considered to be mandatory / must be present in order for websocket upgrade to succeed
    @param mandatoryHttpHeaderCount size_t ///< the number of items in the mandatoryHttpHeaders array
 */
-void WebSocketsServer::onValidateHttpHeader( WebSocketServerHttpHeaderValFunc validationFunc,
-                const char * mandatoryHttpHeaders[], size_t mandatoryHttpHeaderCount)
+void WebSocketsServerCore::onValidateHttpHeader(WebSocketServerHttpHeaderValFunc validationFunc,
+    const char * mandatoryHttpHeaders[], size_t mandatoryHttpHeaderCount)
 {
   _httpHeaderValidationFunc = validationFunc;
 
@@ -263,7 +178,7 @@ void WebSocketsServer::onValidateHttpHeader( WebSocketServerHttpHeaderValFunc va
    @param headerToPayload bool  (see sendFrame for more details)
    @return true if ok
 */
-bool WebSocketsServer::sendTXT(uint8_t num, uint8_t * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::sendTXT(uint8_t num, uint8_t * payload, size_t length, bool headerToPayload)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -285,23 +200,22 @@ bool WebSocketsServer::sendTXT(uint8_t num, uint8_t * payload, size_t length, bo
   return false;
 }
 
-bool WebSocketsServer::sendTXT(uint8_t num, const uint8_t * payload, size_t length)
+bool WebSocketsServerCore::sendTXT(uint8_t num, const uint8_t * payload, size_t length)
 {
   return sendTXT(num, (uint8_t *)payload, length);
 }
 
-bool WebSocketsServer::sendTXT(uint8_t num, char * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::sendTXT(uint8_t num, char * payload, size_t length, bool headerToPayload)
 {
-
   return sendTXT(num, (uint8_t *)payload, length, headerToPayload);
 }
 
-bool WebSocketsServer::sendTXT(uint8_t num, const char * payload, size_t length)
+bool WebSocketsServerCore::sendTXT(uint8_t num, const char * payload, size_t length)
 {
   return sendTXT(num, (uint8_t *)payload, length);
 }
 
-bool WebSocketsServer::sendTXT(uint8_t num, String & payload)
+bool WebSocketsServerCore::sendTXT(uint8_t num, String & payload)
 {
   return sendTXT(num, (uint8_t *)payload.c_str(), payload.length());
 }
@@ -313,7 +227,7 @@ bool WebSocketsServer::sendTXT(uint8_t num, String & payload)
    @param headerToPayload bool  (see sendFrame for more details)
    @return true if ok
 */
-bool WebSocketsServer::broadcastTXT(uint8_t * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::broadcastTXT(uint8_t * payload, size_t length, bool headerToPayload)
 {
   WSclient_t * client;
   bool ret = true;
@@ -334,29 +248,29 @@ bool WebSocketsServer::broadcastTXT(uint8_t * payload, size_t length, bool heade
         ret = false;
       }
     }
-    
+
     WEBSOCKETS_YIELD();
   }
 
   return ret;
 }
 
-bool WebSocketsServer::broadcastTXT(const uint8_t * payload, size_t length)
+bool WebSocketsServerCore::broadcastTXT(const uint8_t * payload, size_t length)
 {
   return broadcastTXT((uint8_t *)payload, length);
 }
 
-bool WebSocketsServer::broadcastTXT(char * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::broadcastTXT(char * payload, size_t length, bool headerToPayload)
 {
   return broadcastTXT((uint8_t *)payload, length, headerToPayload);
 }
 
-bool WebSocketsServer::broadcastTXT(const char * payload, size_t length)
+bool WebSocketsServerCore::broadcastTXT(const char * payload, size_t length)
 {
   return broadcastTXT((uint8_t *)payload, length);
 }
 
-bool WebSocketsServer::broadcastTXT(String & payload)
+bool WebSocketsServerCore::broadcastTXT(String & payload)
 {
   return broadcastTXT((uint8_t *)payload.c_str(), payload.length());
 }
@@ -369,7 +283,7 @@ bool WebSocketsServer::broadcastTXT(String & payload)
    @param headerToPayload bool  (see sendFrame for more details)
    @return true if ok
 */
-bool WebSocketsServer::sendBIN(uint8_t num, uint8_t * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::sendBIN(uint8_t num, uint8_t * payload, size_t length, bool headerToPayload)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -386,7 +300,7 @@ bool WebSocketsServer::sendBIN(uint8_t num, uint8_t * payload, size_t length, bo
   return false;
 }
 
-bool WebSocketsServer::sendBIN(uint8_t num, const uint8_t * payload, size_t length)
+bool WebSocketsServerCore::sendBIN(uint8_t num, const uint8_t * payload, size_t length)
 {
   return sendBIN(num, (uint8_t *)payload, length);
 }
@@ -398,7 +312,7 @@ bool WebSocketsServer::sendBIN(uint8_t num, const uint8_t * payload, size_t leng
    @param headerToPayload bool  (see sendFrame for more details)
    @return true if ok
 */
-bool WebSocketsServer::broadcastBIN(uint8_t * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::broadcastBIN(uint8_t * payload, size_t length, bool headerToPayload)
 {
   WSclient_t * client;
   bool ret = true;
@@ -414,14 +328,14 @@ bool WebSocketsServer::broadcastBIN(uint8_t * payload, size_t length, bool heade
         ret = false;
       }
     }
-    
+
     WEBSOCKETS_YIELD();
   }
-  
+
   return ret;
 }
 
-bool WebSocketsServer::broadcastBIN(const uint8_t * payload, size_t length)
+bool WebSocketsServerCore::broadcastBIN(const uint8_t * payload, size_t length)
 {
   return broadcastBIN((uint8_t *)payload, length);
 }
@@ -433,7 +347,7 @@ bool WebSocketsServer::broadcastBIN(const uint8_t * payload, size_t length)
    @param length size_t
    @return true if ping is send out
 */
-bool WebSocketsServer::sendPing(uint8_t num, uint8_t * payload, size_t length)
+bool WebSocketsServerCore::sendPing(uint8_t num, uint8_t * payload, size_t length)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -450,7 +364,7 @@ bool WebSocketsServer::sendPing(uint8_t num, uint8_t * payload, size_t length)
   return false;
 }
 
-bool WebSocketsServer::sendPing(uint8_t num, String & payload)
+bool WebSocketsServerCore::sendPing(uint8_t num, String & payload)
 {
   return sendPing(num, (uint8_t *)payload.c_str(), payload.length());
 }
@@ -461,7 +375,7 @@ bool WebSocketsServer::sendPing(uint8_t num, String & payload)
    @param length size_t
    @return true if ping is send out
 */
-bool WebSocketsServer::broadcastPing(uint8_t * payload, size_t length)
+bool WebSocketsServerCore::broadcastPing(uint8_t * payload, size_t length)
 {
   WSclient_t * client;
   bool ret = true;
@@ -469,7 +383,6 @@ bool WebSocketsServer::broadcastPing(uint8_t * payload, size_t length)
   for (uint8_t i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX; i++)
   {
     client = &_clients[i];
-
     if (clientIsConnected(client))
     {
       if (!sendFrame(client, WSop_ping, payload, length))
@@ -477,14 +390,14 @@ bool WebSocketsServer::broadcastPing(uint8_t * payload, size_t length)
         ret = false;
       }
     }
-    
+
     WEBSOCKETS_YIELD();
   }
 
   return ret;
 }
 
-bool WebSocketsServer::broadcastPing(String & payload)
+bool WebSocketsServerCore::broadcastPing(String & payload)
 {
   return broadcastPing((uint8_t *)payload.c_str(), payload.length());
 }
@@ -492,7 +405,7 @@ bool WebSocketsServer::broadcastPing(String & payload)
 /**
    disconnect all clients
 */
-void WebSocketsServer::disconnect(void)
+void WebSocketsServerCore::disconnect(void)
 {
   WSclient_t * client;
 
@@ -511,7 +424,7 @@ void WebSocketsServer::disconnect(void)
    disconnect one client
    @param num uint8_t client id
 */
-void WebSocketsServer::disconnect(uint8_t num)
+void WebSocketsServerCore::disconnect(uint8_t num)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -531,7 +444,7 @@ void WebSocketsServer::disconnect(uint8_t num)
    @param user const char
    @param password const char
 */
-void WebSocketsServer::setAuthorization(const char * user, const char * password)
+void WebSocketsServerCore::setAuthorization(const char * user, const char * password)
 {
   if (user && password)
   {
@@ -546,7 +459,7 @@ void WebSocketsServer::setAuthorization(const char * user, const char * password
    set the Authorizatio for the http request
    @param auth const char * base64
 */
-void WebSocketsServer::setAuthorization(const char * auth)
+void WebSocketsServerCore::setAuthorization(const char * auth)
 {
   if (auth)
   {
@@ -558,7 +471,7 @@ void WebSocketsServer::setAuthorization(const char * auth)
    count the connected clients (optional ping them)
    @param ping bool ping the connected clients
 */
-int WebSocketsServer::connectedClients(bool ping)
+int WebSocketsServerCore::connectedClients(bool ping)
 {
   WSclient_t * client;
   int count = 0;
@@ -580,12 +493,12 @@ int WebSocketsServer::connectedClients(bool ping)
 }
 
 /**
- * see if one client is connected
- * @param num uint8_t client id
- */
-bool WebSocketsServer::clientIsConnected(uint8_t num) 
+   see if one client is connected
+   @param num uint8_t client id
+*/
+bool WebSocketsServerCore::clientIsConnected(uint8_t num)
 {
-  if(num >= WEBSOCKETS_SERVER_CLIENT_MAX) 
+  if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
     return false;
   }
@@ -602,7 +515,7 @@ bool WebSocketsServer::clientIsConnected(uint8_t num)
    @param num uint8_t client id
    @return IPAddress
 */
-IPAddress WebSocketsServer::remoteIP(uint8_t num)
+IPAddress WebSocketsServerCore::remoteIP(uint8_t num)
 {
   if (num < WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -626,7 +539,7 @@ IPAddress WebSocketsServer::remoteIP(uint8_t num)
    handle new client connection
    @param client
 */
-bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
+WSclient_t * WebSocketsServerCore::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
 {
   WSclient_t * client;
 
@@ -634,7 +547,7 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
   for (uint8_t i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX; i++)
   {
     client = &_clients[i];
-
+    
     // KH Debug
     //displayClientData(client, false);
     //displayClientData(client);
@@ -650,33 +563,32 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
       client->tcp->setNoDelay(true);
 #endif
 
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
       // set Timeout for readBytesUntil and readStringUntil
       client->tcp->setTimeout(WEBSOCKETS_TCP_TIMEOUT);
 #endif
 
       client->status = WSC_HEADER;
+      
       // KH Debug
       //client->status = WSC_NOT_CONNECTED;
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)\
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)\
      || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-
   #ifndef NODEBUG_WEBSOCKETS
       IPAddress ip = client->tcp->remoteIP();
-
+      
       // KH New debug
-      WSK_LOGDEBUG3("ESP new Client :", client->num, ", IP =", ip);
+      WSK_LOGDEBUG3("ESP New Client :", client->num, ", IP =", ip);
   #endif
-
 #else
       // KH New debug
       WSK_LOGDEBUG1("New Client :", client->num);
 #endif
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
-      client->tcp->onDisconnect(std::bind([](WebSocketsServer * server, AsyncTCPbuffer * obj, WSclient_t * client) -> bool
+      client->tcp->onDisconnect(std::bind([](WebSocketsServerCore * server, AsyncTCPbuffer * obj, WSclient_t * client) -> bool
       {
         WSK_LOGDEBUG1("Disconnect Client :", client->num);
 
@@ -687,11 +599,14 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
           client->status = WSC_NOT_CONNECTED;
           *sl            = NULL;
         }
-        return true;
-      }, this, std::placeholders::_1, client));
 
-      client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsServer::handleHeader,
+        return true;
+      },
+      this, std::placeholders::_1, client));
+
+      client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsServerCore::handleHeader, 
                                    this, client, &(client->cHttpLine)));
+                                   
 #endif
 
       client->pingInterval           = _pingInterval;
@@ -700,12 +615,12 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
       client->lastPing               = millis();
       client->pongReceived           = false;
 
-      return true;
+      return client;
       break;
     }
   }
-  
-  return false;
+
+  return nullptr;
 }
 
 /**
@@ -715,7 +630,7 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient)
    @param payload  uint8_t
    @param length size_t
 */
-void WebSocketsServer::messageReceived(WSclient_t * client, WSopcode_t opcode, uint8_t * payload, size_t length, bool fin)
+void WebSocketsServerCore::messageReceived(WSclient_t * client, WSopcode_t opcode, uint8_t * payload, size_t length, bool fin)
 {
   WStype_t type = WStype_ERROR;
 
@@ -745,10 +660,35 @@ void WebSocketsServer::messageReceived(WSclient_t * client, WSopcode_t opcode, u
 }
 
 /**
+   Discard a native client
+   @param client WSclient_t *  ptr to the client struct contaning the native client "->tcp"
+*/
+void WebSocketsServerCore::dropNativeClient(WSclient_t * client)
+{
+  if (client->tcp)
+  {
+    if (client->tcp->connected())
+    {
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP32)
+      client->tcp->flush();
+#endif
+      client->tcp->stop();
+    }
+    
+#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+    client->status = WSC_NOT_CONNECTED;
+#else
+    delete client->tcp;
+#endif
+    client->tcp = NULL;
+  }
+}
+
+/**
    Disconnect an client
    @param client WSclient_t *  ptr to the client struct
 */
-void WebSocketsServer::clientDisconnect(WSclient_t * client)
+void WebSocketsServerCore::clientDisconnect(WSclient_t * client)
 {
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
     (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
@@ -766,23 +706,7 @@ void WebSocketsServer::clientDisconnect(WSclient_t * client)
   }
 #endif
 
-  if (client->tcp)
-  {
-    if (client->tcp->connected())
-    {
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-      client->tcp->flush();
-#endif
-      client->tcp->stop();
-    }
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
-    client->status = WSC_NOT_CONNECTED;
-#else
-    delete client->tcp;
-#endif
-
-    client->tcp = NULL;
-  }
+  dropNativeClient(client);
 
   client->cUrl         = "";
   client->cKey         = "";
@@ -811,25 +735,24 @@ void WebSocketsServer::clientDisconnect(WSclient_t * client)
    @param client WSclient_t *  ptr to the client struct
    @return true = connected
 */
-#if 1
-bool WebSocketsServer::clientIsConnected(WSclient_t * client) 
+bool WebSocketsServerCore::clientIsConnected(WSclient_t * client)
 {
-  if (!client->tcp) 
+  if (!client->tcp)
   {
     return false;
   }
 
-  if (client->tcp->connected()) 
+  if (client->tcp->connected())
   {
-    if(client->status != WSC_NOT_CONNECTED) 
+    if (client->status != WSC_NOT_CONNECTED)
     {
       return true;
     }
-  } 
-  else 
+  }
+  else
   {
     // client lost
-    if (client->status != WSC_NOT_CONNECTED) 
+    if (client->status != WSC_NOT_CONNECTED)
     {
       WSK_LOGDEBUG1("Clean up : Connection lost. Client :", client->num );
       // do cleanup
@@ -837,7 +760,7 @@ bool WebSocketsServer::clientIsConnected(WSclient_t * client)
     }
   }
 
-  if(client->tcp) 
+  if (client->tcp)
   {
     // do cleanup
     WSK_LOGDEBUG1("[WS-Server] client->tcp, client list cleanup 2. Client :", client->num);
@@ -847,155 +770,78 @@ bool WebSocketsServer::clientIsConnected(WSclient_t * client)
   return false;
 }
 
-#else
-
-bool WebSocketsServer::clientIsConnected(WSclient_t * client)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+/**
+   Handle incoming Connection Request
+*/
+WSclient_t * WebSocketsServerCore::handleNewClient(WEBSOCKETS_NETWORK_CLASS * tcpClient)
 {
-  // KH New debug
-  //displayClientData(client);
+  WSclient_t * client = newClient(tcpClient);
 
-  if (!client->tcp)
+  if (!client)
   {
-    // KH New debug
-    //WSK_LOGDEBUG1("!Client->tcp, Client :", client->num);
-
-    return false;
-  }
-
-  if (client->tcp->connected())
-  {
-    // KH New debug
-    //WSK_LOGDEBUG1("Client->tcp->connected(). Client :", client->num);
-
-    if (client->status != WSC_NOT_CONNECTED)
-    // KH Bug Fix
-    //if ( (client->status != WSC_NOT_CONNECTED) && client->cHttpHeadersValid )
-    {
-      // KH New debug
-      //WSK_LOGDEBUG1("client->status != WSC_NOT_CONNECTED. Client:", client->num);
-
-      return true;
-      // KH New debug
-      //return false;
-    }
-
-    // KH New debug
-    // do cleanup
-    WSK_LOGDEBUG1("client list cleanup 1. Client :", client->num);
-
-    //clientDisconnect(client);
-    //return false;
-  }
-  else
-  {
-    // KH New debug
-    //WSK_LOGDEBUG1("!Client->tcp->connected(). Client :", client->num);
-
-    // client lost
-    if (client->status != WSC_NOT_CONNECTED)
-    {
-      // KH New debug
-      //WSK_LOGDEBUG1("Clean up : Connection lost. Client :", client->num );
-
-      // do cleanup
-      clientDisconnect(client);
-
-      // KH New debug => OK
-      return false;
-    }
-  }
-
-  if (client->tcp)
-  {
-    // do cleanup
-    //WSK_LOGDEBUG1("client->tcp, client list cleanup 2. Client :", client->num);
-
-    clientDisconnect(client);
-  }
-
-  return false;
-}
+    // no free space to handle client
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
+  #ifndef NODEBUG_WEBSOCKETS
+    IPAddress ip = tcpClient->remoteIP();
+    
+    WSK_LOGERROR1("[WS-Server][handleNewClient] No free space for new client from", ip);
+  #endif
+#else
+    WSK_LOGERROR("[WS-Server][handleNewClient] No free space new client");
 #endif
 
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+    dropNativeClient(client);
+  }
+
+  WEBSOCKETS_YIELD();
+
+  return client;
+}
+
 /**
    Handle incoming Connection Request
 */
 void WebSocketsServer::handleNewClients(void)
 {
-  // Has Client already, done here
-  //if (currentActiveClient != 0xFF)
-  //  return;
-
-
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
     (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-  // || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
   while (_server->hasClient())
   {
 #endif
-    bool ok = false;
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
-    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-    // || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
     // store new connection
     WEBSOCKETS_NETWORK_CLASS * tcpClient = new WEBSOCKETS_NETWORK_CLASS(_server->available());
-#else
-    WEBSOCKETS_NETWORK_CLASS * tcpClient = new WEBSOCKETS_NETWORK_CLASS(_server->available());
-#endif
-
+    
     if (!tcpClient)
     {
-      WSK_LOGDEBUG("[WS-Client][handleNewClients] Creating Network class failed!");
-
+      WSK_LOGERROR("[WS-Server][handleNewClients] Creating Network class failed!");
+      
       return;
     }
 
-    ok = newClient(tcpClient);
+    handleNewClient(tcpClient);
 
-    if (!ok)
-    {
-      // no free space to handle client
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
     (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-
-      IPAddress ip = tcpClient->remoteIP();
-      
-      WSK_LOGERROR1("[WS-Server][handleNewClients] no free space new client from", ip);
-#else
-      WSK_LOGERROR("[WS-Server][handleNewClients] No free space new client");
-#endif
-
-      tcpClient->stop();
-    }
-    else
-    {
-      WSK_LOGDEBUG("[WS-Server][handleNewClients] New client created");
-    }
-
-    WEBSOCKETS_YIELD();
-    
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
-    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-    // || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
   }
 #endif
 }
 
 /**
-   Handle incomming data from Client
+   Handel incomming data from Client
 */
-void WebSocketsServer::handleClientData(void)
+void WebSocketsServerCore::handleClientData(void)
 {
   WSclient_t * client;
-
-  static uint8_t currentActiveClient = 0xFF;
+  
+  //static uint8_t currentActiveClient = 0xFF;
 
   for (uint8_t i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX; i++)
   {
     client = &_clients[i];
-
+    
     // KH New debug
     //displayClientData(client);
 
@@ -1016,9 +862,9 @@ void WebSocketsServer::handleClientData(void)
             {
               // KH New
               WSK_LOGINFO1(client->num, "[handleClientData] =================== Start =======================");
-
+              
               String headerLine = client->tcp->readStringUntil('\n');
-
+              
               // KH New
               WSK_LOGINFO3("[handleClientData] Status WSC_HEADER. Client:", client->num, ", headerLine:", headerLine);
               // KH Debug
@@ -1032,8 +878,7 @@ void WebSocketsServer::handleClientData(void)
 
               // KH New
               WSK_LOGINFO1(client->num, "[handleClientData] =================== End =======================");
-
-            }
+            } 
             
             break;
             
@@ -1047,13 +892,13 @@ void WebSocketsServer::handleClientData(void)
             
           default:
             // KH New
-            WSK_LOGINFO1("[handleClientData] default: clientDisconnect. Client:", client->num);
-
+            WSK_LOGINFO3("[handleClientData] default: clientDisconnect. Client:", client->num, 
+                         "unknown client status", client->status);
             WebSockets::clientDisconnect(client, 1002);
-
+            
             // KH New
             currentActiveClient = 0xFF;
-
+            
             break;
         }
       }
@@ -1061,24 +906,24 @@ void WebSocketsServer::handleClientData(void)
       handleHBPing(client);
       handleHBTimeout(client);
     }
-    
+
     WEBSOCKETS_YIELD();
   }
 }
-#endif
+#endif    // #if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
 
 /*
    returns an indicator whether the given named header exists in the configured _mandatoryHttpHeaders collection
    @param headerName String ///< the name of the header being checked
 */
-bool WebSocketsServer::hasMandatoryHeader(String headerName)
+bool WebSocketsServerCore::hasMandatoryHeader(String headerName)
 {
   for (size_t i = 0; i < _mandatoryHttpHeaderCount; i++)
   {
     if (_mandatoryHttpHeaders[i].equalsIgnoreCase(headerName))
       return true;
   }
-  
+
   return false;
 }
 
@@ -1087,14 +932,14 @@ bool WebSocketsServer::hasMandatoryHeader(String headerName)
    @param client WSclient_t * ///< pointer to the client struct
    @param headerLine String ///< the header being read / processed
 */
-void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
+void WebSocketsServerCore::handleHeader(WSclient_t * client, String * headerLine)
 {
   static const char * NEW_LINE = "\r\n";
-
+  
   //WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX before trim:", headerLine->c_str());
 
   headerLine->trim();    // remove \r
-
+  
   //WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX after trim:", headerLine->c_str());
 
   if (headerLine->length() > 0)
@@ -1109,7 +954,7 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
     {
       // cut URL out
       client->cUrl = headerLine->substring(4, headerLine->indexOf(' ', 4));
-
+      
       //KH New
       WSK_LOGINFO1("[handleHeader] RX: client->cUrl =", client->cUrl);
 
@@ -1132,6 +977,7 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
       if (headerName.equalsIgnoreCase(WEBSOCKETS_STRING("Connection")))
       {
         headerValue.toLowerCase();
+
         if (headerValue.indexOf(WEBSOCKETS_STRING("upgrade")) >= 0)
         {
           client->cIsUpgrade = true;
@@ -1174,7 +1020,6 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
           client->cMandatoryHeadersCount++;
         }
       }
-
     }
     else
     {
@@ -1183,7 +1028,7 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
 
     (*headerLine) = "";
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
-    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsServer::handleHeader, this, client, &(client->cHttpLine)));
+    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsServerCore::handleHeader, this, client, &(client->cHttpLine)));
 #endif
   }
   else
@@ -1238,7 +1083,7 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
       if (auth != client->base64Authorization)
       {
         WSK_LOGDEBUG1("[handleHeader] HTTP Authorization failed! Client:", client->num);
-
+        
         handleAuthorizationFailed(client);
         return;
       }
@@ -1262,7 +1107,7 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
                            "Connection: Upgrade\r\n"
                            "Sec-WebSocket-Version: 13\r\n"
                            "Sec-WebSocket-Accept: ");
-                           
+      
       handshake += sKey + NEW_LINE;
 
       if (_origin.length() > 0)
@@ -1302,7 +1147,7 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine)
 /**
    send heartbeat ping to server in set intervals
 */
-void WebSocketsServer::handleHBPing(WSclient_t * client)
+void WebSocketsServerCore::handleHBPing(WSclient_t * client)
 {
   if (client->pingInterval == 0)
     return;
@@ -1327,7 +1172,7 @@ void WebSocketsServer::handleHBPing(WSclient_t * client)
    @param pongTimeout uint32_t millis after which pong should timout if not received
    @param disconnectTimeoutCount uint8_t how many timeouts before disconnect, 0=> do not disconnect
 */
-void WebSocketsServer::enableHeartbeat(uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount)
+void WebSocketsServerCore::enableHeartbeat(uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount)
 {
   _pingInterval           = pingInterval;
   _pongTimeout            = pongTimeout;
@@ -1345,7 +1190,7 @@ void WebSocketsServer::enableHeartbeat(uint32_t pingInterval, uint32_t pongTimeo
 /**
    disable ping/pong heartbeat process
 */
-void WebSocketsServer::disableHeartbeat()
+void WebSocketsServerCore::disableHeartbeat()
 {
   _pingInterval = 0;
 
@@ -1357,4 +1202,61 @@ void WebSocketsServer::disableHeartbeat()
     client->pingInterval = 0;
   }
 }
+
+
+////////////////////
+// WebSocketServer
+
+/**
+   called to initialize the Websocket server
+*/
+void WebSocketsServer::begin(void)
+{
+  WebSocketsServerCore::begin();
+  _server->begin();
+
+  WSK_LOGDEBUG("[WS-Server] Server Started.");
+}
+
+void WebSocketsServer::close(void)
+{
+  WebSocketsServerCore::close();
+
+#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)
+  _server->close();
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || \
+      (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
+  _server->end();
+#else
+  // TODO how to close server?
+#endif
+}
+
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+/**
+   called in arduino loop
+*/
+void WebSocketsServerCore::loop(void)
+{
+  if (_runnning)
+  {
+    WEBSOCKETS_YIELD();
+    handleClientData();
+  }
+}
+
+/**
+   called in arduino loop
+*/
+void WebSocketsServer::loop(void)
+{
+  if (_runnning)
+  {
+    WEBSOCKETS_YIELD();
+    handleNewClients();
+    WebSocketsServerCore::loop();
+  }
+}
+#endif
+
 

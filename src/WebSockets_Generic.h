@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.4
+  Version: 2.3.5
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -42,11 +42,12 @@
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
   2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
+  2.3.5   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet. sync with v2.3.4 of original WebSockets library
  *****************************************************************************************************************************/
 
 #pragma once
 
-#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.3.4"
+#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.3.5"
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -73,6 +74,8 @@
   
   #include <functional>
 #endif
+
+#include "WebSocketsVersion_Generic.h"
 
 #if defined(TEENSYDUINO)
   namespace std
@@ -246,16 +249,17 @@
 
 #define WEBSOCKETS_TCP_TIMEOUT (5000)
 
-#define NETWORK_ESP8266_ASYNC (0)
-#define NETWORK_ESP8266       (1)
-#define NETWORK_W5100         (2)
-#define NETWORK_ENC28J60      (3)
-#define NETWORK_ESP32         (4)
-#define NETWORK_ESP32_ETH     (5)
+#define NETWORK_ESP8266_ASYNC     (0)
+#define NETWORK_ESP8266           (1)
+#define NETWORK_W5100             (2)
+#define NETWORK_ENC28J60          (3)
+#define NETWORK_ESP32             (4)
+#define NETWORK_ESP32_ETH         (5)
 //KH
-#define NETWORK_WIFININA      (6)
-#define NETWORK_ETHERNET_ENC  (7)
-#define NETWORK_RTL8720DN     (8)
+#define NETWORK_WIFININA          (6)
+#define NETWORK_ETHERNET_ENC      (7)
+#define NETWORK_RTL8720DN         (8)
+#define NETWORK_NATIVEETHERNET    (9)
 ////////////////////////////////
 
 // max size of the WS Message Header
@@ -455,6 +459,14 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_NATIVEETHERNET)
+
+  //KH, from v2.3.5
+  #include <NativeEthernet.h>
+  #warning Using Teensy 4.1 NativeEthernet Library
+  
+  #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
 
 #else
   #error "no network type selected!"
@@ -523,34 +535,42 @@ typedef struct
 
 typedef struct
 {
-  uint8_t num;    ///< connection number
+  void init(uint8_t num, uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount) 
+  {
+    this->num                    = num;
+    this->pingInterval           = pingInterval;
+    this->pongTimeout            = pongTimeout;
+    this->disconnectTimeoutCount = disconnectTimeoutCount;
+  }
 
-  WSclientsStatus_t status;
+  uint8_t num = 0;    ///< connection number
 
-  WEBSOCKETS_NETWORK_CLASS * tcp;
+  WSclientsStatus_t status = WSC_NOT_CONNECTED;
 
-  bool isSocketIO;    ///< client for socket.io server
+  WEBSOCKETS_NETWORK_CLASS * tcp = nullptr;
+
+  bool isSocketIO = false;    ///< client for socket.io server
 
 #if defined(HAS_SSL)
-  bool isSSL;    ///< run in ssl mode
+  bool isSSL = false;    ///< run in ssl mode
   WEBSOCKETS_NETWORK_SSL_CLASS * ssl;
 #endif
 
-  String cUrl;       ///< http url
-  uint16_t cCode;    ///< http code
+  String cUrl;           ///< http url
+  uint16_t cCode = 0;    ///< http code
 
-  bool cIsClient = false;    ///< will be used for masking
-  bool cIsUpgrade;           ///< Connection == Upgrade
-  bool cIsWebsocket;         ///< Upgrade == websocket
+  bool cIsClient    = false;    ///< will be used for masking
+  bool cIsUpgrade   = false;    ///< Connection == Upgrade
+  bool cIsWebsocket = false;    ///< Upgrade == websocket
 
-  String cSessionId;     ///< client Set-Cookie (session id)
-  String cKey;           ///< client Sec-WebSocket-Key
-  String cAccept;        ///< client Sec-WebSocket-Accept
-  String cProtocol;      ///< client Sec-WebSocket-Protocol
-  String cExtensions;    ///< client Sec-WebSocket-Extensions
-  uint16_t cVersion;     ///< client Sec-WebSocket-Version
+  String cSessionId;        ///< client Set-Cookie (session id)
+  String cKey;              ///< client Sec-WebSocket-Key
+  String cAccept;           ///< client Sec-WebSocket-Accept
+  String cProtocol;         ///< client Sec-WebSocket-Protocol
+  String cExtensions;       ///< client Sec-WebSocket-Extensions
+  uint16_t cVersion = 0;    ///< client Sec-WebSocket-Version
 
-  uint8_t cWsRXsize;                                ///< State of the RX
+  uint8_t cWsRXsize = 0;                            ///< State of the RX
   uint8_t cWsHeader[WEBSOCKETS_MAX_HEADER_SIZE];    ///< RX WS Message buffer
   WSMessageHeader_t cWsHeaderDecode;
 
@@ -559,15 +579,15 @@ typedef struct
 
   String extraHeaders;
 
-  bool cHttpHeadersValid;           ///< non-websocket http header validity indicator
-  size_t cMandatoryHeadersCount;    ///< non-websocket mandatory http headers present count
+  bool cHttpHeadersValid = false;    ///< non-websocket http header validity indicator
+  size_t cMandatoryHeadersCount;     ///< non-websocket mandatory http headers present count
 
-  bool pongReceived;
-  uint32_t pingInterval;             // how often ping will be sent, 0 means "heartbeat is not active"
-  uint32_t lastPing;                 // millis when last pong has been received
-  uint32_t pongTimeout;              // interval in millis after which pong is considered to timeout
-  uint8_t disconnectTimeoutCount;    // after how many subsequent pong timeouts discconnect will happen, 0 means "do not disconnect"
-  uint8_t pongTimeoutCount;          // current pong timeout count
+  bool pongReceived              = false;
+  uint32_t pingInterval          = 0;    // how often ping will be sent, 0 means "heartbeat is not active"
+  uint32_t lastPing              = 0;    // millis when last pong has been received
+  uint32_t pongTimeout           = 0;    // interval in millis after which pong is considered to timeout
+  uint8_t disconnectTimeoutCount = 0;    // after how many subsequent pong timeouts discconnect will happen, 0 means "do not disconnect"
+  uint8_t pongTimeoutCount       = 0;    // current pong timeout count
 
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
   String cHttpLine;    ///< HTTP header lines

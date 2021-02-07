@@ -29,7 +29,7 @@ Please ensure to specify the following:
 Arduino IDE version: 1.8.13
 Arduino SAMD Core Version 1.8.9
 OS: Ubuntu 20.04 LTS
-Linux xy-Inspiron-3593 5.4.0-51-generic #56-Ubuntu SMP Mon Oct 5 14:28:49 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+Linux xy-Inspiron-3593 5.4.0-65-generic #73-Ubuntu SMP Mon Jan 18 17:25:17 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
 
 
 Context:

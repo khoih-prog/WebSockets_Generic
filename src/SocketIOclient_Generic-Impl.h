@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.4
+  Version: 2.3.5
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -42,6 +42,7 @@
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
   2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
+  2.3.5   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet. sync with v2.3.4 of original WebSockets library
  *****************************************************************************************************************************/
 
 #pragma once
@@ -60,18 +61,78 @@ void SocketIOclient::begin(const char * host, uint16_t port, const char * url, c
 {
   WebSocketsClient::beginSocketIO(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+  initClient();
 }
 
 void SocketIOclient::begin(String host, uint16_t port, String url, String protocol)
 {
   WebSocketsClient::beginSocketIO(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+  initClient();
 }
 
 void SocketIOclient::begin(IPAddress host, uint16_t port, String url, String protocol)
 {
   WebSocketsClient::beginSocketIO(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+  initClient();
+}
+
+#if defined(HAS_SSL)
+void SocketIOclient::beginSSL(const char * host, uint16_t port, const char * url, const char * protocol) 
+{
+  WebSocketsClient::beginSocketIOSSL(host, port, url, protocol);
+  WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+  initClient();
+}
+
+void SocketIOclient::beginSSL(String host, uint16_t port, String url, String protocol) 
+{
+  WebSocketsClient::beginSocketIOSSL(host, port, url, protocol);
+  WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+  initClient();
+}
+
+#if defined(SSL_BARESSL)
+void SocketIOclient::beginSSLWithCA(const char * host, uint16_t port, const char * url, const char * CA_cert, const char * protocol) 
+{
+  WebSocketsClient::beginSocketIOSSLWithCA(host, port, url, CA_cert, protocol);
+  WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+  initClient();
+}
+
+void SocketIOclient::beginSSLWithCA(const char * host, uint16_t port, const char * url, BearSSL::X509List * CA_cert, const char * protocol) 
+{
+  WebSocketsClient::beginSocketIOSSLWithCA(host, port, url, CA_cert, protocol);
+  WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
+  initClient();
+}
+
+void SocketIOclient::setSSLClientCertKey(const char * clientCert, const char * clientPrivateKey) 
+{
+  WebSocketsClient::setSSLClientCertKey(clientCert, clientPrivateKey);
+}
+
+void SocketIOclient::setSSLClientCertKey(BearSSL::X509List * clientCert, BearSSL::PrivateKey * clientPrivateKey) 
+{
+  WebSocketsClient::setSSLClientCertKey(clientCert, clientPrivateKey);
+}
+
+#endif
+#endif
+
+void SocketIOclient::configureEIOping(bool disableHeartbeat) 
+{
+  _disableHeartbeat = disableHeartbeat;
+}
+
+void SocketIOclient::initClient(void) 
+{
+  if(_client.cUrl.indexOf("EIO=4") != -1) 
+  {
+    WSK_LOGINFO("[wsIOc] found EIO=4 disable EIO ping on client");
+    configureEIOping(true);
+  }
 }
 
 /**
@@ -193,13 +254,11 @@ void SocketIOclient::loop(void)
 {
   WebSocketsClient::loop();
   unsigned long t = millis();
-
-  if ((t - _lastConnectionFail) > EIO_HEARTBEAT_INTERVAL)
+  
+  if(!_disableHeartbeat && (t - _lastHeartbeat) > EIO_HEARTBEAT_INTERVAL) 
   {
-    _lastConnectionFail = t;
-
-    WSK_LOGDEBUG("[wsIOc] send ping");
-
+    _lastHeartbeat = t;
+    WSK_LOGDEBUG("[wsIOc] send ping\n");
     WebSocketsClient::sendTXT(eIOtype_PING);
   }
 }
