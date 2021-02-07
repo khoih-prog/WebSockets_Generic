@@ -24,7 +24,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.5
+  Version: 2.4.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -38,7 +38,8 @@
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
   2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
-  2.3.5   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet. sync with v2.3.4 of original WebSockets library
+  2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
+                                  Sync with v2.3.4 of original WebSockets library
   *****************************************************************************************************************************/
 
 #pragma once
@@ -129,35 +130,44 @@
 
 /////////////////////
 
-#define WSK_LOGERROR(x)         if(_WEBSOCKETS_LOGLEVEL_>0) { DBG_PORT.print("[WS] "); DBG_PORT.println(x); }
-#define WSK_LOGERROR0(x)        if(_WEBSOCKETS_LOGLEVEL_>0) { DBG_PORT.print(x); }
-#define WSK_LOGERROR1(x,y)      if(_WEBSOCKETS_LOGLEVEL_>0) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.println(y); }
-#define WSK_LOGERROR2(x,y,z)    if(_WEBSOCKETS_LOGLEVEL_>0) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.println(z); }
-#define WSK_LOGERROR3(x,y,z,w)  if(_WEBSOCKETS_LOGLEVEL_>0) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.print(z); DBG_PORT.print(" "); DBG_PORT.println(w); }
+const char WS_MARK[] = "[WS] ";
+
+#define WS_PRINT_MARK   WS_PRINT(WS_MARK)
+
+#define WS_PRINT        DBG_PORT.print
+#define WS_PRINTLN      DBG_PORT.println
 
 /////////////////////
 
-#define WSK_LOGWARN(x)          if(_WEBSOCKETS_LOGLEVEL_>1) { DBG_PORT.print("[WS] "); DBG_PORT.println(x); }
-#define WSK_LOGWARN0(x)         if(_WEBSOCKETS_LOGLEVEL_>1) { DBG_PORT.print(x); }
-#define WSK_LOGWARN1(x,y)       if(_WEBSOCKETS_LOGLEVEL_>1) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.println(y); }
-#define WSK_LOGWARN2(x,y,z)     if(_WEBSOCKETS_LOGLEVEL_>1) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.println(z); }
-#define WSK_LOGWARN3(x,y,z,w)   if(_WEBSOCKETS_LOGLEVEL_>1) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.print(z); DBG_PORT.print(" "); DBG_PORT.println(w); }
+#define WSK_LOGERROR(x)         if(_WEBSOCKETS_LOGLEVEL_>0) { WS_PRINT_MARK; WS_PRINTLN(x); }
+#define WSK_LOGERROR0(x)        if(_WEBSOCKETS_LOGLEVEL_>0) { WS_PRINT(x); }
+#define WSK_LOGERROR1(x,y)      if(_WEBSOCKETS_LOGLEVEL_>0) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINTLN(y); }
+#define WSK_LOGERROR2(x,y,z)    if(_WEBSOCKETS_LOGLEVEL_>0) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINTLN(z); }
+#define WSK_LOGERROR3(x,y,z,w)  if(_WEBSOCKETS_LOGLEVEL_>0) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINT(z); WS_PRINTLN(w); }
 
 /////////////////////
 
-#define WSK_LOGINFO(x)          if(_WEBSOCKETS_LOGLEVEL_>2) { DBG_PORT.print("[WS] "); DBG_PORT.println(x); }
-#define WSK_LOGINFO0(x)         if(_WEBSOCKETS_LOGLEVEL_>2) { DBG_PORT.print(x); }
-#define WSK_LOGINFO1(x,y)       if(_WEBSOCKETS_LOGLEVEL_>2) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.println(y); }
-#define WSK_LOGINFO2(x,y,z)     if(_WEBSOCKETS_LOGLEVEL_>2) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.println(z); }
-#define WSK_LOGINFO3(x,y,z,w)   if(_WEBSOCKETS_LOGLEVEL_>2) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.print(z); DBG_PORT.print(" "); DBG_PORT.println(w); }
+#define WSK_LOGWARN(x)          if(_WEBSOCKETS_LOGLEVEL_>1) { WS_PRINT_MARK; WS_PRINTLN(x); }
+#define WSK_LOGWARN0(x)         if(_WEBSOCKETS_LOGLEVEL_>1) { WS_PRINT(x); }
+#define WSK_LOGWARN1(x,y)       if(_WEBSOCKETS_LOGLEVEL_>1) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINTLN(y); }
+#define WSK_LOGWARN2(x,y,z)     if(_WEBSOCKETS_LOGLEVEL_>1) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINTLN(z); }
+#define WSK_LOGWARN3(x,y,z,w)   if(_WEBSOCKETS_LOGLEVEL_>1) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINT(z);  WS_PRINTLN(w); }
 
 /////////////////////
 
-#define WSK_LOGDEBUG(x)         if(_WEBSOCKETS_LOGLEVEL_>3) { DBG_PORT.print("[WS] "); DBG_PORT.println(x); }
-#define WSK_LOGDEBUG0(x)        if(_WEBSOCKETS_LOGLEVEL_>3) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); }
-#define WSK_LOGDEBUG1(x,y)      if(_WEBSOCKETS_LOGLEVEL_>3) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.println(y); }
-#define WSK_LOGDEBUG2(x,y,z)    if(_WEBSOCKETS_LOGLEVEL_>3) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.println(z); }
-#define WSK_LOGDEBUG3(x,y,z,w)  if(_WEBSOCKETS_LOGLEVEL_>3) { DBG_PORT.print("[WS] "); DBG_PORT.print(x); DBG_PORT.print(" "); DBG_PORT.print(y); DBG_PORT.print(" "); DBG_PORT.print(z); DBG_PORT.print(" "); DBG_PORT.println(w); }
+#define WSK_LOGINFO(x)          if(_WEBSOCKETS_LOGLEVEL_>2) { WS_PRINT_MARK; WS_PRINTLN(x); }
+#define WSK_LOGINFO0(x)         if(_WEBSOCKETS_LOGLEVEL_>2) { WS_PRINT(x); }
+#define WSK_LOGINFO1(x,y)       if(_WEBSOCKETS_LOGLEVEL_>2) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINTLN(y); }
+#define WSK_LOGINFO2(x,y,z)     if(_WEBSOCKETS_LOGLEVEL_>2) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINTLN(z); }
+#define WSK_LOGINFO3(x,y,z,w)   if(_WEBSOCKETS_LOGLEVEL_>2) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINT(z); WS_PRINTLN(w); }
+
+/////////////////////
+
+#define WSK_LOGDEBUG(x)         if(_WEBSOCKETS_LOGLEVEL_>3) { WS_PRINT_MARK; WS_PRINTLN(x); }
+#define WSK_LOGDEBUG0(x)        if(_WEBSOCKETS_LOGLEVEL_>3) { WS_PRINT_MARK; WS_PRINT(x); }
+#define WSK_LOGDEBUG1(x,y)      if(_WEBSOCKETS_LOGLEVEL_>3) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINTLN(y); }
+#define WSK_LOGDEBUG2(x,y,z)    if(_WEBSOCKETS_LOGLEVEL_>3) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINTLN(z); }
+#define WSK_LOGDEBUG3(x,y,z,w)  if(_WEBSOCKETS_LOGLEVEL_>3) { WS_PRINT_MARK; WS_PRINT(x); WS_PRINT(y); WS_PRINT(z); WS_PRINTLN(w); }
 
 /////////////////////
 

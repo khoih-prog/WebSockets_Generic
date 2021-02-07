@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.3.5
+  Version: 2.4.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -42,7 +42,8 @@
   2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
   2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
-  2.3.5   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet. sync with v2.3.4 of original WebSockets library
+  2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
+                                  Sync with v2.3.4 of original WebSockets library
  *****************************************************************************************************************************/
 
 #pragma once
@@ -50,12 +51,12 @@
 #ifndef WEBSOCKETSVERSION_GENERIC_H_
 #define WEBSOCKETSVERSION_GENERIC_H_
 
-#define WEBSOCKETS_VERSION "2.3.5"
+#define WEBSOCKETS_VERSION "2.4.0"
 
-#define WEBSOCKETS_VERSION_MAJOR 2
-#define WEBSOCKETS_VERSION_MINOR 3
-#define WEBSOCKETS_VERSION_PATCH 5
+#define WEBSOCKETS_GENERIC_VERSION_MAJOR    2
+#define WEBSOCKETS_GENERIC_VERSION_MINOR    4
+#define WEBSOCKETS_GENERIC_VERSION_PATCH    0
 
-#define WEBSOCKETS_VERSION_INT 2003005
+#define WEBSOCKETS_GENERIC_VERSION_INT      2004000
 
 #endif /* WEBSOCKETSVERSION_GENERIC_H_ */
