@@ -107,7 +107,7 @@ void setup()
   delay(200);
 
   Serial.println("\nStart ESP8266_WebSocketClient on " + String(ARDUINO_BOARD));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
 
@@ -161,5 +161,4 @@ void setup()
 void loop()
 {
   webSocket.loop();
-  delay(10000);
 }

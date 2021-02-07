@@ -304,7 +304,7 @@ void setup()
   Serial.println("\nStart ENC28J60_Blynk on " + String(BOARD_NAME));
 #endif
 
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Blynk.begin();
   
@@ -312,12 +312,12 @@ void setup()
 
 #if USE_LOCAL_SERVER
   Serial.println("\nStart ENC28J60_Blynk, no WM, on " + String(BOARD_NAME) + String(" using Local Server"));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
   
   Blynk.begin(auth, server, BLYNK_HARDWARE_PORT);
 #else
   Serial.println("\nStart ENC28J60_Blynk, no WM, on " + String(BOARD_NAME) + String(" using Cloud Server"));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
   
   //Blynk.begin(auth);
   // You can also specify server:

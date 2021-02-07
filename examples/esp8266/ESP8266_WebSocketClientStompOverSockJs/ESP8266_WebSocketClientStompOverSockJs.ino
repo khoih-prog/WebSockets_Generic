@@ -80,7 +80,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         else if (payload[0] == 'o')
         {
           // on open connection
-          char *msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
+          const char *msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
           webSocket.sendTXT(msg);
 
         }
@@ -88,7 +88,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         {
           // subscribe to some channels
 
-          char *msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
+          const char *msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
           webSocket.sendTXT(msg);
           delay(1000);
 
@@ -120,7 +120,7 @@ void setup()
   Serial.begin(115200);
 
   Serial.println("\nStart ESP8266_WebSocketClientStompOverSockJs on " + String(ARDUINO_BOARD));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   // connect to WiFi
   Serial.print("Logging into WLAN: "); Serial.print(wlan_ssid); Serial.print(" ...");

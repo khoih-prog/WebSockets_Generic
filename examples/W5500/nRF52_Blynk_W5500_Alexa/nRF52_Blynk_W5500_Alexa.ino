@@ -297,7 +297,7 @@ void setup()
   Serial.println("\nStart nRF52_Blynk_W5500_Alexa on " + String(BOARD_NAME));
 #endif
 
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
   
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH); // Deselect the SD card

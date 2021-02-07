@@ -139,7 +139,7 @@ void setup()
   while (!Serial);
 
   Serial.println("\nStart ESP8266_WebSocketClientSocketIOack on " + String(ARDUINO_BOARD));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
 

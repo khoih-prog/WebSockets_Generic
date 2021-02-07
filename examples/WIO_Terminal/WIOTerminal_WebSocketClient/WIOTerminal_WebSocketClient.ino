@@ -12,6 +12,8 @@
   Original Author: Markus Sattler
 *****************************************************************************************************************************/
 
+// Note: Must use Seeed_Arduino_mbedtls-dev Library version to avoid "esp_system.h" error
+
 #if !defined(SEEED_WIO_TERMINAL)
   #error This code is intended to run on the SEEED_WIO_TERMINAL ! Please check your Tools->Board setting.
 #endif
@@ -126,14 +128,7 @@ void setup()
   while (!Serial);
 
   Serial.println("\nStart WIOTerminal_WebSocketClient on " + String(BOARD_NAME));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
-
-  for (uint8_t t = 4; t > 0; t--)
-  {
-    Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
-    Serial.flush();
-    delay(1000);
-  }
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WiFiMulti.addAP("SSID", "passpasspass");
 

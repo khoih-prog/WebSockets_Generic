@@ -12,6 +12,18 @@
   Author: Markus Sattler
  *****************************************************************************************************************************/
 
+#if ( defined(ARDUINO_SAM_DUE) || defined(__SAM3X8E__) )
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN       10
+  #define BOARD_TYPE      "SAM DUE"
+#elif ( defined(CORE_TEENSY) )  
+  #error You have to use examples written for Teensy
+#endif
+
+#ifndef BOARD_NAME
+  #define BOARD_NAME    BOARD_TYPE
+#endif
+
 #define _WEBSOCKETS_LOGLEVEL_     3
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ENC28J60
 
@@ -116,6 +128,7 @@ void setup()
 
   Serial.print("\nStart WebSocketClientIO_ENC on " + String(BOARD_NAME));
   Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");

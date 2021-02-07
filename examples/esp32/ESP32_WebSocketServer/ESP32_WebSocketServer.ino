@@ -98,16 +98,9 @@ void setup()
   while (!Serial);
 
   Serial.println("\nStart ESP32_WebSocketServer on " + String(ARDUINO_BOARD));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
-
-  for (uint8_t t = 4; t > 0; t--)
-  {
-    Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
-    Serial.flush();
-    delay(1000);
-  }
 
   WiFiMulti.addAP("SSID", "passpasspass");
 

@@ -125,7 +125,7 @@ void setup()
   Serial.begin(115200);
 
   Serial.println("\nStart ESP8266_WebSocketClientStomp on " + String(ARDUINO_BOARD));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
   
   // connect to WiFi
   Serial.print("Logging into WLAN: "); Serial.print(wlan_ssid); Serial.print(" ...");

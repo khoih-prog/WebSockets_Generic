@@ -259,7 +259,7 @@ void setup()
   //delay(1000);
 
   Serial.println("\nStart Blynk_WiFiNINA_WM using WiFiNINA_Shield on " + String(BOARD_NAME));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
 #if USE_BLYNK_WM
   Serial.println(F("Start Blynk_WM"));

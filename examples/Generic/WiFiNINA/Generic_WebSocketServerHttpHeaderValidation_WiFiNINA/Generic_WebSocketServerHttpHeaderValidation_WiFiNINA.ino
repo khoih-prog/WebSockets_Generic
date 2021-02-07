@@ -12,6 +12,18 @@
   Original Author: Markus Sattler
  *****************************************************************************************************************************/
 
+#if ( defined(ARDUINO_SAM_DUE) || defined(__SAM3X8E__) )
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN       10
+  #define BOARD_TYPE      "SAM DUE"
+#elif ( defined(CORE_TEENSY) )  
+  #error You have to use examples written for Teensy
+#endif
+
+#ifndef BOARD_NAME
+  #define BOARD_NAME    BOARD_TYPE
+#endif
+
 #define _WEBSOCKETS_LOGLEVEL_     3
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
@@ -87,7 +99,7 @@ void setup()
   while (!Serial);
 
   Serial.println("\nStart Generic_WebSocketServerHttpHeaderValidation_WiFiNINA on " + String(BOARD_NAME));
-  Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
+  Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");
   Serial.print("MOSI:");
@@ -98,13 +110,6 @@ void setup()
   Serial.println(SCK);
   Serial.print("SS:");
   Serial.println(SS);
-
-  for (uint8_t t = 4; t > 0; t--)
-  {
-    Serial.println("[SETUP] BOOT WAIT " + String(t));
-    Serial.flush();
-    delay(1000);
-  }
 
   // check for the WiFi module:
   if (WiFi.status() == WL_NO_MODULE)
