@@ -19,6 +19,7 @@
   * [Currently supported WiFi shields/modules](#currently-supported-wifi-shieldsmodules)
   * [Currently supported Ethernet shields/modules](#currently-supported-ethernet-shieldsmodules)
 * [Changelog](#changelog)
+  * [Release v2.4.1](#release-v241)
   * [Major Release v2.4.0](#major-release-v240)
   * [Release v2.3.4](#release-v234)
   * [Release v2.3.3](#release-v233)
@@ -186,6 +187,12 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
 ---
 
 ## Changelog
+
+### Release v2.4.1
+
+1. Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes
+2. Update Packages' and Libraries' Patches 
+3. Add `Bug Report` and `Feature Request` templates
 
 ### Major Release v2.4.0
 
@@ -1181,7 +1188,7 @@ It also uses [**WebSockets_Generic** library](https://github.com/khoih-prog/WebS
 
 ```
 Start nRF52_Blynk_W5500_Alexa using W5x00_Shield on NRF52840_FEATHER
-WebSockets_Generic v2.4.0
+WebSockets_Generic v2.4.1
 LittleFS Flag read = 0xd0d04321
 Flag read = 0xd0d04321
 No doubleResetDetected
@@ -1271,7 +1278,7 @@ It also uses [**WebSockets_Generic** library](https://github.com/khoih-prog/WebS
 
 ```
 Start Blynk_WiFiNINA_WM using WiFiNINA_Shield on SAMD NANO_33_IOT
-WebSockets_Generic v2.4.0
+WebSockets_Generic v2.4.1
 Start Blynk_WM
 Flag read = 0xd0d04321
 No doubleResetDetected
@@ -1342,7 +1349,7 @@ Turn off Device ID: ****
 
 ```
 Start Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER
-WebSockets_Generic v2.4.0
+WebSockets_Generic v2.4.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1625,7 +1632,7 @@ Device 123456789012345678901234 set position to 0
 
 ```
 Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.4.0
+WebSockets_Generic v2.4.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1708,7 +1715,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 
 ```
 Start Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
-WebSockets_Generic v2.4.0
+WebSockets_Generic v2.4.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1792,7 +1799,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 ```
 
 Start WIOTerminal_WebSocketClientSSL on WIO_TERMINAL
-WebSockets_Generic v2.4.0
+WebSockets_Generic v2.4.1
 WebSockets Client started @ IP address: 192.168.2.150
 WebSockets Server : wss://echo.websocket.org
 Connected to WebSockets Server @ wss://echo.websocket.org
@@ -1822,7 +1829,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```
 Start Generic_WebSocketClientSSL_WiFiNINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.4.0
+WebSockets_Generic v2.4.1
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1874,6 +1881,12 @@ Sometimes, the library will only work if you update the core to the newer or old
 ---
 
 ## Releases
+
+### Release v2.4.1
+
+1. Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes
+2. Update Packages' and Libraries' Patches 
+3. Add `Bug Report` and `Feature Request` templates
 
 ### Major Release v2.4.0
 

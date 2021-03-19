@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.4.0
+  Version: 2.4.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -44,6 +44,7 @@
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
   2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
                                   Sync with v2.3.4 of original WebSockets library
+  2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes  
  *****************************************************************************************************************************/
 
 #pragma once
@@ -283,7 +284,8 @@ void WebSocketsClient::beginSocketIOSSLWithCA(const char * host, uint16_t port, 
 
 #endif    // HAS_SSL
 
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+  #warning WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC
 /**
    called in arduino loop
 */
@@ -305,6 +307,8 @@ void WebSocketsClient::loop(void)
     }
 
 #if defined(HAS_SSL)
+  #warning HAS_SSL
+  
     if (_client.isSSL)
     {
       WSK_LOGINFO("[WS-Client] Connect wss...");
@@ -324,14 +328,19 @@ void WebSocketsClient::loop(void)
         WSK_LOGINFO("[WS-Client] Setting CA certificate");
 
 #if defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
+  #warning ESP32 or NETWORK_RTL8720DN
         _client.ssl->setCACert(_CA_cert);
+        
 #elif defined(ESP8266) && defined(SSL_AXTLS)
+  #warning ESP8266 and SSL_AXTLS
         _client.ssl->setCACert((const uint8_t *)_CA_cert, strlen(_CA_cert) + 1);
+        
 #elif defined(ESP8266) && ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
+  #warning ESP8266 and SSL_BEARSSL
         _client.ssl->setTrustAnchors(_CA_cert);
         
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)    //defined(SEEED_WIO_TERMINAL)
-        
+  #warning NETWORK_RTL8720DN    
         _client.ssl->setCACert(_CA_cert); 
    
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
@@ -341,16 +350,40 @@ void WebSocketsClient::loop(void)
   #error setCACert not implemented
 #endif
       }
-#if ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
-      else if (_fingerprint)
+
+////////////////////
+#if defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
+      else if (!SSL_FINGERPRINT_IS_SET) 
+      {
+        // ESP32 has no setInsecure()
+        //_client.ssl->setInsecure();    
+      }
+#elif defined(ESP8266)
+      else if (!SSL_FINGERPRINT_IS_SET) 
+      {
+        _client.ssl->setInsecure();    
+      }
+////////////////////
+       
+#elif ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
+      else if (SSL_FINGERPRINT_IS_SET)
       {
         _client.ssl->setFingerprint(_fingerprint);
       }
       else
       {
+        #if defined(ESP8266)      
+        // ESP32 has no setInsecure()
         _client.ssl->setInsecure();
+        #endif        
       }
-#endif
+      
+      if(_client_cert && _client_key) 
+      {
+        _client.ssl->setClientRSACert(_client_cert, _client_key);
+        WSK_LOGINFO("[WS-Client] setting client certificate and key");
+      }  
+#endif    // defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
     }
     else
     {
@@ -366,6 +399,7 @@ void WebSocketsClient::loop(void)
     }
 
 #else   // HAS_SSL
+    #warning Not HAS_SSL
     _client.tcp = new WEBSOCKETS_NETWORK_CLASS();
 #endif  // HAS_SSL
 
@@ -417,7 +451,7 @@ void WebSocketsClient::loop(void)
     }
   }
 }
-#endif
+#endif    // (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
 
 /**
    set callback function
@@ -997,7 +1031,7 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
           }
         case 403:    ///< Forbidden
         // todo handle login
-        default:    ///< Server dont unterstand request
+        default:    ///< Server dont understand request
           ok = false;
 
           WSK_LOGINFO1("[WS-Client][handleHeader] serverCode is not 101 :", client->cCode);
@@ -1105,7 +1139,8 @@ void WebSocketsClient::connectedCb()
 //#if (defined(SSL_AXTLS) || defined(ESP32)) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFININA) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_RTL8720DN)
 //////
 
-  if (_client.isSSL && _fingerprint.length())
+  //if (_client.isSSL && _fingerprint.length())
+  if(_client.isSSL && SSL_FINGERPRINT_IS_SET)
   {
     if (!_client.ssl->verify(_fingerprint.c_str(), _host.c_str()))
     {
@@ -1116,14 +1151,18 @@ void WebSocketsClient::connectedCb()
     }
   }
 #else
-  if (_client.isSSL && _fingerprint)
+  //if (_client.isSSL && _fingerprint)
+  if(_client.isSSL && SSL_FINGERPRINT_IS_SET)
   {
   }
 #endif
   else if (_client.isSSL && !_CA_cert)
   {
 #if (defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
+  #if defined(ESP8266)
+    // ESP32 has no setInsecure()
     _client.ssl->setInsecure();
+  #endif  
 #endif
   }
 
