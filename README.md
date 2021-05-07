@@ -127,7 +127,7 @@ This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Gener
 
 #### Important Notes
 
-1. Currently, the WebSocketServer feature is usable only for ESP8266/ESP32.
+1. Currently, the WebSocketServer feature is usable only for ESP8266/ESP32 using native WiFi.
 2. The timeline when to fix and reintroduce the WebSocketServer feature to other boards is not determined yet.
 3. Please use the new [**WebSockets2_Generic Library**](https://github.com/khoih-prog/WebSockets2_Generic) if WebSocketServer is necessary. See [Issue 2](https://github.com/khoih-prog/WebSockets_Generic/issues/2), [Issue 3](https://github.com/khoih-prog/WebSockets_Generic/issues/3) and [Issue 4](https://github.com/khoih-prog/WebSockets_Generic/issues/4)
 
