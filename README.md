@@ -88,7 +88,7 @@
   * [For Teensy boards using W5x00 Ethernet shield](#for-teensy-boards-using-w5x00-ethernet-shield)
   * [For Teensy boards using WiFiNINA](#for-teensy-boards-using-wifinina) 
 * [Example Generic_WebSocketClient_WiFiNINA](#example-generic_websocketclient_wifinina)
-* [Debug Termimal Output Samples](#debug-termimal-output-samples)
+* [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. Debug Terminal Output when running nRF52_Blynk_W5500_Alexa on NRF52840_FEATHER](#1-debug-terminal-output-when-running-nrf52_blynk_w5500_alexa-on-nrf52840_feather)
   * [2. Debug Terminal Output when running SAMD_Blynk_NINA_Alexa on SAMD NANO_33_IOT](#2-debug-terminal-output-when-running-samd_blynk_nina_alexa-on-samd-nano_33_iot)
   * [3. Debug Terminal Output when running Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER](#3-debug-terminal-output-when-running-generic_websocketclient_ethernetenc-on-nrf52840_feather)
@@ -1204,7 +1204,7 @@ void loop()
 ---
 ---
 
-### Debug Termimal Output Samples
+### Debug Terminal Output Samples
 
 #### 1. Debug Terminal Output when running [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa) on NRF52840_FEATHER
 
