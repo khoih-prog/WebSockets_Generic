@@ -127,7 +127,7 @@ This [WebSockets_Generic library](https://github.com/khoih-prog/WebSockets_Gener
 
 #### Important Notes
 
-1. Currently, the WebSocketServer feature is usable only for ESP8266/ESP32 using native WiFi.
+1. Currently, the WebSocketServer feature is usable only for ESP8266/ESP32.
 2. The timeline when to fix and reintroduce the WebSocketServer feature to other boards is not determined yet.
 3. Please use the new [**WebSockets2_Generic Library**](https://github.com/khoih-prog/WebSockets2_Generic) if WebSocketServer is necessary. See [Issue 2](https://github.com/khoih-prog/WebSockets_Generic/issues/2), [Issue 3](https://github.com/khoih-prog/WebSockets_Generic/issues/3) and [Issue 4](https://github.com/khoih-prog/WebSockets_Generic/issues/4)
 
@@ -2012,6 +2012,6 @@ If you want to contribute to this project:
 
 - Most of the credits go to original author [**Markus Sattler**](https://github.com/Links2004).
 
-- The library is licensed under [**LGPLv2.1**](https://github.com/Links2004/arduinoWebSockets/blob/master/LICENSE) and [**MIT**](https://github.com/khoih-prog/WebSockets_Generic/blob/master/LICENSE)
+- The library is licensed under [**GPLv3**](https://github.com/khoih-prog/WebSockets_Generic/blob/master/LICENSE)
 
 - [libb64](http://libb64.sourceforge.net/) written by Chris Venter. It is distributed under Public Domain see [LICENSE](https://github.com/Links2004/arduinoWebSockets/blob/master/src/libb64/LICENSE).
