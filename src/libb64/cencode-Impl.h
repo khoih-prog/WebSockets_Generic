@@ -55,51 +55,63 @@ int base64_encode_block(const char* plaintext_in, int length_in, char* code_out,
   {
       while (1)
       {
-      case step_A:
-        if (plainchar == plaintextend)
-        {
-          state_in->result = result;
-          state_in->step = step_A;
-          return codechar - code_out;
-        }
-        
-        fragment = *plainchar++;
-        result = (fragment & 0x0fc) >> 2;
-        *codechar++ = base64_encode_value(result);
-        result = (fragment & 0x003) << 4;
-      case step_B:
-        if (plainchar == plaintextend)
-        {
-          state_in->result = result;
-          state_in->step = step_B;
-          return codechar - code_out;
-        }
-        
-        fragment = *plainchar++;
-        result |= (fragment & 0x0f0) >> 4;
-        *codechar++ = base64_encode_value(result);
-        result = (fragment & 0x00f) << 2;
-      case step_C:
-        if (plainchar == plaintextend)
-        {
-          state_in->result = result;
-          state_in->step = step_C;
-          return codechar - code_out;
-        }
-        
-        fragment = *plainchar++;
-        result |= (fragment & 0x0c0) >> 6;
-        *codechar++ = base64_encode_value(result);
-        result  = (fragment & 0x03f) >> 0;
-        *codechar++ = base64_encode_value(result);
+        case step_A:
+          if (plainchar == plaintextend)
+          {
+            state_in->result = result;
+            state_in->step = step_A;
+            return codechar - code_out;
+          }
+          
+          fragment = *plainchar++;
+          result = (fragment & 0x0fc) >> 2;
+          *codechar++ = base64_encode_value(result);
+          result = (fragment & 0x003) << 4;
+          
+          break;
+          
+        case step_B:
+          if (plainchar == plaintextend)
+          {
+            state_in->result = result;
+            state_in->step = step_B;
+            return codechar - code_out;
+          }
+          
+          fragment = *plainchar++;
+          result |= (fragment & 0x0f0) >> 4;
+          *codechar++ = base64_encode_value(result);
+          result = (fragment & 0x00f) << 2;
+          
+          break;
+          
+        case step_C:
+          if (plainchar == plaintextend)
+          {
+            state_in->result = result;
+            state_in->step = step_C;
+            return codechar - code_out;
+          }
+          
+          fragment = *plainchar++;
+          result |= (fragment & 0x0c0) >> 6;
+          *codechar++ = base64_encode_value(result);
+          result  = (fragment & 0x03f) >> 0;
+          *codechar++ = base64_encode_value(result);
 
-        ++(state_in->stepcount);
+          ++(state_in->stepcount);
+          
+          if (state_in->stepcount == CHARS_PER_LINE / 4)
+          {
+            *codechar++ = '\n';
+            state_in->stepcount = 0;
+          }
+          
+          break;
         
-        if (state_in->stepcount == CHARS_PER_LINE / 4)
-        {
-          *codechar++ = '\n';
-          state_in->stepcount = 0;
-        }
+        default:
+        
+          break;  
       }
   }
   /* control should not reach here */

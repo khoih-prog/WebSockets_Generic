@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.4.1
+  Version: 2.5.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -44,12 +44,13 @@
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
   2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
                                   Sync with v2.3.4 of original WebSockets library
-  2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes                              
+  2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
+  2.5.0   K Hoang      22/05/2021 Add support to WiFi101                            
  *****************************************************************************************************************************/
 
 #pragma once
 
-#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.4.1"
+#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.5.0"
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -270,6 +271,7 @@
 #define NETWORK_RTL8720DN         (8)
 #define NETWORK_NATIVEETHERNET    (9)
 #define NETWORK_LAN8742A          (10)
+#define NETWORK_WIFI101           (11)
 ////////////////////////////////
 
 // max size of the WS Message Header
@@ -297,7 +299,7 @@
           defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
-    #define WEBSOCKETS_NETWORK_TYPE NETWORK_WIFININA
+    #define WEBSOCKETS_NETWORK_TYPE     NETWORK_WIFININA
 
   #elif ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
        || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRFox1200) || defined(ARDUINO_SAMD_MKRWAN1300) || defined(ARDUINO_SAMD_MKRWAN1310) \
@@ -305,20 +307,25 @@
        || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) || defined(__SAMD21E18A__) || defined(__SAMD51__) || defined(__SAMD51J20A__) || defined(__SAMD51J19A__) \
        || defined(__SAMD51G19A__) || defined(__SAMD51P19A__) || defined(__SAMD21G18A__) )
        
-    #if defined(SEEED_WIO_TERMINAL)
+       
+    #if defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) 
+      //KH
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101     
+      #define WEBSOCKETS_NETWORK_TYPE     NETWORK_WIFI101
+    #elif defined(SEEED_WIO_TERMINAL)
       //KH, from v2.3.2
       #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN
       #define WEBSOCKETS_NETWORK_TYPE     NETWORK_RTL8720DN
     #else  
       //KH
-      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA     
       #define WEBSOCKETS_NETWORK_TYPE     NETWORK_WIFININA
     #endif
     
   #else
     //KH
     #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100
-    #define WEBSOCKETS_NETWORK_TYPE NETWORK_W5100
+    #define WEBSOCKETS_NETWORK_TYPE       NETWORK_W5100
 
   #endif  //#if defined(ESP8266) || defined(ESP31B)
   
@@ -450,6 +457,18 @@
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
+  
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101)
+
+  //KH
+  #include <WiFi101.h>
+  #include <WiFiSSLClient.h>
+  
+  #define SSL_AXTLS
+  
+  #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiSSLClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer  
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ETHERNET_ENC)
 
@@ -579,7 +598,7 @@ typedef struct
 
 #if defined(HAS_SSL)
   bool isSSL = false;    ///< run in ssl mode
-  WEBSOCKETS_NETWORK_SSL_CLASS * ssl;
+  WEBSOCKETS_NETWORK_SSL_CLASS * ssl = nullptr;
 #endif
 
   String cUrl;           ///< http url

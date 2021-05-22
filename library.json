@@ -1,6 +1,6 @@
 {
   "name": "WebSockets_Generic",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, etc. besides ESP8266/ESP32",
   "keywords": "wifi, WiFiNINA, http, web, server, client, websocket, websockets-server,websockets-client, Mega, Teensy, SAM DUE, SAMD21, SAMD51, STM32, nRF52, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EtnernetENC, UIPEthernet, NativeEthernet, ESP32, ESP8266, W5100, W5200, W5500, ENC28J60",
   "authors": [
@@ -33,19 +33,19 @@
     {
       "owner": "khoih.prog",
       "name": "WiFiNINA_Generic",
-      "version": ">=1.8.0",
+      "version": ">=1.8.5",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "DoubleResetDetector_Generic",
-      "version": ">=1.0.2",
+      "version": ">=1.2.0",
       "platforms": ["*"]
     },
     {
       "owner": "khoih.prog",
       "name": "FlashStorage_SAMD",
-      "version": ">=1.0.0",
+      "version": ">=1.1.0",
       "platforms": ["*"]
     },
     {
@@ -57,19 +57,19 @@
     {
       "owner": "khoih-prog",
       "name": "WiFiWebServer",
-      "version": ">=1.1.0",
+      "version": ">=1.1.1",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "EthernetWebServer",
-      "version": ">=1.2.0",
+      "version": ">=1.5.0",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "EthernetWebServer_STM32",
-      "version": ">=1.1.0",
+      "version": ">=1.2.0",
       "platforms": ["ststm32"]
     },
     {
@@ -93,13 +93,13 @@
     {
       "owner": "uipethernet",
       "name": "UIPEthernet",
-      "version": ">=2.0.8",
+      "version": ">=2.0.10",
       "platforms": ["atmelavr", "atmelmegaavr", "atmelsam", "espressif8266", "intel_arc32", "nordicnrf51", "nxplpc", "ststm32", "teensy"]
     },
     {
       "owner": "jandrassy",
       "name": "EthernetENC",
-      "version": ">=2.0.0",
+      "version": ">=2.0.1",
       "platforms": ["*"]
     },
     {
@@ -117,7 +117,7 @@
     {
       "owner": "sstaub",
       "name": "Ethernet3",
-      "version": ">=1.5.3",
+      "version": ">=1.5.5",
       "platforms": ["*"]
     },
     {

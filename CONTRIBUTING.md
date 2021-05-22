@@ -15,7 +15,7 @@ If you don't find anything, please [open a new issue](https://github.com/khoih-p
 Please ensure to specify the following:
 
 * Arduino IDE version (e.g. 1.8.13) or Platform.io version
-* `SAMD` Core Version (e.g. Arduino SAMD core v1.8.9, Adafruit SAMD core v1.6.4, Seeed Studio SAMD v1.8.1)
+* `SAMD` Core Version (e.g. Arduino SAMD core v1.8.11, Adafruit SAMD core v1.7.0, Seeed Studio SAMD v1.8.1)
 * Contextual information (e.g. what you were trying to achieve)
 * Simplest possible steps to reproduce
 * Anything that might be relevant in your opinion, such as:
@@ -27,10 +27,9 @@ Please ensure to specify the following:
 
 ```
 Arduino IDE version: 1.8.13
-Arduino SAMD Core Version 1.8.9
+Arduino SAMD Core Version 1.8.11
 OS: Ubuntu 20.04 LTS
-Linux xy-Inspiron-3593 5.4.0-65-generic #73-Ubuntu SMP Mon Jan 18 17:25:17 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
-
+Linux xy-Inspiron-3593 5.4.0-73-generic #82-Ubuntu SMP Wed Apr 14 17:39:42 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
 
 Context:
 I encountered an endless loop while trying to connect to Local WiFi.
@@ -41,6 +40,7 @@ Steps to reproduce:
 3. ...
 4. ...
 ```
+
 ### Sending Feature Requests
 
 Feel free to post feature requests. It's helpful if you can explain exactly why the feature would be useful.

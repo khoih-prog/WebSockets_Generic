@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.4.1
+  Version: 2.5.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -44,7 +44,8 @@
   2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
   2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
                                   Sync with v2.3.4 of original WebSockets library
-  2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes  
+  2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
+  2.5.0   K Hoang      22/05/2021 Add support to WiFi101 
  *****************************************************************************************************************************/
 
 #pragma once
@@ -345,7 +346,10 @@ void WebSocketsClient::loop(void)
    
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
   // Do something here for WiFiNINA
-        
+
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101)
+  // Do something here for WiFi101
+          
 #else
   #error setCACert not implemented
 #endif
@@ -678,8 +682,9 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
 {
   bool event = false;
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
-    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) ||   (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)    || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA) || \
+    (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101)
   if (client->isSSL && client->ssl)
   {
     if (client->ssl->connected())
@@ -1029,8 +1034,11 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
           {
             break;
           }
+          
         case 403:    ///< Forbidden
         // todo handle login
+          break;
+          
         default:    ///< Server dont understand request
           ok = false;
 
@@ -1135,7 +1143,7 @@ void WebSocketsClient::connectedCb()
 
 #if defined(HAS_SSL)
 
-#if (defined(SSL_AXTLS) || defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFININA)
+#if (defined(SSL_AXTLS) || defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)) && ( (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFININA) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFI101) )
 //#if (defined(SSL_AXTLS) || defined(ESP32)) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFININA) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_RTL8720DN)
 //////
 

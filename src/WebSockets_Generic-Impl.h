@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.4.1
+  Version: 2.5.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -45,6 +45,7 @@
   2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
                                   Sync with v2.3.4 of original WebSockets library
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
+  2.5.0   K Hoang      22/05/2021 Add support to WiFi101
  *****************************************************************************************************************************/
 
 #pragma once
@@ -647,17 +648,19 @@ void WebSockets::handleWebsocketPayloadCb(WSclient_t * client, bool ok, uint8_t 
         }
       }
     }
-
+   
     switch (header->opCode)
     {
       case WSop_text:
         WSK_LOGDEBUG3("[handleWebsocketPayloadCb] Client: ", client->num, ", text:", (char *) payload);
-        
-      // no break here!
+        messageReceived(client, header->opCode, payload, header->payloadLen, header->fin);
+        break;
+
       case WSop_binary:
       case WSop_continuation:
         messageReceived(client, header->opCode, payload, header->payloadLen, header->fin);
         break;
+        
       case WSop_ping:
         // send pong back
         WSK_LOGDEBUG3("[handleWebsocketPayloadCb] Client: ", client->num, ", ping received", payload ? (const char *)payload : "");               
@@ -665,12 +668,14 @@ void WebSockets::handleWebsocketPayloadCb(WSclient_t * client, bool ok, uint8_t 
         sendFrame(client, WSop_pong, payload, header->payloadLen);
         messageReceived(client, header->opCode, payload, header->payloadLen, header->fin);
         break;
+        
       case WSop_pong:
         WSK_LOGDEBUG3("[handleWebsocketPayloadCb] Client: ", client->num, ", get pong", payload ? (const char *)payload : "");             
                           
         client->pongReceived = true;
         messageReceived(client, header->opCode, payload, header->payloadLen, header->fin);
         break;
+        
       case WSop_close:
         {
           uint16_t reasonCode = 1000;
@@ -690,6 +695,7 @@ void WebSockets::handleWebsocketPayloadCb(WSclient_t * client, bool ok, uint8_t 
           clientDisconnect(client, 1000);
         } 
         break;
+        
       default:
         WSK_LOGDEBUG3("[WS][handleWebsocket] Got unknown opcode: Client =", client->num, ", opcode =", header->opCode);
         clientDisconnect(client, 1002);
