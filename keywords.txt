@@ -76,6 +76,7 @@ onEvent  KEYWORD2
 sendEVENT KEYWORD2
 send KEYWORD2
 loop KEYWORD2
+setReconnectInterval  KEYWORD2
 
 #######################################
 # Literals (LITERAL1)

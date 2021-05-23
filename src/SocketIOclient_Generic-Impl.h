@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.5.0
+  Version: 2.5.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -46,6 +46,7 @@
                                   Sync with v2.3.4 of original WebSockets library
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
+  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
  *****************************************************************************************************************************/
 
 #pragma once
@@ -129,7 +130,7 @@ void SocketIOclient::configureEIOping(bool disableHeartbeat)
   _disableHeartbeat = disableHeartbeat;
 }
 
-void SocketIOclient::initClient(void) 
+void SocketIOclient::initClient() 
 {
   if(_client.cUrl.indexOf("EIO=4") != -1) 
   {
@@ -147,7 +148,7 @@ void SocketIOclient::onEvent(SocketIOclientEvent cbEvent)
   _cbEvent = cbEvent;
 }
 
-bool SocketIOclient::isConnected(void)
+bool SocketIOclient::isConnected()
 {
   return WebSocketsClient::isConnected();
 }
@@ -253,7 +254,7 @@ bool SocketIOclient::sendEVENT(String & payload)
   return sendEVENT((uint8_t *)payload.c_str(), payload.length());
 }
 
-void SocketIOclient::loop(void)
+void SocketIOclient::loop()
 {
   WebSocketsClient::loop();
   unsigned long t = millis();
@@ -261,7 +262,7 @@ void SocketIOclient::loop(void)
   if(!_disableHeartbeat && (t - _lastHeartbeat) > EIO_HEARTBEAT_INTERVAL) 
   {
     _lastHeartbeat = t;
-    WSK_LOGDEBUG("[wsIOc] send ping\n");
+    WSK_LOGINFO("[wsIOc] send ping\n");
     WebSocketsClient::sendTXT(eIOtype_PING);
   }
 }
@@ -273,12 +274,12 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
     case WStype_DISCONNECTED:
       runIOCbEvent(sIOtype_DISCONNECT, NULL, 0);
 
-      WSK_LOGDEBUG("[wsIOc] Disconnected!");
+      WSK_LOGINFO("[wsIOc] Disconnected!");
 
       break;
     case WStype_CONNECTED:
       {
-        WSK_LOGDEBUG1("[wsIOc] Connected to url:", (char *) payload);
+        WSK_LOGWARN1("[wsIOc] Connected to url:", (char *) payload);
 
         // send message to server when Connected
         // Engine.io upgrade confirmation message (required)
@@ -298,12 +299,12 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
           case eIOtype_PING:
             payload[0] = eIOtype_PONG;
 
-            WSK_LOGDEBUG1("[wsIOc] get ping send pong:", (char *) payload);
+            WSK_LOGWARN1("[wsIOc] get ping send pong:", (char *) payload);
 
             WebSocketsClient::sendTXT(payload, length, false);
             break;
           case eIOtype_PONG:
-            WSK_LOGDEBUG("[wsIOc] get pong");
+            WSK_LOGWARN("[wsIOc] get pong");
 
             break;
           case eIOtype_MESSAGE:
@@ -320,8 +321,8 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
               switch (ioType)
               {
                 case sIOtype_EVENT:
-                  WSK_LOGDEBUG1("[wsIOc] get event: ", lData);
-                  WSK_LOGDEBUG1("[wsIOc] get data: ", (char *) data);
+                  WSK_LOGWARN1("[wsIOc] get event: ", lData);
+                  WSK_LOGWARN1("[wsIOc] get data: ", (char *) data);
 
                   break;
                 case sIOtype_CONNECT:
@@ -331,8 +332,8 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
                 case sIOtype_BINARY_EVENT:
                 case sIOtype_BINARY_ACK:
                 default:
-                  WSK_LOGDEBUG1("[wsIOc] Socket.IO Message Type is not implemented:", ioType);
-                  WSK_LOGDEBUG1("[wsIOc] get text:", (char *) payload);
+                  WSK_LOGINFO1("[wsIOc] Socket.IO Message Type is not implemented:", ioType);
+                  WSK_LOGWARN1("[wsIOc] get text:", (char *) payload);
 
                   break;
               }
@@ -344,8 +345,8 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
           case eIOtype_UPGRADE:
           case eIOtype_NOOP:
           default:
-            WSK_LOGDEBUG1("[wsIOc] Socket.IO Message Type is not implemented:", eType);
-            WSK_LOGDEBUG1("[wsIOc] get text:", (char *) payload);
+            WSK_LOGINFO1("[wsIOc] Socket.IO Message Type is not implemented:", eType);
+            WSK_LOGWARN1("[wsIOc] get text:", (char *) payload);
             break;
         }
       }

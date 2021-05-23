@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.5.0
+  Version: 2.5.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -46,6 +46,7 @@
                                   Sync with v2.3.4 of original WebSockets library
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
+  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
  *****************************************************************************************************************************/
 
 #pragma once
@@ -53,12 +54,12 @@
 #ifndef WEBSOCKETSVERSION_GENERIC_H_
 #define WEBSOCKETSVERSION_GENERIC_H_
 
-#define WEBSOCKETS_VERSION "2.5.0"
+#define WEBSOCKETS_VERSION "2.5.1"
 
 #define WEBSOCKETS_GENERIC_VERSION_MAJOR    2
 #define WEBSOCKETS_GENERIC_VERSION_MINOR    5
-#define WEBSOCKETS_GENERIC_VERSION_PATCH    0
+#define WEBSOCKETS_GENERIC_VERSION_PATCH    1
 
-#define WEBSOCKETS_GENERIC_VERSION_INT      2005000
+#define WEBSOCKETS_GENERIC_VERSION_INT      2005001
 
 #endif /* WEBSOCKETSVERSION_GENERIC_H_ */

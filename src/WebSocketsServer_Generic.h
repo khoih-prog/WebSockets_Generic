@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.5.0
+  Version: 2.5.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -46,6 +46,7 @@
                                   Sync with v2.3.4 of original WebSockets library
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
+  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
  *****************************************************************************************************************************/
 
 #pragma once
@@ -60,10 +61,10 @@ class WebSocketsServerCore : protected WebSockets
 {
   public:
     WebSocketsServerCore(const String & origin = "", const String & protocol = "arduino");
-    virtual ~WebSocketsServerCore(void);
+    virtual ~WebSocketsServerCore();
 
-    void begin(void);
-    void close(void);
+    void begin();
+    void close();
 
 #ifdef __AVR__
     typedef void (*WebSocketServerEvent)(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
@@ -103,7 +104,7 @@ class WebSocketsServerCore : protected WebSockets
     bool broadcastPing(uint8_t * payload = NULL, size_t length = 0);
     bool broadcastPing(String & payload);
 
-    void disconnect(void);
+    void disconnect();
     void disconnect(uint8_t num);
 
     void setAuthorization(const char * user, const char * password);
@@ -122,7 +123,7 @@ class WebSocketsServerCore : protected WebSockets
 #endif
 
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void loop(void);    // handle client data only
+    void loop();    // handle client data only
 #endif
 
     WSclient_t * newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient);
@@ -156,7 +157,7 @@ class WebSocketsServerCore : protected WebSockets
     bool clientIsConnected(WSclient_t * client);
 
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void handleClientData(void);
+    void handleClientData();
 #endif
 
     void handleHeader(WSclient_t * client, String * headerLine);
@@ -261,21 +262,21 @@ class WebSocketsServer : public WebSocketsServerCore
 {
   public:
     WebSocketsServer(uint16_t port, const String & origin = "", const String & protocol = "arduino");
-    virtual ~WebSocketsServer(void);
+    virtual ~WebSocketsServer();
 
-    void begin(void);
-    void close(void);
+    void begin();
+    void close();
 
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void loop(void);    // handle incoming client and client data
+    void loop();    // handle incoming client and client data
 #else
     // Async interface not need a loop call
-    void loop(void) __attribute__((deprecated)) {}
+    void loop() __attribute__((deprecated)) {}
 #endif
 
   protected:
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void handleNewClients(void);
+    void handleNewClients();
 #endif
 
     // KH Debug
@@ -302,19 +303,19 @@ class WebSocketsServer : protected WebSockets
 #endif
 
     WebSocketsServer(uint16_t port, String origin = "", String protocol = "arduino");
-    virtual ~WebSocketsServer(void);
+    virtual ~WebSocketsServer();
 
     //KH New Debug
     void displayClientData(WSclient_t *client, bool onlyTCPValid = true);
     
-    void begin(void);
-    void close(void);
+    void begin();
+    void close();
 
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void loop(void);
+    void loop();
 #else
     // Async interface not need a loop call
-    void loop(void) __attribute__((deprecated)) {}
+    void loop() __attribute__((deprecated)) {}
 #endif
 
     void onEvent(WebSocketServerEvent cbEvent);
@@ -347,7 +348,7 @@ class WebSocketsServer : protected WebSockets
     bool broadcastPing(uint8_t * payload = NULL, size_t length = 0);
     bool broadcastPing(String & payload);
 
-    void disconnect(void);
+    void disconnect();
     void disconnect(uint8_t num);
 
     void setAuthorization(const char * user, const char * password);
@@ -401,8 +402,8 @@ class WebSocketsServer : protected WebSockets
     bool clientIsConnected(WSclient_t * client);
 
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void handleNewClients(void);
-    void handleClientData(void);
+    void handleNewClients();
+    void handleClientData();
 #endif
 
     void handleHeader(WSclient_t * client, String * headerLine);

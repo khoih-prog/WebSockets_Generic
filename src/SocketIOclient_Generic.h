@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.5.0
+  Version: 2.5.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -46,6 +46,7 @@
                                   Sync with v2.3.4 of original WebSockets library
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
+  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
  *****************************************************************************************************************************/
 
 #pragma once
@@ -88,26 +89,27 @@ class SocketIOclient : protected WebSocketsClient
     typedef std::function<void(socketIOmessageType_t type, uint8_t * payload, size_t length)> SocketIOclientEvent;
 #endif
 
-    SocketIOclient(void);
-    virtual ~SocketIOclient(void);
+    SocketIOclient();
+    virtual ~SocketIOclient();
 
-    void begin(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", const char * protocol = "arduino");
-    void begin(String host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+    // KH, change to default EIO=4. v2.5.1
+    void begin(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * protocol = "arduino");
+    void begin(String host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
     // KH
-    void begin(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+    void begin(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
 
 #ifdef HAS_SSL
-    void beginSSL(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", const char * protocol = "arduino");
-    void beginSSL(String host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
+    void beginSSL(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * protocol = "arduino");
+    void beginSSL(String host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
 #ifndef SSL_AXTLS
-    void beginSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", const char * CA_cert = NULL, const char * protocol = "arduino");
-    void beginSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=3", BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
+    void beginSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * CA_cert = NULL, const char * protocol = "arduino");
+    void beginSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
     void setSSLClientCertKey(const char * clientCert = NULL, const char * clientPrivateKey = NULL);
     void setSSLClientCertKey(BearSSL::X509List * clientCert = NULL, BearSSL::PrivateKey * clientPrivateKey = NULL);
 #endif
 #endif
 
-    bool isConnected(void);
+    bool isConnected();
 
     void onEvent(SocketIOclientEvent cbEvent);
 
@@ -123,9 +125,15 @@ class SocketIOclient : protected WebSocketsClient
     bool send(socketIOmessageType_t type, const char * payload, size_t length = 0);
     bool send(socketIOmessageType_t type, String & payload);
 
-    void loop(void);
+    void loop();
     
     void configureEIOping(bool disableHeartbeat = false);
+    
+    // KH, add v2.5.1
+    void setReconnectInterval(unsigned long time)
+    {
+      _reconnectInterval = time;
+    }
 
   protected:
     bool _disableHeartbeat  = false;
@@ -139,7 +147,7 @@ class SocketIOclient : protected WebSocketsClient
       }
     }
     
-    void initClient(void);
+    void initClient();
 
     // Handling events from websocket layer
     virtual void runCbEvent(WStype_t type, uint8_t * payload, size_t length)

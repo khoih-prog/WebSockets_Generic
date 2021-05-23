@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.5.0
+  Version: 2.5.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -46,6 +46,7 @@
                                   Sync with v2.3.4 of original WebSockets library
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
+  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
  *****************************************************************************************************************************/
 
 #pragma once
@@ -101,7 +102,7 @@ WebSocketsServer::~WebSocketsServer()
 /**
    called to initialize the Websocket server
 */
-void WebSocketsServerCore::begin(void) 
+void WebSocketsServerCore::begin() 
 {
   // adjust clients storage:
   // _clients[i]'s constructor are already called,
@@ -128,7 +129,7 @@ void WebSocketsServerCore::begin(void)
   WSK_LOGDEBUG(WEBSOCKETS_GENERIC_VERSION);
 }
 
-void WebSocketsServerCore::close(void) 
+void WebSocketsServerCore::close() 
 {
   _runnning = false;
   disconnect();
@@ -408,7 +409,7 @@ bool WebSocketsServerCore::broadcastPing(String & payload)
 /**
    disconnect all clients
 */
-void WebSocketsServerCore::disconnect(void)
+void WebSocketsServerCore::disconnect()
 {
   WSclient_t * client;
 
@@ -806,7 +807,7 @@ WSclient_t * WebSocketsServerCore::handleNewClient(WEBSOCKETS_NETWORK_CLASS * tc
 /**
    Handle incoming Connection Request
 */
-void WebSocketsServer::handleNewClients(void)
+void WebSocketsServer::handleNewClients()
 {
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || \
     (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
@@ -835,7 +836,7 @@ void WebSocketsServer::handleNewClients(void)
 /**
    Handel incomming data from Client
 */
-void WebSocketsServerCore::handleClientData(void)
+void WebSocketsServerCore::handleClientData()
 {
   WSclient_t * client;
   
@@ -1213,7 +1214,7 @@ void WebSocketsServerCore::disableHeartbeat()
 /**
    called to initialize the Websocket server
 */
-void WebSocketsServer::begin(void)
+void WebSocketsServer::begin()
 {
   WebSocketsServerCore::begin();
   _server->begin();
@@ -1221,7 +1222,7 @@ void WebSocketsServer::begin(void)
   WSK_LOGDEBUG("[WS-Server] Server Started.");
 }
 
-void WebSocketsServer::close(void)
+void WebSocketsServer::close()
 {
   WebSocketsServerCore::close();
 
@@ -1239,7 +1240,7 @@ void WebSocketsServer::close(void)
 /**
    called in arduino loop
 */
-void WebSocketsServerCore::loop(void)
+void WebSocketsServerCore::loop()
 {
   if (_runnning)
   {
@@ -1251,7 +1252,7 @@ void WebSocketsServerCore::loop(void)
 /**
    called in arduino loop
 */
-void WebSocketsServer::loop(void)
+void WebSocketsServer::loop()
 {
   if (_runnning)
   {

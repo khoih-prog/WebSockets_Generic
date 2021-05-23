@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.5.0
+  Version: 2.5.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -45,7 +45,8 @@
   2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
                                   Sync with v2.3.4 of original WebSockets library
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
-  2.5.0   K Hoang      22/05/2021 Add support to WiFi101 
+  2.5.0   K Hoang      22/05/2021 Add support to WiFi101
+  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
  *****************************************************************************************************************************/
 
 #pragma once
@@ -61,8 +62,8 @@ class WebSocketsClient : protected WebSockets
     typedef std::function<void(WStype_t type, uint8_t * payload, size_t length)> WebSocketClientEvent;
 #endif
 
-    WebSocketsClient(void);
-    virtual ~WebSocketsClient(void);
+    WebSocketsClient();
+    virtual ~WebSocketsClient();
 
     void begin(const char * host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
     void begin(String host, uint16_t port, String url = "/", String protocol = "arduino");
@@ -127,10 +128,10 @@ class WebSocketsClient : protected WebSockets
 #endif    // HAS_SSL
 
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void loop(void);
+    void loop();
 #else
     // Async interface not need a loop call
-    void loop(void) __attribute__((deprecated)) {}
+    void loop() __attribute__((deprecated)) {}
 #endif
 
     void onEvent(WebSocketClientEvent cbEvent);
@@ -148,7 +149,7 @@ class WebSocketsClient : protected WebSockets
     bool sendPing(uint8_t * payload = NULL, size_t length = 0);
     bool sendPing(String & payload);
 
-    void disconnect(void);
+    void disconnect();
 
     void setAuthorization(const char * user, const char * password);
     void setAuthorization(const char * auth);
@@ -160,7 +161,7 @@ class WebSocketsClient : protected WebSockets
     void enableHeartbeat(uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount);
     void disableHeartbeat();
 
-    bool isConnected(void);
+    bool isConnected();
 
   protected:
     String _host;
@@ -200,7 +201,7 @@ class WebSocketsClient : protected WebSockets
     bool clientIsConnected(WSclient_t * client);
 
 #if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
-    void handleClientData(void);
+    void handleClientData();
 #endif
 
     void sendHeader(WSclient_t * client);

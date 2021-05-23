@@ -19,6 +19,7 @@
   * [Currently supported WiFi shields/modules](#currently-supported-wifi-shieldsmodules)
   * [Currently supported Ethernet shields/modules](#currently-supported-ethernet-shieldsmodules)
 * [Changelog](#changelog)
+  * [Release v2.5.1](#release-v251)
   * [Major Release v2.5.0](#major-release-v250)
   * [Release v2.4.1](#release-v241)
   * [Major Release v2.4.0](#major-release-v240)
@@ -190,6 +191,12 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
 ---
 
 ## Changelog
+
+### Release v2.5.1
+
+1. Default to **EIO4 for Socket.IO**.
+2. Permit changing reconnectInterval in Socket.IO. Default is 0.5s. Set in Sicket.IO examples to 10s.
+2. Better debug settings
 
 ### Major Release v2.5.0
 
@@ -1214,7 +1221,7 @@ It also uses [**WebSockets_Generic** library](https://github.com/khoih-prog/WebS
 
 ```
 Start nRF52_Blynk_W5500_Alexa using W5x00_Shield on NRF52840_FEATHER
-WebSockets_Generic v2.5.0
+WebSockets_Generic v2.5.1
 LittleFS Flag read = 0xd0d04321
 Flag read = 0xd0d04321
 No doubleResetDetected
@@ -1304,7 +1311,7 @@ It also uses [**WebSockets_Generic** library](https://github.com/khoih-prog/WebS
 
 ```
 Start Blynk_WiFiNINA_WM using WiFiNINA_Shield on SAMD NANO_33_IOT
-WebSockets_Generic v2.5.0
+WebSockets_Generic v2.5.1
 Start Blynk_WM
 Flag read = 0xd0d04321
 No doubleResetDetected
@@ -1375,7 +1382,7 @@ Turn off Device ID: ****
 
 ```
 Start Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER
-WebSockets_Generic v2.5.0
+WebSockets_Generic v2.5.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1658,7 +1665,7 @@ Device 123456789012345678901234 set position to 0
 
 ```
 Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.5.0
+WebSockets_Generic v2.5.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1741,7 +1748,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 
 ```
 Start Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
-WebSockets_Generic v2.5.0
+WebSockets_Generic v2.5.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1825,7 +1832,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 ```
 
 Start WIOTerminal_WebSocketClientSSL on WIO_TERMINAL
-WebSockets_Generic v2.5.0
+WebSockets_Generic v2.5.1
 WebSockets Client started @ IP address: 192.168.2.150
 WebSockets Server : wss://echo.websocket.org
 Connected to WebSockets Server @ wss://echo.websocket.org
@@ -1855,7 +1862,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```
 Start Generic_WebSocketClientSSL_WiFiNINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.5.0
+WebSockets_Generic v2.5.1
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1884,6 +1891,159 @@ User-Agent: arduino-WebSocket-Client
 ```
 
 ---
+
+#### 9. Debug Terminal Output when running [WebSocketClientSocketIO_NINA](examples/WiFiNINA/WebSocketClientSocketIO_NINA) on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library
+
+
+```
+
+
+Start WebSocketClientSocketIO_NINA on SAMD_NANO_33_IOT
+WebSockets_Generic v2.5.1
+Used/default SPI pinout:
+MOSI:11
+MISO:12
+SCK:13
+SS:10
+Attempting to connect to SSID: HueNet1
+SSID: HueNet1
+WebSockets Client IP Address: 192.168.2.114
+signal strength (RSSI):-19 dBm
+Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
+[WS] WebSockets_Generic v2.5.1
+[WS] [wsIOc] found EIO=4 disable EIO ping on client
+[WS] [WS-Client] Connect ws...
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=polling HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Origin: file://
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):2586
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX:Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX:Content-Length: 97
+[WS] [WS-Client][handleHeader] RX:Date: Sun, 23 May 2021 04:04:06 GMT
+[WS] [WS-Client][handleHeader] RX:Connection: keep-alive
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:Y
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:
+[IOc] Disconnected
+[WS] [wsIOc] Disconnected!
+[WS] [WS-Client] Connect ws...
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=polling HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Origin: file://
+User-Agent: arduino-WebSocket-Client
+
+```
+
+---
+
+#### 10. Debug Terminal Output when running [Generic_WebSocketClientSocketIO_W5500]examples/Generic/W5500/Generic_WebSocketClientSocketIO_W5500) on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library
+
+
+```
+Start Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using EthernetLarge Library
+WebSockets_Generic v2.5.1
+[WS] Board :NRF52840_FEATHER, setCsPin:10
+[WS] Default SPI pinout:
+[WS] MOSI:25
+[WS] MISO:24
+[WS] SCK:26
+[WS] SS:5
+[WS] =========================
+_pinCS = 0
+W5100 init, using SS_PIN_DEFAULT = 10, new ss_pin = 10, W5100Class::ss_pin = 10
+W5100::init: W5500, SSIZE =8192
+WebSockets Client @ IP address: 192.168.2.123
+Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
+[WS] WebSockets_Generic v2.5.1
+[WS] [wsIOc] found EIO=4 disable EIO ping on client
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=polling HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Origin: file://
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):976
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX:Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX:Content-Length: 97
+[WS] [WS-Client][handleHeader] RX:Date: Sun, 23 May 2021 02:55:58 GMT
+[WS] [WS-Client][handleHeader] RX:Connection: keep-alive
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:s
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:
+[WS] [wsIOc] Disconnected!
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=polling HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Origin: file://
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):976
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX:Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX:Content-Length: 97
+[WS] [WS-Client][handleHeader] RX:Date: Sun, 23 May 2021 02:55:58 GMT
+[WS] [WS-Client][handleHeader] RX:Connection: keep-alive
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:x
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:0
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:
+[WS] [wsIOc] Disconnected!
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=polling HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Origin: file://
+User-Agent: arduino-WebSocket-Client
+```
+
+---
 ---
 
 ### Debug
@@ -1907,6 +2067,12 @@ Sometimes, the library will only work if you update the core to the newer or old
 ---
 
 ## Releases
+
+### Release v2.5.1
+
+1. Default to **EIO4 for Socket.IO**.
+2. Permit changing reconnectInterval in Socket.IO. Default is 0.5s. Set in Sicket.IO examples to 10s.
+2. Better debug settings
 
 ### Major Release v2.5.0
 
