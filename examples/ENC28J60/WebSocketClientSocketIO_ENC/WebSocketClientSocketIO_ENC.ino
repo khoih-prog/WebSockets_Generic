@@ -67,8 +67,8 @@ byte mac[][NUMBER_OF_MAC] =
 IPAddress clientIP(192, 168, 2, 225);
 
 // Select the IP address according to your local network
-IPAddress serverIP(192, 168, 2, 51);
-uint16_t  serverPort = 3000;
+IPAddress serverIP(192, 168, 2, 30);
+uint16_t  serverPort = 8080;
 
 //IPAddress serverIP(10, 11, 100, 100);
 //uint16_t  serverPort = 8880;
@@ -156,7 +156,12 @@ void setup()
   Serial.print(", port: ");
   Serial.println(serverPort);
 
+  // setReconnectInterval to 10s, new from v2.5.1 to avoid flooding server. Default is 0.5s
+  socketIO.setReconnectInterval(10000);
+
   // server address, port and URL
+  // void begin(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+  // To use default EIO=4 fron v2.5.1
   socketIO.begin(serverIP, serverPort);
 
   // event handler
@@ -171,7 +176,7 @@ void loop()
 
   uint64_t now = millis();
 
-  if (now - messageTimestamp > 2000) 
+  if (now - messageTimestamp > 30000) 
   {
     messageTimestamp = now;
 
