@@ -90,14 +90,16 @@
   * [For Teensy boards using WiFiNINA](#for-teensy-boards-using-wifinina) 
 * [Example Generic_WebSocketClient_WiFiNINA](#example-generic_websocketclient_wifinina)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
-  * [1. Debug Terminal Output when running nRF52_Blynk_W5500_Alexa on NRF52840_FEATHER](#1-debug-terminal-output-when-running-nrf52_blynk_w5500_alexa-on-nrf52840_feather)
-  * [2. Debug Terminal Output when running SAMD_Blynk_NINA_Alexa on SAMD NANO_33_IOT](#2-debug-terminal-output-when-running-samd_blynk_nina_alexa-on-samd-nano_33_iot)
-  * [3. Debug Terminal Output when running Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER](#3-debug-terminal-output-when-running-generic_websocketclient_ethernetenc-on-nrf52840_feather)
-  * [4. Debug Terminal Output when running Generic_Ethernet_Blinds on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#4-debug-terminal-output-when-running-generic_ethernet_blinds-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library)
-  * [5. Debug Terminal Output when running WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5500 using Ethernet2 Library](#5-debug-terminal-output-when-running-websocketclientsocketio_w5500-on-nrf52840_feather-with-w5500-using-ethernet2-library)
-  * [6. Debug Terminal Output when running Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#6-debug-terminal-output-when-running-generic_websocketclientsocketio_ethernetenc-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library) 
-  * [7. Debug Terminal Output when running WIOTerminal_WebSocketClientSSL on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library](#7-debug-terminal-output-when-running-wioterminal_websocketclientssl-on-seeedstudio-samd51-wio_terminal-with-realtek-rtl8720dn-wifi-using-seeed_arduino_rpcwifi-library)
-  * [8. Debug Terminal Output when running Generic_WebSocketClientSSL_WiFiNINA on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library](#8-debug-terminal-output-when-running-generic_websocketclientssl_wifinina-on-arduino-samd21-nano-33-iot-with-wifinina-using-wifinina_generic-library)
+  * [1. nRF52_Blynk_W5500_Alexa on NRF52840_FEATHER](#1-nrf52_blynk_w5500_alexa-on-nrf52840_feather)
+  * [2. SAMD_Blynk_NINA_Alexa on SAMD NANO_33_IOT](#2-samd_blynk_nina_alexa-on-samd-nano_33_iot)
+  * [3.Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER](#3-generic_websocketclient_ethernetenc-on-nrf52840_feather)
+  * [4. Generic_Ethernet_Blinds on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#4-generic_ethernet_blinds-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library)
+  * [5. WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5500 using Ethernet2 Library](#5-websocketclientsocketio_w5500-on-nrf52840_feather-with-w5500-using-ethernet2-library)
+  * [6. Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#6-generic_websocketclientsocketio_ethernetenc-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library) 
+  * [7. WIOTerminal_WebSocketClientSSL on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library](#7-wioterminal_websocketclientssl-on-seeedstudio-samd51-wio_terminal-with-realtek-rtl8720dn-wifi-using-seeed_arduino_rpcwifi-library)
+  * [8. Generic_WebSocketClientSSL_WiFiNINA on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library](#8-generic_websocketclientssl_wifinina-on-arduino-samd21-nano-33-iot-with-wifinina-using-wifinina_generic-library)
+  * [9. WIOTerminal_WebSocketClientSSL on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library](#9-websocketclientsocketio_nina-on-arduino-samd21-nano-33-iot-with-wifinina-using-wifinina_generic-library)
+  * [10. Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using EthernetLarge Library](#10-generic_websocketclientsocketio_w5500-on-nrf52840_feather-with-w5x00-using-ethernetlarge-library)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Releases](#releases)
@@ -1213,7 +1215,7 @@ void loop()
 
 ### Debug Terminal Output Samples
 
-#### 1. Debug Terminal Output when running [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa) on NRF52840_FEATHER
+#### 1. [nRF52_Blynk_W5500_Alexa](examples/W5500/nRF52_Blynk_W5500_Alexa) on NRF52840_FEATHER
 
 You can see the **Adafruit NRF52840_FEATHER Express** board, with W5500 Ethernet shield, connects to Blynk using [**BlynkEthernet_WM** library](https://github.com/khoih-prog/BlynkEthernet_WM). 
 
@@ -1303,7 +1305,7 @@ Turn off Device ID: ****
 ```
 ---
 
-#### 2. Debug Terminal Output when running [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa) on SAMD NANO_33_IOT
+#### 2. [SAMD_Blynk_NINA_Alexa](examples/WiFiNINA/SAMD_Blynk_NINA_Alexa) on SAMD NANO_33_IOT
 
 You can see the **Arduino SAMD NANO_33_IoT** board, with built-in WiFiNINA, connects to Blynk using [**Blynk_WiFiNINA_WM** library](https://github.com/khoih-prog/Blynk_WiFiNINA_WM). 
 
@@ -1378,7 +1380,7 @@ Turn off Device ID: ****
 
 ---
 
-#### 3. Debug Terminal Output when running [Generic_WebSocketClient_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClient_EthernetENC) on NRF52840_FEATHER
+#### 3. [Generic_WebSocketClient_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClient_EthernetENC) on NRF52840_FEATHER
 
 ```
 Start Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER
@@ -1418,7 +1420,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.140
 ```
 ---
 
-#### 4. Debug Terminal Output when running [Generic_Ethernet_Blinds](https://github.com/khoih-prog/SinricPro_Generic/tree/master/examples/Generic/Blinds/Generic_Ethernet_Blinds) on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
+#### 4. [Generic_Ethernet_Blinds](https://github.com/khoih-prog/SinricPro_Generic/tree/master/examples/Generic/Blinds/Generic_Ethernet_Blinds) on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
 
 You can see the **NRF52840_FEATHER** board, with NC28J60 using EthernetENC Library, connects to SinricPro service using [**SinricPro_Generic** library](https://github.com/khoih-prog/SinricPro_Generic). 
 
@@ -1661,7 +1663,7 @@ Device 123456789012345678901234 set position to 0
 
 ---
 
-#### 5. Debug Terminal Output when running [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5500 using Ethernet2 Library
+#### 5. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5500 using Ethernet2 Library
 
 ```
 Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet2 Library
@@ -1744,7 +1746,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 
 ---
 
-#### 6. Debug Terminal Output when running [Generic_WebSocketClientSocketIO_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientSocketIO_EthernetENC) on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
+#### 6. [Generic_WebSocketClientSocketIO_EthernetENC](examples/Generic/EthernetENC/Generic_WebSocketClientSocketIO_EthernetENC) on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
 
 ```
 Start Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
@@ -1827,7 +1829,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.51, port: 3000
 
 ---
 
-#### 7. Debug Terminal Output when running [WIOTerminal_WebSocketClientSSL](examples/WIO_Terminal/WIOTerminal_WebSocketClientSSL) on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library
+#### 7. [WIOTerminal_WebSocketClientSSL](examples/WIO_Terminal/WIOTerminal_WebSocketClientSSL) on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library
 
 ```
 
@@ -1858,7 +1860,7 @@ User-Agent: arduino-WebSocket-Client
 
 ---
 
-#### 8. Debug Terminal Output when running [Generic_WebSocketClientSSL_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClientSSL_WiFiNINA) on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library
+#### 8. [Generic_WebSocketClientSSL_WiFiNINA](examples/Generic/WiFiNINA/Generic_WebSocketClientSSL_WiFiNINA) on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library
 
 ```
 Start Generic_WebSocketClientSSL_WiFiNINA on SAMD_NANO_33_IOT
@@ -1892,7 +1894,7 @@ User-Agent: arduino-WebSocket-Client
 
 ---
 
-#### 9. Debug Terminal Output when running [WebSocketClientSocketIO_NINA](examples/WiFiNINA/WebSocketClientSocketIO_NINA) on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library
+#### 9. [WebSocketClientSocketIO_NINA](examples/WiFiNINA/WebSocketClientSocketIO_NINA) on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library
 
 
 ```
@@ -1956,7 +1958,7 @@ User-Agent: arduino-WebSocket-Client
 
 ---
 
-#### 10. Debug Terminal Output when running [Generic_WebSocketClientSocketIO_W5500]examples/Generic/W5500/Generic_WebSocketClientSocketIO_W5500) on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library
+#### 10. [Generic_WebSocketClientSocketIO_W5500](examples/Generic/W5500/Generic_WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5x00 using EthernetLarge Library
 
 
 ```
