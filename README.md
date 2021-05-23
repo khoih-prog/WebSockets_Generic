@@ -197,7 +197,7 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
 ### Release v2.5.1
 
 1. Default to **EIO4 for Socket.IO**.
-2. Permit changing reconnectInterval in Socket.IO. Default is 0.5s. Set in Sicket.IO examples to 10s.
+2. Permit changing reconnectInterval in Socket.IO. Default is 0.5s. Set in Socket.IO examples to 10s.
 2. Better debug settings
 
 ### Major Release v2.5.0
@@ -2071,7 +2071,7 @@ Sometimes, the library will only work if you update the core to the newer or old
 ### Release v2.5.1
 
 1. Default to **EIO4 for Socket.IO**.
-2. Permit changing reconnectInterval in Socket.IO. Default is 0.5s. Set in Sicket.IO examples to 10s.
+2. Permit changing reconnectInterval in Socket.IO. Default is 0.5s. Set in Socket.IO examples to 10s.
 2. Better debug settings
 
 ### Major Release v2.5.0
