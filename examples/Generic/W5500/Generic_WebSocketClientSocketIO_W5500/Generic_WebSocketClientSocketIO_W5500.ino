@@ -111,9 +111,6 @@ IPAddress clientIP(192, 168, 2, 225);
 IPAddress serverIP(192, 168, 2, 30);
 uint16_t  serverPort = 8080;
 
-//IPAddress serverIP(10, 11, 100, 100);
-//uint16_t  serverPort = 8880;
-
 // Only for W5100
 #define SDCARD_CS       4
 
@@ -127,6 +124,9 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
+
+      // join default namespace (no auto join in Socket.IO V3)
+      socketIO.send(sIOtype_CONNECT, "/");
       
       break;
     case sIOtype_EVENT:
@@ -223,6 +223,8 @@ void setup()
 
   // setReconnectInterval to 10s, new from v2.5.1 to avoid flooding server. Default is 0.5s
   socketIO.setReconnectInterval(10000);
+
+  socketIO.setExtraHeaders("Authorization: 1234567890");
 
   // server address, port and URL
   // void begin(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");

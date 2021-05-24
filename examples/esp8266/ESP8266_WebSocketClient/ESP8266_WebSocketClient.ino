@@ -31,14 +31,31 @@ WebSocketsClient webSocket;
 #define USE_SSL         false
 
 #if USE_SSL
-#define WS_SERVER           "wss://echo.websocket.org"
-#define WS_PORT             443
+  #define WS_SERVER           "wss://echo.websocket.org"
+  #define WS_PORT             443
 #else
-#define WS_SERVER           "ws://echo.websocket.org"
-#define WS_PORT             80
+
+  #define WS_SERVER           "192.168.2.30"
+  #define WS_PORT             8080
+  //#define WS_SERVER           "ws://echo.websocket.org"
+  //#define WS_PORT             80
 #endif
 
 bool alreadyConnected = false;
+
+void sendTXTMessage()
+{
+  static unsigned long sendTXTMessage_timeout = 0;
+
+  //KH
+#define HEARTBEAT_INTERVAL    20000L
+  // Print hearbeat every HEARTBEAT_INTERVAL (20) seconds.
+  if ((millis() > sendTXTMessage_timeout) || (sendTXTMessage_timeout == 0))
+  {
+    webSocket.sendTXT("message here");
+    sendTXTMessage_timeout = millis() + HEARTBEAT_INTERVAL;
+  }
+}
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 {
@@ -67,7 +84,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       Serial.printf("[WSc] get text: %s\n", payload);
 
       // send message to server
-      webSocket.sendTXT("message here");
+      sendTXTMessage();
+      
       break;
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);

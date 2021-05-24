@@ -41,9 +41,6 @@ IPAddress clientIP(192, 168, 2, 225);
 IPAddress serverIP(192, 168, 2, 51);
 uint16_t  serverPort = 3000;
 
-//IPAddress serverIP(10, 11, 100, 100);
-//uint16_t  serverPort = 8880;
-
 int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -61,6 +58,9 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
+
+      // join default namespace (no auto join in Socket.IO V3)
+      socketIO.send(sIOtype_CONNECT, "/");
       
       break;
     case sIOtype_EVENT:
@@ -174,9 +174,11 @@ void setup()
   // setReconnectInterval to 10s, new from v2.5.1 to avoid flooding server. Default is 0.5s
   socketIO.setReconnectInterval(10000);
 
+  socketIO.setExtraHeaders("Authorization: 1234567890");
+
   // server address, port and URL
   // void begin(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
-  // To use default EIO=4 fron v2.5.1
+  // To use default EIO=4 from v2.5.1
   socketIO.begin(serverIP, serverPort);
 
   // event handler
