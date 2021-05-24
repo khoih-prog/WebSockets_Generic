@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.5.1
+  Version: 2.6.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -47,6 +47,7 @@
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
   2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
+  2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
  *****************************************************************************************************************************/
 
 #pragma once
@@ -171,7 +172,7 @@ bool SocketIOclient::send(socketIOmessageType_t type, uint8_t * payload, size_t 
     length = strlen((const char *)payload);
   }
 
-  if (clientIsConnected(&_client))
+  if (clientIsConnected(&_client) && _client.status == WSC_CONNECTED)
   {
     if (!headerToPayload)
     {
@@ -283,9 +284,12 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
 
         // send message to server when Connected
         // Engine.io upgrade confirmation message (required)
+        WebSocketsClient::sendTXT("2probe");
         WebSocketsClient::sendTXT(eIOtype_UPGRADE);
         runIOCbEvent(sIOtype_CONNECT, payload, length);
-      } break;
+      } 
+      
+      break;
     case WStype_TEXT:
       {
         if (length < 1)
@@ -294,6 +298,7 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
         }
 
         engineIOmessageType_t eType = (engineIOmessageType_t)payload[0];
+        
         switch (eType)
         {
           case eIOtype_PING:
@@ -321,11 +326,15 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
               switch (ioType)
               {
                 case sIOtype_EVENT:
-                  WSK_LOGWARN1("[wsIOc] get event: ", lData);
+                  WSK_LOGWARN1("[wsIOc] get event: len = ", lData);
                   WSK_LOGWARN1("[wsIOc] get data: ", (char *) data);
 
                   break;
                 case sIOtype_CONNECT:
+                  WSK_LOGWARN1("[wsIOc] connected: len = ", lData);
+                  WSK_LOGWARN1("[wsIOc] data: ", (char *) data);
+                  return;
+                  
                 case sIOtype_DISCONNECT:
                 case sIOtype_ACK:
                 case sIOtype_ERROR:
@@ -339,7 +348,10 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
               }
 
               runIOCbEvent(ioType, data, lData);
-            } break;
+            } 
+            
+            break;
+            
           case eIOtype_OPEN:
           case eIOtype_CLOSE:
           case eIOtype_UPGRADE:
@@ -347,9 +359,11 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
           default:
             WSK_LOGINFO1("[wsIOc] Socket.IO Message Type is not implemented:", eType);
             WSK_LOGWARN1("[wsIOc] get text:", (char *) payload);
+            
             break;
         }
       }
+      
       break;
     case WStype_ERROR:
     case WStype_BIN:
