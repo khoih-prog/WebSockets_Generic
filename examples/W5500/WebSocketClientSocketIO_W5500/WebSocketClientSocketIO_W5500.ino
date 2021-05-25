@@ -66,8 +66,20 @@
   #define SHIELD_TYPE           "W5x00 using Ethernet Library"
 #endif
 
-// Default pin 10 to SS/CS
-#define USE_THIS_SS_PIN         10
+#if ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) )
+  #if defined(ETHERNET_USE_RPIPICO)
+    #undef ETHERNET_USE_RPIPICO
+  #endif
+  #define ETHERNET_USE_RPIPICO      true
+#endif
+
+#if ETHERNET_USE_RPIPICO
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN         SS
+#else
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN         10
+#endif
 
 #include <ArduinoJson.h>
 
@@ -108,8 +120,8 @@ byte mac[][NUMBER_OF_MAC] =
 IPAddress clientIP(192, 168, 2, 225);
 
 // Select the IP address according to your local network
-IPAddress serverIP(192, 168, 2, 51);
-uint16_t  serverPort = 3000;
+IPAddress serverIP(192, 168, 2, 30);
+uint16_t  serverPort = 8080;
 
 #define SDCARD_CS       4
 
