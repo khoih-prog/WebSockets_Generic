@@ -72,8 +72,20 @@
   #define SHIELD_TYPE           "W5x00 using Ethernet Library"
 #endif
 
-// Default pin 10 to SS/CS
-#define USE_THIS_SS_PIN         10
+#if ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) )
+  #if defined(ETHERNET_USE_RPIPICO)
+    #undef ETHERNET_USE_RPIPICO
+  #endif
+  #define ETHERNET_USE_RPIPICO      true
+#endif
+
+#if ETHERNET_USE_RPIPICO
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN         SS
+#else
+  // Default pin 10 to SS/CS
+  #define USE_THIS_SS_PIN         10
+#endif
 
 
 #include <WebSocketsClient_Generic.h>

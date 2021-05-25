@@ -12,7 +12,10 @@ io.on('connection', (socket) => {
 
     console.log("Message from Client : ", data);
 
-  
+    socket.broadcast.emit("Send Message socket.broadcast.emit : ", data);
+    io.emit("Send Message io.emit Broadcasted : ", data);
+    socket.emit("Send Message : ", data);
+
   })
   
   socket.on('disconnect', () => {
