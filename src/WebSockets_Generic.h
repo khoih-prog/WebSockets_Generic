@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.6.0
+  Version: 2.7.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -47,12 +47,13 @@
   2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
   2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
-  2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO                 
+  2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
+  2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core          
  *****************************************************************************************************************************/
 
 #pragma once
 
-#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.6.0"
+#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.7.0"
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -236,6 +237,22 @@
   // try to send data in one TCP package (only if some free Heap is there)
   //#define WEBSOCKETS_USE_BIG_MEM
 
+  // moves all Header strings to Flash (~300 Byte)
+  #define WEBSOCKETS_SAVE_RAM
+
+  #define WEBSOCKETS_YIELD()        yield()
+  #define WEBSOCKETS_YIELD_MORE()   delay(1)
+  
+  
+#elif ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) )
+
+  // KH
+  #warning Use RP2040 in WebSockets_Generic
+
+  #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
+
+  // Try to use GET_FREE_HEAP and large mem
+  // try to send data in one TCP package (only if some free Heap is there)
   // moves all Header strings to Flash (~300 Byte)
   #define WEBSOCKETS_SAVE_RAM
 

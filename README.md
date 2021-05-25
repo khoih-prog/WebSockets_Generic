@@ -19,6 +19,7 @@
   * [Currently supported WiFi shields/modules](#currently-supported-wifi-shieldsmodules)
   * [Currently supported Ethernet shields/modules](#currently-supported-ethernet-shieldsmodules)
 * [Changelog](#changelog)
+  * [Major Release v2.7.0](#major-release-v270)
   * [Major Release v2.6.0](#major-release-v260)
   * [Release v2.5.1](#release-v251)
   * [Major Release v2.5.0](#major-release-v250)
@@ -47,6 +48,11 @@
   * [5. For Adafruit SAMD boards](#5-for-adafruit-samd-boards)
   * [6. For Seeeduino SAMD boards](#6-for-seeeduino-samd-boards)
   * [7. For STM32 boards](#7-for-stm32-boards) 
+    * [7.1. For STM32 boards to use LAN8720](#71-for-stm32-boards-to-use-lan8720)
+    * [7.2. For STM32 boards to use Serial1](#72-for-stm32-boards-to-use-serial1)
+  * [8. For RP2040-based boards using Earle Philhower arduino-pico core](#8-for-rp2040-based-boards-using-earle-philhower-arduino-pico-core)
+    * [8.1. To use BOARD_NAME](#81-to-use-board_name)
+    * [8.2. To avoid compile error relating to microsecondsToClockCycles](#82-to-avoid-compile-error-relating-to-microsecondstoclockcycles)
 * [Libraries' Patches](#libraries-patches)
   * [1. For application requiring 2K+ HTML page](#1-for-application-requiring-2k-html-page)
   * [2. For Ethernet library](#2-for-ethernet-library)
@@ -61,6 +67,7 @@
   * [Limitations](#limitations)
   * [Limitations for Async](#limitations-for-async)
   * [Originally Supported Hardware](#originally-supported-hardware)
+  * [New support from v2.7.0](#new-support-from-v270)
   * [New support from v2.5.0](#new-support-from-v250)
   * [New support from v2.4.0](#new-support-from-v240)
   * [New support from v2.3.4](#new-support-from-v234)
@@ -106,6 +113,12 @@
   * [10. Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using EthernetLarge Library](#10-generic_websocketclientsocketio_w5500-on-nrf52840_feather-with-w5x00-using-ethernetlarge-library)
     * [10.1 Client](#101-client)
     * [10.2 Server](#102-server)
+  * [11. WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library](#11-websocketclientsocketio_w5500-on-raspberry_pi_pico-with-w5x00-using-ethernet2-library)
+    * [11.1 Client](#111-client)
+    * [11.2 Server](#112-server)
+  * [12. WebSocketClientSocketIO_W5500 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library](#12-websocketclientsocketio_w5500-on-mbed-raspberry_pi_pico-with-w5x00-using-ethernet2-library)
+    * [12.1 Client](#121-client)
+    * [12.2 Server](#122-server) 
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Releases](#releases)
@@ -178,6 +191,8 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
 
  7. **ESP32**
  8. **ESP8266**
+ 
+ 9. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed) or [**Earle Philhower's arduino-pico** core v1.3.1+](https://github.com/earlephilhower/arduino-pico).
 
 
 #### Currently supported WiFi shields/modules
@@ -199,6 +214,13 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
 ---
 
 ## Changelog
+
+### Major Release v2.7.0
+
+1. Add support to RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico core**](https://github.com/earlephilhower/arduino-pico).
+2. Add support to RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed).
+3. Update Socket.IO Test Server to demonstrate the server message broadcast
+4. Update examples with new features
 
 ### Major Release v2.6.0
 
@@ -295,13 +317,15 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
  5. [`Teensy core v1.53+`](https://www.pjrc.com/teensy/td_download.html) for Teensy (4.1, 4.0, 3.6, 3.5, 3,2, 3.1, 3.0) boards. **Ready** from v1.0.0.
  6. [`Arduino SAM DUE core v1.6.12+`](https://github.com/arduino/ArduinoCore-sam) for SAM DUE ARM Cortex-M3 boards.
  7. [`Arduino SAMD core 1.8.11+`](https://github.com/arduino/ArduinoCore-samd) for SAMD ARM Cortex-M0+ boards. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-samd.svg)](https://github.com/arduino/ArduinoCore-samd/releases/latest)
- 8. [`Adafruit SAMD core 1.7.0+`](https://github.com/adafruit/ArduinoCore-samd) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.). [![GitHub release](https://img.shields.io/github/release/adafruit/ArduinoCore-samd.svg)](https://github.com/adafruit/ArduinoCore-samd/releases/latest)
+ 8. [`Adafruit SAMD core 1.7.1+`](https://github.com/adafruit/ArduinoCore-samd) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.). [![GitHub release](https://img.shields.io/github/release/adafruit/ArduinoCore-samd.svg)](https://github.com/adafruit/ArduinoCore-samd/releases/latest)
  9. [`Seeeduino SAMD core 1.8.1+`](https://github.com/Seeed-Studio/ArduinoCore-samd) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.). [![Latest release](https://img.shields.io/github/release/Seeed-Studio/ArduinoCore-samd.svg)](https://github.com/Seeed-Studio/ArduinoCore-samd/releases/latest/)
 10. [`Adafruit nRF52 v0.22.0+`](https://github.com/adafruit/Adafruit_nRF52_Arduino) for nRF52 boards such as Adafruit NRF52840_FEATHER, NRF52832_FEATHER, NRF52840_FEATHER_SENSE, NRF52840_ITSYBITSY, NRF52840_CIRCUITPLAY, NRF52840_CLUE, NRF52840_METRO, NRF52840_PCA10056, PARTICLE_XENON, **NINA_B302_ublox**, etc. [![GitHub release](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino/releases/latest)
 11. [`Arduino Core for STM32 v2.0.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
-12. [`Blynk library 0.6.1+`](https://github.com/blynkkk/blynk-library/releases). [![Latest release](https://img.shields.io/github/release/blynkkk/blynk-library.svg)](https://github.com/blynkkk/blynk-library/releases/latest/) to use with Blynk examples.
-13. [`EthernetWebServer library v1.5.0+`](https://github.com/khoih-prog/EthernetWebServer) if necessary to use certain Ethernet features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer.svg?)](https://www.ardu-badge.com/EthernetWebServer)
-14. Depending on which Ethernet card you're using:
+12. [`Arduino mbed_rp2040 core 2.1.0+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) RP2040-based boards, such as RASPBERRY_PI_PICO. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
+13. [`Earle Philhower's arduino-pico core v1.5.1+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+14. [`Blynk library 0.6.1+`](https://github.com/blynkkk/blynk-library/releases). [![Latest release](https://img.shields.io/github/release/blynkkk/blynk-library.svg)](https://github.com/blynkkk/blynk-library/releases/latest/) to use with Blynk examples. Never use the Blynk `beta` library versions.
+15. [`EthernetWebServer library v1.5.0+`](https://github.com/khoih-prog/EthernetWebServer) if necessary to use certain Ethernet features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer.svg?)](https://www.ardu-badge.com/EthernetWebServer)
+16. Depending on which Ethernet card you're using:
    - [`Ethernet library v2.0.0+`](https://github.com/arduino-libraries/Ethernet) for W5100, W5200 and W5500.  [![GitHub release](https://img.shields.io/github/release/arduino-libraries/Ethernet.svg)](https://github.com/arduino-libraries/Ethernet/releases/latest)
    - [`EthernetLarge library v2.0.0+`](https://github.com/OPEnSLab-OSU/EthernetLarge) for W5100, W5200 and W5500.
    - [`Ethernet2 library v1.0.4+`](https://github.com/khoih-prog/Ethernet2) for W5500. [![GitHub release](https://img.shields.io/github/release/adafruit/Ethernet2.svg)](https://github.com/adafruit/Ethernet2/releases/latest)
@@ -309,13 +333,13 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
    - [`EthernetENC library v2.0.1+`](https://github.com/jandrassy/EthernetENC) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/jandrassy/EthernetENC.svg)](https://github.com/jandrassy/EthernetENC/releases/latest). **New and Better**
    - [`UIPEthernet library v2.0.10+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/UIPEthernet/UIPEthernet.svg)](https://github.com/UIPEthernet/UIPEthernet/releases/latest)
    - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/STM32Ethernet.svg)](https://github.com/stm32duino/STM32Ethernet/releases/latest). To be used with [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP). [![GitHub release](https://img.shields.io/github/release/stm32duino/LwIP.svg)](https://github.com/stm32duino/LwIP/releases/latest). 
-15. [`WiFiNINA_Generic library v1.8.5+`](https://github.com/khoih-prog/WiFiNINA_Generic) if necessary to use WiFiNINA. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiNINA_Generic.svg?)](https://www.ardu-badge.com/WiFiNINA_Generic)
-16. [`Modified WiFi101 Library v0.16.1+`](https://github.com/khoih-prog/WiFi101) to use SAMD MKR1000, etc. boards with WiFi101.
-17. [`WiFiWebServer library v1.1.1+`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
-18. [`FlashStorage_SAMD library v1.1.0+`](https://github.com/khoih-prog/FlashStorage_SAMD) for SAMD21 and SAMD51 boards (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit Itsy-Bitsy M4, etc.) if necessary to use certain features. [![GitHub release](https://img.shields.io/github/release/khoih-prog/FlashStorage_SAMD.svg)](https://github.com/khoih-prog/FlashStorage_SAMD/releases/latest)
-19. [`DueFlashStorage library v1.0.0+`](https://github.com/sebnil/DueFlashStorage) for SAM DUE if necessary to use certain features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/DueFlashStorage.svg?)](https://www.ardu-badge.com/DueFlashStorage).
-20. [`Adafruit's LittleFS/InternalFS`](https://www.adafruit.com) for nRF52. Already included if you already installed Adafruit **nRF52 board package** from Boards Manager.
-21. [`DoubleResetDetector_Generic v1.2.0+`](https://github.com/khoih-prog/DoubleResetDetector_Generic) if necessary to use some examples. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic) if necessary to use certain features.
+17. [`WiFiNINA_Generic library v1.8.5+`](https://github.com/khoih-prog/WiFiNINA_Generic) if necessary to use WiFiNINA. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiNINA_Generic.svg?)](https://www.ardu-badge.com/WiFiNINA_Generic)
+18. [`Modified WiFi101 Library v0.16.1+`](https://github.com/khoih-prog/WiFi101) to use SAMD MKR1000, etc. boards with WiFi101.
+19. [`WiFiWebServer library v1.1.1+`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
+20. [`FlashStorage_SAMD library v1.1.0+`](https://github.com/khoih-prog/FlashStorage_SAMD) for SAMD21 and SAMD51 boards (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit Itsy-Bitsy M4, etc.) if necessary to use certain features. [![GitHub release](https://img.shields.io/github/release/khoih-prog/FlashStorage_SAMD.svg)](https://github.com/khoih-prog/FlashStorage_SAMD/releases/latest)
+21. [`DueFlashStorage library v1.0.0+`](https://github.com/sebnil/DueFlashStorage) for SAM DUE if necessary to use certain features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/DueFlashStorage.svg?)](https://www.ardu-badge.com/DueFlashStorage).
+22. [`Adafruit's LittleFS/InternalFS`](https://www.adafruit.com) for nRF52. Already included if you already installed Adafruit **nRF52 board package** from Boards Manager.
+23. [`DoubleResetDetector_Generic v1.2.0+`](https://github.com/khoih-prog/DoubleResetDetector_Generic) if necessary to use some examples. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic) if necessary to use certain features.
 
 ---
 
@@ -444,11 +468,11 @@ Whenever the above-mentioned compiler error issue is fixed with the new Arduino 
 
 #### 5. For Adafruit SAMD boards
  
- ***To be able to automatically detect and display BOARD_NAME on Adafruit SAMD (Itsy-Bitsy M4, etc) boards***, you have to copy the file [Adafruit SAMD platform.txt](Packages_Patches/adafruit/hardware/samd/1.7.0) into Adafruit samd directory (~/.arduino15/packages/adafruit/hardware/samd/1.7.0). 
+ ***To be able to automatically detect and display BOARD_NAME on Adafruit SAMD (Itsy-Bitsy M4, etc) boards***, you have to copy the file [Adafruit SAMD platform.txt](Packages_Patches/adafruit/hardware/samd/1.7.1) into Adafruit samd directory (~/.arduino15/packages/adafruit/hardware/samd/1.7.1). 
 
-Supposing the Adafruit SAMD core version is 1.7.0. This file must be copied into the directory:
+Supposing the Adafruit SAMD core version is 1.7.1. This file must be copied into the directory:
 
-- `~/.arduino15/packages/adafruit/hardware/samd/1.7.0/platform.txt`
+- `~/.arduino15/packages/adafruit/hardware/samd/1.7.1/platform.txt`
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
 This file must be copied into the directory:
@@ -470,18 +494,75 @@ This file must be copied into the directory:
 
 #### 7. For STM32 boards
 
-**To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/2.0.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/2.0.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
+#### 7.1 For STM32 boards to use LAN8720
 
-Supposing the STM32 stm32 core version is 2.0.0. These files must be copied into the directory:
+To use LAN8720 on some STM32 boards 
 
-- `~/.arduino15/packages/STM32/hardware/stm32/2.0.0/variants/NUCLEO_F767ZI/variant.h` for Nucleo-144 NUCLEO_F767ZI.
-- `~/.arduino15/packages/STM32/hardware/stm32/2.0.0/variants/NUCLEO_L053R8/variant.h` for Nucleo-64 NUCLEO_L053R8.
+- **Nucleo-144 (F429ZI, NUCLEO_F746NG, NUCLEO_F746ZG, NUCLEO_F756ZG)**
+- **Discovery (DISCO_F746NG)**
+- **STM32F4 boards (BLACK_F407VE, BLACK_F407VG, BLACK_F407ZE, BLACK_F407ZG, BLACK_F407VE_Mini, DIYMORE_F407VGT, FK407M1)**
+
+you have to copy the files [stm32f4xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/1.9.0/system/STM32F4xx) and [stm32f7xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/1.9.0/system/STM32F7xx) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/1.9.0/system) to overwrite the old files.
+
+Supposing the STM32 stm32 core version is 1.9.0. These files must be copied into the directory:
+
+- `~/.arduino15/packages/STM32/hardware/stm32/1.9.0/system/STM32F4xx/stm32f4xx_hal_conf_default.h` for STM32F4.
+- `~/.arduino15/packages/STM32/hardware/stm32/1.9.0/system/STM32F7xx/stm32f7xx_hal_conf_default.h` for Nucleo-144 STM32F7.
+
+Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz,
+theses files must be copied into the corresponding directory:
+
+- `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/system/STM32F4xx/stm32f4xx_hal_conf_default.h`
+- `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/system/STM32F7xx/stm32f7xx_hal_conf_default.h
+
+
+#### 7.2 For STM32 boards to use Serial1
+
+**To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/1.9.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/1.9.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
+
+Supposing the STM32 stm32 core version is 1.9.0. These files must be copied into the directory:
+
+- `~/.arduino15/packages/STM32/hardware/stm32/1.9.0/variants/NUCLEO_F767ZI/variant.h` for Nucleo-144 NUCLEO_F767ZI.
+- `~/.arduino15/packages/STM32/hardware/stm32/1.9.0/variants/NUCLEO_L053R8/variant.h` for Nucleo-64 NUCLEO_L053R8.
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz,
 theses files must be copied into the corresponding directory:
 
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/NUCLEO_F767ZI/variant.h`
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/NUCLEO_L053R8/variant.h`
+
+#### 8. For RP2040-based boards using [Earle Philhower arduino-pico core](https://github.com/earlephilhower/arduino-pico)
+
+#### 8.1 To use BOARD_NAME
+
+ **To be able to automatically detect and display BOARD_NAME on RP2040-based boards (RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040, GENERIC_RP2040, etc) boards**, you have to copy the file [RP2040 platform.txt](Packages_Patches/rp2040/hardware/rp2040/1.4.0) into rp2040 directory (~/.arduino15/packages/rp2040/hardware/rp2040/1.4.0). 
+
+Supposing the rp2040 core version is 1.4.0. This file must be copied into the directory:
+
+- `~/.arduino15/packages/rp2040/hardware/rp2040/1.4.0/platform.txt`
+
+Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
+This file must be copied into the directory:
+
+- `~/.arduino15/packages/rp2040/hardware/rp2040/x.yy.zz/platform.txt`
+
+With core after v1.5.0, this step is not necessary anymore thanks to the PR [Add -DBOARD_NAME="{build.board}" #136](https://github.com/earlephilhower/arduino-pico/pull/136).
+
+#### 8.2 To avoid compile error relating to microsecondsToClockCycles
+
+Some libraries, such as [Adafruit DHT-sensor-library](https://github.com/adafruit/DHT-sensor-library), require the definition of microsecondsToClockCycles(). **To be able to compile and run on RP2040-based boards**, you have to copy the files in [**RP2040 Arduino.h**](Packages_Patches/rp2040/hardware/rp2040/1.4.0/cores/rp2040/Arduino.h) into rp2040 directory (~/.arduino15/packages/rp2040/hardware/rp2040/1.4.0).
+
+Supposing the rp2040 core version is 1.4.0. This file must be copied to replace:
+
+- `~/.arduino15/packages/rp2040/hardware/rp2040/1.4.0/cores/rp2040/Arduino.h`
+
+Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz
+This file must be copied to replace:
+
+- `~/.arduino15/packages/rp2040/hardware/rp2040/x.yy.zz/cores/rp2040/Arduino.h`
+
+With core after v1.5.0, this step is not necessary anymore thanks to the PR [Add defs for compatibility #142](https://github.com/earlephilhower/arduino-pico/pull/142).
+
 
 ---
 
@@ -661,6 +742,11 @@ To know the default CS/SS pins of not listed boards, check the related `variant.
  - ATmega2560 with ENC28J60 (ATmega branch)
 
 ---
+
+#### New support from v2.7.0
+
+1. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico core**](https://github.com/earlephilhower/arduino-pico).
+2. RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed).
 
 #### New support from v2.5.0
 
@@ -2172,6 +2258,291 @@ Message from Client :  { now: 30001 }
 ```
 
 ---
+
+#### 11. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library
+
+The following are debug terminal output when running example [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 and Ethernet2 Library using [**Earle Philhower's arduino-pico core** v1.5.1](https://github.com/earlephilhower/arduino-pico)
+
+
+#### 11.1 Client
+
+```
+Start WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library
+WebSockets_Generic v2.7.0
+[WS] Board :RASPBERRY_PI_PICO, setCsPin:17
+[WS] Default SPI pinout:
+[WS] MOSI:19
+[WS] MISO:16
+[WS] SCK:18
+[WS] SS:17
+[WS] =========================
+WebSockets Client @ IP address: 192.168.2.119
+Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
+[WS] WebSockets_Generic v2.6.0
+[WS] [wsIOc] found EIO=4 disable EIO ping on client
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] sendHeader: client->cKey = rqJZ543MlA+uTo5YdFR+qA==
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=polling HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Authorization: 1234567890
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):2184
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX:Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX:Content-Length: 97
+[WS] [WS-Client][handleHeader] RX:Date: Mon, 24 May 2021 04:29:00 GMT
+[WS] [WS-Client][handleHeader] RX:Connection: keep-alive
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:rqJZ543MlA+uTo5YdFR+qA==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:
+[WS] [WS-Client][handleHeader] Still missing cSessionId try Socket.IO
+[WS] [WS-Client][handleHeader] socket.io json: 0{"sid":"TCiWG1KEq2MHPezpAAAg","upgrades":["websocket"],"pingInterval":25000,"pingTimeout":20000}
+[WS] [WS-Client][handleHeader] - cSessionId: TCiWG1KEq2MHPezpAAAg
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:rqJZ543MlA+uTo5YdFR+qA==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:TCiWG1KEq2MHPezpAAAg
+[WS] [WS-Client][handleHeader] found cSessionId
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] sendHeader: client->cKey = ADdto91YKZwqbZ0X0v5ceg==
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=websocket&sid=TCiWG1KEq2MHPezpAAAg HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Version: 13
+Sec-WebSocket-Key: ADdto91YKZwqbZ0X0v5ceg==
+Sec-WebSocket-Protocol: arduino
+Authorization: 1234567890
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):2851
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 101 Switching Protocols
+[WS] [WS-Client][handleHeader] RX:Upgrade: websocket
+[WS] [WS-Client][handleHeader] RX:Connection: Upgrade
+[WS] [WS-Client][handleHeader] RX:Sec-WebSocket-Accept: gKekYE3itucoN6vDWPglIu3GU1U=
+[WS] [WS-Client][handleHeader] RX:Sec-WebSocket-Protocol: arduino
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:ADdto91YKZwqbZ0X0v5ceg==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:101
+[WS] [WS-Client][handleHeader] - cIsUpgrade:1
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:gKekYE3itucoN6vDWPglIu3GU1U=
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:TCiWG1KEq2MHPezpAAAg
+[WS] [WS-Client][handleHeader] Websocket connection init done.
+[WS] [wsIOc] Connected to url:/socket.io/?EIO=4
+[IOc] Connected to url: /socket.io/?EIO=4
+[WS] [wsIOc] get pong
+[WS] [wsIOc] connected: len = 30
+[WS] [wsIOc] data: {"sid":"kcgaqp1ovWXOgjCnAAAh"}
+["event_name",{"now":30001}]
+[WS] [wsIOc] get ping send pong:3
+[WS] [WS-Client] Sending HB ping
+["event_name",{"now":60002}]
+[WS] [wsIOc] get ping send pong:3
+[WS] [wsIOc] get ping send pong:3
+["event_name",{"now":90003}]
+[WS] [wsIOc] get ping send pong:3
+[WS] [WS-Client] Sending HB ping
+["event_name",{"now":120004}]
+[WS] [wsIOc] get ping send pong:3
+["event_name",{"now":150005}]
+[WS] [wsIOc] get ping send pong:3
+
+```
+
+---
+
+#### 11.2 Server
+
+Using the Socket.IO Server in [**Nodejs_SocketIO_TestServer**](examples/Nodejs_SocketIO_TestServer)
+
+```
+kh@kh-Inspiron-3593:~/Downloads/Nodejs/New_SIO$ nodejs app
+Server launched on port 8080
+Connected
+kcgaqp1ovWXOgjCnAAAh
+JWT token test:  { host: '192.168.2.30:8080',
+  connection: 'keep-alive',
+  authorization: '1234567890',
+  'user-agent': 'arduino-WebSocket-Client' }
+Message from Client :  { now: 30001 }
+Message from Client :  { now: 60002 }
+Message from Client :  { now: 90003 }
+Message from Client :  { now: 120004 }
+Message from Client :  { now: 150005 }
+
+```
+
+---
+
+#### 12. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library
+
+The following are debug terminal output when running example [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 and Ethernet2 Library using [**Arduino-mbed RP2040** core v2.1.0](https://github.com/arduino/ArduinoCore-mbed)
+
+
+#### 12.1 Client
+
+```
+Start WebSocketClientSocketIO_W5500 on RaspberryPi Pico with W5x00 using Ethernet2 Library
+WebSockets_Generic v2.7.0
+[WS] Board :RaspberryPi Pico, setCsPin:5
+[WS] Default SPI pinout:
+[WS] MOSI:3
+[WS] MISO:4
+[WS] SCK:2
+[WS] SS:5
+[WS] =========================
+WebSockets Client @ IP address: 192.168.2.98
+Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
+[WS] WebSockets_Generic v2.6.0
+[WS] [wsIOc] found EIO=4 disable EIO ping on client
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] sendHeader: client->cKey = fDyOMZVB7gvbnhOZclfWcA==
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=polling HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Authorization: 1234567890
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):3217
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX:Content-Type: text/plain; charset=UTF-8
+[WS] [WS-Client][handleHeader] RX:Content-Length: 97
+[WS] [WS-Client][handleHeader] RX:Date: Mon, 24 May 2021 04:37:41 GMT
+[WS] [WS-Client][handleHeader] RX:Connection: keep-alive
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:fDyOMZVB7gvbnhOZclfWcA==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:
+[WS] [WS-Client][handleHeader] Still missing cSessionId try Socket.IO
+[WS] [WS-Client][handleHeader] socket.io json: 0{"sid":"7zb9ikut5ezr2H6kAAAi","upgrades":["websocket"],"pingInterval":25000,"pingTimeout":20000}
+[WS] [WS-Client][handleHeader] - cSessionId: 7zb9ikut5ezr2H6kAAAi
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:fDyOMZVB7gvbnhOZclfWcA==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:7zb9ikut5ezr2H6kAAAi
+[WS] [WS-Client][handleHeader] found cSessionId
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] sendHeader: client->cKey = m1MElaS+NSouCUhWjSLPug==
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=websocket&sid=7zb9ikut5ezr2H6kAAAi HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Version: 13
+Sec-WebSocket-Key: m1MElaS+NSouCUhWjSLPug==
+Sec-WebSocket-Protocol: arduino
+Authorization: 1234567890
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):4878
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 101 Switching Protocols
+[WS] [WS-Client][handleHeader] RX:Upgrade: websocket
+[WS] [WS-Client][handleHeader] RX:Connection: Upgrade
+[WS] [WS-Client][handleHeader] RX:Sec-WebSocket-Accept: r/1zdz7Sk+4eMliZJTebh6cH7uw=
+[WS] [WS-Client][handleHeader] RX:Sec-WebSocket-Protocol: arduino
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:m1MElaS+NSouCUhWjSLPug==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:101
+[WS] [WS-Client][handleHeader] - cIsUpgrade:1
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:r/1zdz7Sk+4eMliZJTebh6cH7uw=
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:7zb9ikut5ezr2H6kAAAi
+[WS] [WS-Client][handleHeader] Websocket connection init done.
+[WS] [wsIOc] Connected to url:/socket.io/?EIO=4
+[IOc] Connected to url: /socket.io/?EIO=4
+[WS] [wsIOc] get pong
+[WS] [wsIOc] connected: len = 30
+[WS] [wsIOc] data: {"sid":"7SXGNMJxjtzOWXClAAAj"}
+["event_name",{"now":30001}]
+[WS] [wsIOc] get ping send pong:3
+[WS] [WS-Client] Sending HB ping
+["event_name",{"now":60002}]
+[WS] [wsIOc] get ping send pong:3
+["event_name",{"now":90003}]
+[WS] [wsIOc] get ping send pong:3
+[WS] [wsIOc] get ping send pong:3
+[WS] [WS-Client] Sending HB ping
+["event_name",{"now":120004}]
+```
+
+---
+
+#### 12.2 Server
+
+Using the Socket.IO Server in [**Nodejs_SocketIO_TestServer**](examples/Nodejs_SocketIO_TestServer)
+
+```
+kh@kh-Inspiron-3593:~/Downloads/Nodejs/New_SIO$ nodejs app
+Server launched on port 8080
+Connected
+7SXGNMJxjtzOWXClAAAj
+JWT token test:  { host: '192.168.2.30:8080',
+  connection: 'keep-alive',
+  authorization: '1234567890',
+  'user-agent': 'arduino-WebSocket-Client' }
+Message from Client :  { now: 30001 }
+Message from Client :  { now: 60002 }
+Message from Client :  { now: 90003 }
+Message from Client :  { now: 120005 }
+```
+---
 ---
 
 ### Debug
@@ -2195,6 +2566,13 @@ Sometimes, the library will only work if you update the core to the newer or old
 ---
 
 ## Releases
+
+### Major Release v2.7.0
+
+1. Add support to RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico core**](https://github.com/earlephilhower/arduino-pico).
+2. Add support to RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed).
+3. Update Socket.IO Test Server to demonstrate the server message broadcast
+4. Update examples with new features
 
 ### Major Release v2.6.0
 
@@ -2292,7 +2670,6 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 1. Bug Searching and Killing
 2. Support more types of boards using WiFi/Ethernet shields (Teensy, etc.)
 3. Support more non-compatible Ethernet Libraries such as Ethernet_Shield_W5200, EtherCard, EtherSia
-4. Add support to RP2040-based boards using Ethernet, WiFi, etc.
 
 ---
 
@@ -2315,6 +2692,8 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 15. Add support to SAMD_MKR1000 and SAMD_MKRWIFI1010 using WiFi101
 16. Fix breaking problem with SocketIO. 
 17. Default to EIOv4
+18. Add support to RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Earle Philhower's arduino-pico core** v1.3.1+](https://github.com/earlephilhower/arduino-pico).
+19. Add support to RP2040-based boards, such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed).
 
 ---
 ---
@@ -2323,7 +2702,7 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 
 1. Based on and modified from [Markus Sattler's **arduinoWebSockets** library](https://github.com/Links2004/arduinoWebSockets)
 2. Thanks to [Anson He](https://github.com/ansonhe97) for the PR [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5) to fix SeeedStudio **SEEED_WIO_TERMINAL** compile errors and leading to new version v2.3.3.
-3. Thanks to [Jose A.Molina](https://github.com/Josua2012) for the enhanement request [**WiFi101 and Arduino MKR1000.** #10](https://github.com/khoih-prog/WebSockets_Generic/issues/10), and help testing, leading to new version v2.5.0.
+3. Thanks to [Jose A.Molina](https://github.com/Josua2012) for the enhanement request [**WiFi101 and Arduino MKR1000.** #10](https://github.com/khoih-prog/WebSockets_Generic/issues/10), and help testing, leading to new version v2.5.0, and v2.6.0
 
 <table>
   <tr>
