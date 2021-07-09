@@ -173,10 +173,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart ESP8266_WebSocketClientSocketIO on " + String(ARDUINO_BOARD));
-  Serial.println(WEBSOCKETS_GENERIC_VERSION);
-
-  Serial.print("\nStarting WT32_ETH01_WebSocketClient on " + String(ARDUINO_BOARD));
+  Serial.print("\nStarting WT32_ETH01_WebSocketClientSocketIO on " + String(ARDUINO_BOARD));
   Serial.println(" with " + String(SHIELD_TYPE));
   Serial.println(WEBSERVER_WT32_ETH01_VERSION);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
