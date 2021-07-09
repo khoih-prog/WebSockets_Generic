@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.7.0
+  Version: 2.8.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -48,10 +48,14 @@
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
   2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
   2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
-  2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core 
+  2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core
+  2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
  *****************************************************************************************************************************/
 
 #pragma once
+
+#ifndef WEBSOCKETS_CLIENT_GENERIC_IMPL_H_
+#define WEBSOCKETS_CLIENT_GENERIC_IMPL_H_
 
 WebSocketsClient::WebSocketsClient()
 {
@@ -234,12 +238,16 @@ void WebSocketsClient::setSSLClientCertKey(const char * clientCert, const char *
 
 void WebSocketsClient::beginSocketIO(const char * host, uint16_t port, const char * url, const char * protocol)
 {
+  WSK_LOGDEBUG("[WS-Client] beginSocketIO with const char");
+  
   begin(host, port, url, protocol);
   _client.isSocketIO = true;
 }
 
 void WebSocketsClient::beginSocketIO(String host, uint16_t port, String url, String protocol)
 {
+  WSK_LOGDEBUG("[WS-Client] beginSocketIO with String");
+  
   beginSocketIO(host.c_str(), port, url.c_str(), protocol.c_str());
 }
 
@@ -247,6 +255,8 @@ void WebSocketsClient::beginSocketIO(String host, uint16_t port, String url, Str
 // KH
 void WebSocketsClient::beginSocketIO(IPAddress host, uint16_t port, String url, String protocol)
 {
+  WSK_LOGDEBUG("[WS-Client] beginSocketIO with IPAddress");
+
   beginSocketIO(WS_IPAddressToString(host).c_str(), port, url.c_str(), protocol.c_str());
 }
 
@@ -1335,3 +1345,4 @@ void WebSocketsClient::disableHeartbeat()
   _client.pingInterval = 0;
 }
 
+#endif    // WEBSOCKETS_CLIENT_GENERIC_IMPL_H_

@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.7.0
+  Version: 2.8.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -48,10 +48,14 @@
   2.5.0   K Hoang      22/05/2021 Add support to WiFi101
   2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
   2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
-  2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core 
+  2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core
+  2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
  *****************************************************************************************************************************/
 
 #pragma once
+
+#ifndef SOCKET_IO_CLIENT_GENERIC_H_
+#define SOCKET_IO_CLIENT_GENERIC_H_
 
 #include "WebSockets_Generic.h"
 
@@ -166,4 +170,6 @@ class SocketIOclient : protected WebSocketsClient
 };
 
 #include "SocketIOclient_Generic-Impl.h"
+
+#endif    // SOCKET_IO_CLIENT_GENERIC_H_
 
