@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.8.0
+  Version: 2.9.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -50,6 +50,7 @@
   2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
   2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core
   2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
+  2.9.0   K Hoang      05/09/2021 Add support to QNEthernet Library for Teensy 4.1
  *****************************************************************************************************************************/
 
 #pragma once
@@ -57,12 +58,12 @@
 #ifndef WEBSOCKETSVERSION_GENERIC_H_
 #define WEBSOCKETSVERSION_GENERIC_H_
 
-#define WEBSOCKETS_VERSION "2.8.0"
+#define WEBSOCKETS_VERSION "2.9.0"
 
 #define WEBSOCKETS_GENERIC_VERSION_MAJOR    2
-#define WEBSOCKETS_GENERIC_VERSION_MINOR    8
+#define WEBSOCKETS_GENERIC_VERSION_MINOR    9
 #define WEBSOCKETS_GENERIC_VERSION_PATCH    0
 
-#define WEBSOCKETS_GENERIC_VERSION_INT      2008000
+#define WEBSOCKETS_GENERIC_VERSION_INT      2009000
 
 #endif /* WEBSOCKETSVERSION_GENERIC_H_ */

@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.8.0
+  Version: 2.9.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -49,7 +49,8 @@
   2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
   2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
   2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core
-  2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards       
+  2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
+  2.9.0   K Hoang      05/09/2021 Add support to QNEthernet Library for Teensy 4.1
  *****************************************************************************************************************************/
 
 #pragma once
@@ -57,7 +58,7 @@
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
 
-#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.8.0"
+#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.9.0"
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -293,6 +294,8 @@
 #define NETWORK_NATIVEETHERNET    (9)
 #define NETWORK_LAN8742A          (10)
 #define NETWORK_WIFI101           (11)
+#define NETWORK_QN_ETHERNET       (12)
+
 ////////////////////////////////
 
 // max size of the WS Message Header
@@ -518,6 +521,17 @@
   //KH, from v2.4.0
   #include <NativeEthernet.h>
   #warning Using Teensy 4.1 NativeEthernet Library
+  
+  #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
+
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_QN_ETHERNET)
+
+  //KH, from v2.9.0
+  #include <QNEthernet.h>
+  using namespace qindesign::network;
+  
+  #warning Using Teensy 4.1 QNEthernet Library
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
