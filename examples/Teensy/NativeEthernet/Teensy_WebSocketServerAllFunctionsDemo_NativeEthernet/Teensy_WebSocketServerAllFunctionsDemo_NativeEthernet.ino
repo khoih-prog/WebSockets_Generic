@@ -220,6 +220,7 @@ void setup()
   digitalWrite(GREEN_LED, 1);
   digitalWrite(BLUE_LED, 1);
 
+#if !USE_NATIVE_ETHERNET
   WS_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
 
   WS_LOGWARN(F("Default SPI pinout:"));
@@ -228,6 +229,7 @@ void setup()
   WS_LOGWARN1(F("SCK:"),  SCK);
   WS_LOGWARN1(F("SS:"),   SS);
   WS_LOGWARN(F("========================="));
+#endif
 
   #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
     // For other boards, to change if necessary

@@ -271,14 +271,16 @@ void setup()
   Serial.println(" with " + String(SHIELD_TYPE));
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
   
-  WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
+#if !USE_NATIVE_ETHERNET
+  WS_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
 
-  WSK_LOGWARN(F("Default SPI pinout:"));
-  WSK_LOGWARN1(F("MOSI:"), MOSI);
-  WSK_LOGWARN1(F("MISO:"), MISO);
-  WSK_LOGWARN1(F("SCK:"),  SCK);
-  WSK_LOGWARN1(F("SS:"),   SS);
-  WSK_LOGWARN(F("========================="));
+  WS_LOGWARN(F("Default SPI pinout:"));
+  WS_LOGWARN1(F("MOSI:"), MOSI);
+  WS_LOGWARN1(F("MISO:"), MISO);
+  WS_LOGWARN1(F("SCK:"),  SCK);
+  WS_LOGWARN1(F("SS:"),   SS);
+  WS_LOGWARN(F("========================="));
+#endif
 
   #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
     // For other boards, to change if necessary
