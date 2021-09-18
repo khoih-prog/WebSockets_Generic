@@ -31,6 +31,8 @@
   * [Release v2.1.3](#release-v213)
 * [Important Notes](#important-notes)
   * [Originally Supported Hardware](#originally-supported-hardware)
+  * [New support from v2.10.0](#new-support-from-v2100)
+  * [New support from v2.9.0](#new-support-from-v290)
   * [New support from v2.8.0](#new-support-from-v280)
   * [New support from v2.7.0](#new-support-from-v270)
   * [New support from v2.5.0](#new-support-from-v250)
@@ -46,12 +48,12 @@
 
 ## Changelog
 
-### Major Releases v2.10.0
+### Major Release v2.10.0
 
 1. Add support to **Portenta_H7**, using either WiFi or Vision-shield Ethernet
 2. Add examples with new features
 
-### Major Releases v2.9.0
+### Major Release v2.9.0
 
 1. Add support to [QNEthernet Library](https://github.com/ssilverman/QNEthernet) for Teensy 4.1 built-in Ethernet
 2. Update examples with new features
