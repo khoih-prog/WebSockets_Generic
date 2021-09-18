@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.9.0
+  Version: 2.10.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -51,6 +51,7 @@
   2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core
   2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
   2.9.0   K Hoang      05/09/2021 Add support to QNEthernet Library for Teensy 4.1
+  2.10.0  K Hoang      18/09/2021 Add support to Portenta_H7, using either WiFi or Vision-shield Ethernet
  *****************************************************************************************************************************/
 
 #pragma once
@@ -58,7 +59,7 @@
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
 
-#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.9.0"
+#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.10.0"
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -264,6 +265,21 @@
   #define WEBSOCKETS_YIELD()        yield()
   #define WEBSOCKETS_YIELD_MORE()   delay(1)
   
+#elif ( ( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) ) && defined(ARDUINO_ARCH_MBED) )
+
+    // KH
+  #warning Use Portenta_H7 in WebSockets_Generic
+
+  #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
+
+  // Try to use GET_FREE_HEAP and large mem
+  // try to send data in one TCP package (only if some free Heap is there)
+  // moves all Header strings to Flash (~300 Byte)
+  #define WEBSOCKETS_SAVE_RAM
+
+  #define WEBSOCKETS_YIELD()        yield()
+  #define WEBSOCKETS_YIELD_MORE()   delay(1)
+    
 #else
   #warning Use atmega328p in WebSockets_Generic
 
@@ -281,20 +297,22 @@
 
 #define WEBSOCKETS_TCP_TIMEOUT (5000)
 
-#define NETWORK_ESP8266_ASYNC     (0)
-#define NETWORK_ESP8266           (1)
-#define NETWORK_W5100             (2)
-#define NETWORK_ENC28J60          (3)
-#define NETWORK_ESP32             (4)
-#define NETWORK_ESP32_ETH         (5)
+#define NETWORK_ESP8266_ASYNC             (0)
+#define NETWORK_ESP8266                   (1)
+#define NETWORK_W5100                     (2)
+#define NETWORK_ENC28J60                  (3)
+#define NETWORK_ESP32                     (4)
+#define NETWORK_ESP32_ETH                 (5)
 //KH
-#define NETWORK_WIFININA          (6)
-#define NETWORK_ETHERNET_ENC      (7)
-#define NETWORK_RTL8720DN         (8)
-#define NETWORK_NATIVEETHERNET    (9)
-#define NETWORK_LAN8742A          (10)
-#define NETWORK_WIFI101           (11)
-#define NETWORK_QN_ETHERNET       (12)
+#define NETWORK_WIFININA                  (6)
+#define NETWORK_ETHERNET_ENC              (7)
+#define NETWORK_RTL8720DN                 (8)
+#define NETWORK_NATIVEETHERNET            (9)
+#define NETWORK_LAN8742A                  (10)
+#define NETWORK_WIFI101                   (11)
+#define NETWORK_QN_ETHERNET               (12)
+#define NETWORK_PORTENTA_H7_WIFI          (13)
+#define NETWORK_PORTENTA_H7_ETHERNET      (14)
 
 ////////////////////////////////
 
@@ -385,6 +403,7 @@
   #define WEBSOCKETS_NETWORK_CLASS          AsyncTCPbuffer
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   AsyncServer
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)
 
   #if !defined(ESP8266) && !defined(ESP31B)
@@ -411,6 +430,7 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS      WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   WiFiServer
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100)
 
   #ifdef STM32_DEVICE
@@ -445,12 +465,14 @@
     
   #endif
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ENC28J60)
 
   #include <UIPEthernet.h>
   #define WEBSOCKETS_NETWORK_CLASS UIPClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS UIPServer
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
 
   #include <WiFi.h>
@@ -464,12 +486,14 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ETH)
 
   #include <ETH.h>
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
 
   //KH
@@ -481,7 +505,8 @@
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
-  
+
+////////////////////////////////////////////////////////////////    
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101)
 
   //KH
@@ -494,6 +519,7 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer  
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ETHERNET_ENC)
 
   //KH
@@ -503,6 +529,7 @@
   #define WEBSOCKETS_NETWORK_CLASS            EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     EthernetServer
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
 
   //KH, from v2.3.2
@@ -516,6 +543,7 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_NATIVEETHERNET)
 
   //KH, from v2.4.0
@@ -525,6 +553,7 @@
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
 
+//////////////////////////////////////////////////////////////// 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_QN_ETHERNET)
 
   //KH, from v2.9.0
@@ -535,7 +564,35 @@
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
+  
+////////////////////////////////////////////////////////////////  
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_PORTENTA_H7_WIFI)
 
+  //KH, from v2.10.0
+  #include <WiFi.h>
+  //#include <WiFiSSLClient.h>
+  
+  #warning Using Portenta_H7 WiFi Library
+   
+  #define WEBSOCKETS_NETWORK_CLASS          WiFiClient
+  //#define WEBSOCKETS_NETWORK_SSL_CLASS      WiFiSSLClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS   WiFiServer
+  
+////////////////////////////////////////////////////////////////  
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_PORTENTA_H7_ETHERNET)
+
+  //KH, from v2.10.0
+  #include <PortentaEthernet.h>
+  
+  #warning Using Portenta_H7 Ethernet Library
+  
+  #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
+  //#define WEBSOCKETS_NETWORK_SSL_CLASS      EthernetSSLClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
+
+
+
+////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_LAN8742A)
 
   //KH, from v2.4.0
@@ -545,6 +602,8 @@
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
+
+////////////////////////////////////////////////////////////////  
   
 #else
   #error "no network type selected!"

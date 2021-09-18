@@ -1,8 +1,8 @@
 {
   "name": "WebSockets_Generic",
-  "version": "2.9.0",
-  "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, RP2040-based boards, besides ESP8266/ESP32 and WT32_ETH01. Ethernet shields W5100, W5200, W5500, ENC28J60 or Teensy 4.1 NativeEthernet/QNEthernet.",
-  "keywords": "wifi, WiFiNINA, websocket, websockets-server, websockets-client, Teensy, SAM DUE, SAMD, STM32, nRF52, QNEthernet, rp2040, ESP32, ESP8266, W5x00, ENC28J60, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EthernetENC, UIPEthernet, NativeEthernet, rpi-pico, http, web, server, client, Mega",
+  "version": "2.10.0",
+  "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, Portenta_H7, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, RP2040-based boards, besides ESP8266/ESP32 and WT32_ETH01. Ethernet shields W5100, W5200, W5500, ENC28J60, Teensy 4.1 NativeEthernet/QNEthernet or Portenta_H7 WiFi/Ethernet",
+  "keywords": "wifi, WiFiNINA, websocket, websockets-server, websockets-client, Teensy, SAM DUE, SAMD, STM32, nRF52, QNEthernet, rp2040, Portenta-H7, ESP32, ESP8266, W5x00, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EthernetENC, UIPEthernet, NativeEthernet, ENC28J60, rpi-pico, http, web, server, client, Mega",
   "authors": [
     {
       "name":  "Markus Sattler",
@@ -33,19 +33,19 @@
     {
       "owner": "khoih.prog",
       "name": "WiFiNINA_Generic",
-      "version": ">=1.8.12",
+      "version": ">=1.8.13",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "DoubleResetDetector_Generic",
-      "version": ">=1.4.0",
+      "version": ">=1.7.2",
       "platforms": ["*"]
     },
     {
       "owner": "khoih.prog",
       "name": "FlashStorage_SAMD",
-      "version": ">=1.1.0",
+      "version": ">=1.2.0",
       "platforms": ["*"]
     },
     {
@@ -57,19 +57,19 @@
     {
       "owner": "khoih-prog",
       "name": "WiFiWebServer",
-      "version": ">=1.2.0",
+      "version": ">=1.4.0",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "EthernetWebServer",
-      "version": ">=1.5.0",
+      "version": ">=1.7.0",
       "platforms": ["*"]
     },
     {
       "owner": "khoih.prog",
       "name": "WebServer_WT32_ETH01",
-      "version": "^1.1.0",
+      "version": "^1.2.0",
       "platforms": ["espressif32"]
     },
     {
@@ -81,7 +81,7 @@
     {
       "owner": "khoih.prog",
       "name": "SinricPro_Generic",
-      "version": ">=2.8.0",
+      "version": ">=2.8.2",
       "platforms": ["*"]
     },
     {
