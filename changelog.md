@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.10.1](#release-v2101)
   * [Major Release v2.10.0](#major-release-v2100)
   * [Major Release v2.9.0](#major-release-v290)
   * [Major Release v2.8.0](#major-release-v280)
@@ -47,6 +48,11 @@
 ---
 
 ## Changelog
+
+### Release v2.10.1
+
+1. Update `platform.ini` and `library.json` to use original `khoih-prog` instead of `khoih.prog` after PIO fix
+2. Update `Packages' Patches`
 
 ### Major Release v2.10.0
 

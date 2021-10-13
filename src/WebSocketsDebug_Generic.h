@@ -24,7 +24,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.10.0
+  Version: 2.10.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -48,6 +48,7 @@
   2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
   2.9.0   K Hoang      05/09/2021 Add support to QNEthernet Library for Teensy 4.1
   2.10.0  K Hoang      18/09/2021 Add support to Portenta_H7, using either WiFi or Vision-shield Ethernet
+  2.10.1  K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   *****************************************************************************************************************************/
 
 #pragma once
