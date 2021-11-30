@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Major Release v2.11.0](#major-release-v2110)
   * [Release v2.10.1](#release-v2101)
   * [Major Release v2.10.0](#major-release-v2100)
   * [Major Release v2.9.0](#major-release-v290)
@@ -48,6 +49,13 @@
 ---
 
 ## Changelog
+
+### Major Release v2.11.0
+
+1. Auto detect ESP32 core to use for WT32_ETH01
+2. Fix bug in WT32_ETH01 examples to reduce connection time
+3. Delete Blynk-related examples
+4. Replace deprecated `echo.websocket.org` in examples.
 
 ### Release v2.10.1
 

@@ -1,6 +1,6 @@
 {
   "name": "WebSockets_Generic",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, Portenta_H7, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, RP2040-based boards, besides ESP8266/ESP32 and WT32_ETH01. Ethernet shields W5100, W5200, W5500, ENC28J60, Teensy 4.1 NativeEthernet/QNEthernet or Portenta_H7 WiFi/Ethernet",
   "keywords": "wifi, WiFiNINA, websocket, websockets-server, websockets-client, Teensy, SAM DUE, SAMD, STM32, nRF52, QNEthernet, rp2040, Portenta-H7, ESP32, ESP8266, W5x00, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EthernetENC, UIPEthernet, NativeEthernet, ENC28J60, rpi-pico, http, web, server, client, Mega",
   "authors": [
@@ -33,7 +33,7 @@
     {
       "owner": "khoih-prog",
       "name": "WiFiNINA_Generic",
-      "version": ">=1.8.13",
+      "version": ">=1.8.14-1",
       "platforms": ["*"]
     },
     {
@@ -57,7 +57,7 @@
     {
       "owner": "khoih-prog",
       "name": "WiFiWebServer",
-      "version": ">=1.4.1",
+      "version": ">=1.4.2",
       "platforms": ["*"]
     },
     {
@@ -69,7 +69,7 @@
     {
       "owner": "khoih-prog",
       "name": "WebServer_WT32_ETH01",
-      "version": "^1.2.0",
+      "version": "^1.4.1",
       "platforms": ["espressif32"]
     },
     {
@@ -147,7 +147,9 @@
       "version": "https://github.com/ssilverman/QNEthernet"
     }
   ],
+  "license": "LGPL-3.0",
   "frameworks": "*",
   "platforms": "*",
-  "examples": "examples/*/*/*.ino"
+  "examples": "examples/*/*/*.ino",
+  "headers": ["WebSocketsClient_Generic.h", "WebSocketsServer_Generic.h"]
 }
