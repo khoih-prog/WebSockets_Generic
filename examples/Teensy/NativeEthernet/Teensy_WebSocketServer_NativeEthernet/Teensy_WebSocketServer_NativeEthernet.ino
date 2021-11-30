@@ -199,8 +199,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart Teensy_WebSocketServer_NativeEthernet on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print("\nStart Teensy_WebSocketServer_NativeEthernet on "); Serial.print(BOARD_NAME);
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
 #if !USE_NATIVE_ETHERNET

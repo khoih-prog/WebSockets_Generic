@@ -40,8 +40,8 @@ WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
 // Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 225);
-IPAddress serverIP(192, 168, 2, 140);
+//IPAddress clientIP(192, 168, 2, 225);
+IPAddress serverIP(192, 168, 2, 30);
 
 void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
 {
@@ -106,7 +106,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WIOTerminal_WebSocketClientSSL on " + String(BOARD_NAME));
+  Serial.print("\nStart WIOTerminal_WebSocketClientSSL on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WiFiMulti.addAP("SSID", "passpasspass");

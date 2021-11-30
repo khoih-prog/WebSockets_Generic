@@ -67,8 +67,8 @@ SocketIOclient socketIO;
 IPAddress clientIP(192, 168, 2, 225);
 
 // Select the IP address according to your local network
-IPAddress serverIP(192, 168, 2, 51);
-uint16_t  serverPort = 3000;
+IPAddress serverIP(192, 168, 2, 30);
+uint16_t  serverPort = 8080;
 
 int status = WL_IDLE_STATUS;
 
@@ -153,7 +153,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart Teensy_WebSocketClientSocketIO_WiFiNINA on " + String(BOARD_NAME));
+  Serial.print("\nStart Teensy_WebSocketClientSocketIO_WiFiNINA on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

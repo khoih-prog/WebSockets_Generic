@@ -46,12 +46,13 @@ int status = WL_IDLE_STATUS;
 #define USE_SSL         false
 
 #if USE_SSL
+  // Deprecated echo.websocket.org to be replaced
   #define WS_SERVER           "wss://echo.websocket.org"
   #define WS_PORT             443
 #else
-  //#define WS_SERVER           "ws://echo.websocket.org"
-  #define WS_SERVER           "192.168.2.37"
-  #define WS_PORT             81
+  // To run a local WebSocket Server
+  #define WS_SERVER           "192.168.2.30"
+  #define WS_PORT             8080
 #endif
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -140,7 +141,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WebSocketClient_WiFi101 on " + String(BOARD_NAME));
+  Serial.print("\nStart WebSocketClient_WiFi101 on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

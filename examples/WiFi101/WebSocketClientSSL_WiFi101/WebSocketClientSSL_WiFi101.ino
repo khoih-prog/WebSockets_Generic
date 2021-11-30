@@ -43,6 +43,7 @@ WebSocketsClient webSocket;
 
 int status = WL_IDLE_STATUS;
 
+// Deprecated echo.websocket.org to be replaced
 #define WS_SERVER           "wss://echo.websocket.org"
 #define SSL_PORT            443
 
@@ -132,7 +133,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WebSocketClient_NINA on " + String(BOARD_NAME));
+  Serial.print("\nStart WebSocketClientSSL_WiFi101 on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

@@ -66,11 +66,12 @@ WebSocketsClient webSocket;
 #define USE_SSL               true
 
 #if USE_SSL
+  // Deprecated echo.websocket.org to be replaced
   #define WS_SERVER           "wss://echo.websocket.org"
   #define WS_PORT             443
 #else  
-  #define WS_SERVER           "ws://echo.websocket.org"
-  #define WS_PORT             80
+  #define WS_SERVER           "192.168.2.30"
+  #define WS_PORT             8080
 #endif
 
 int status = WL_IDLE_STATUS;
@@ -161,7 +162,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart Teensy_WebSocketClientSSL_WiFiNINA on " + String(BOARD_NAME));
+  Serial.print("\nStart Teensy_WebSocketClientSSL_WiFiNINA on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

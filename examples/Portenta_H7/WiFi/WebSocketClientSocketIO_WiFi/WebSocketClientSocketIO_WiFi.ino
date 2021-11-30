@@ -139,7 +139,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WebSocketClientSocketIO_WiFi on " + String(BOARD_NAME));
+  Serial.print("\nStart WebSocketClientSocketIO_WiFi on "); Serial.print(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   // check for the WiFi module:

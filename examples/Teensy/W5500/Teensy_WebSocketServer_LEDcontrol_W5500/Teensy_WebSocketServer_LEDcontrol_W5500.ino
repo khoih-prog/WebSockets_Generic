@@ -213,8 +213,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart Teensy_WebSocketServer_LEDcontrol_W5500 on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print("\nStart Teensy_WebSocketServer_LEDcontrol_W5500 on "); Serial.print(BOARD_NAME);
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   pinMode(RED_LED, OUTPUT);

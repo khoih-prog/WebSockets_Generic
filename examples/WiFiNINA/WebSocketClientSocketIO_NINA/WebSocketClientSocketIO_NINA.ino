@@ -129,7 +129,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WebSocketClientSocketIO_NINA on " + String(BOARD_NAME));
+  Serial.print("\nStart WebSocketClientSocketIO_NINA on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

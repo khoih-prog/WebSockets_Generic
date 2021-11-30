@@ -110,7 +110,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WIOTerminal_WebSocketServer on " + String(BOARD_NAME));
+  Serial.print("\nStart WIOTerminal_WebSocketServer on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WiFiMulti.addAP("SSID", "passpasspass");

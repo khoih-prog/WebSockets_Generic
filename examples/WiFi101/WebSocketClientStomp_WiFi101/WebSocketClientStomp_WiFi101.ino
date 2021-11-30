@@ -170,7 +170,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart WebSocketClientStomp_NINA on " + String(BOARD_NAME));
+  Serial.print("\nStart WebSocketClientStomp_WiFi101 on "); Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

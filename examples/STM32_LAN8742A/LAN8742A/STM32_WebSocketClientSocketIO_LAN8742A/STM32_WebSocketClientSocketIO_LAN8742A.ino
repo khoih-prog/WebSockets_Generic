@@ -64,8 +64,8 @@ byte mac[][NUMBER_OF_MAC] =
 IPAddress clientIP(192, 168, 2, 225);
 
 // Select the IP address according to your local network
-IPAddress serverIP(192, 168, 2, 51);
-uint16_t  serverPort = 3000;
+IPAddress serverIP(192, 168, 2, 30);
+uint16_t  serverPort = 8080;
 
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
 {
@@ -123,8 +123,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart STM32_WebSocketClientSocketIO_LAN8742A on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print("\nStart STM32_WebSocketClientSocketIO_LAN8742A on "); Serial.print(BOARD_NAME);
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   // start the ethernet connection and the server:

@@ -272,8 +272,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart Teensy_WebSocketClientStomp_W5500 on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print("\nStart Teensy_WebSocketClientStomp_W5500 on "); Serial.print(BOARD_NAME);
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);

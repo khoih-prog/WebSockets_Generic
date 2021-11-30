@@ -158,11 +158,13 @@ byte mac[][NUMBER_OF_MAC] =
 #define USE_SSL         false
 
 #if USE_SSL
+  // Deprecated echo.websocket.org to be replaced
   #define WS_SERVER           "wss://echo.websocket.org"
   #define WS_PORT             443
 #else
-  #define WS_SERVER           "ws://echo.websocket.org"
-  #define WS_PORT             80
+  // To run a local WebSocket Server
+  #define WS_SERVER           "192.168.2.30"
+  #define WS_PORT             8080
 #endif
 
 // Only for W5100
@@ -242,8 +244,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart Teensy_WebSocketClient_W5500 on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print("\nStart Teensy_WebSocketClient_W5500 on "); Serial.print(BOARD_NAME);
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WS_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
