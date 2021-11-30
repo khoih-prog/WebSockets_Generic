@@ -28,6 +28,7 @@
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
+// Deprecated echo.websocket.org to be replaced
 #define WS_SERVER           "wss://echo.websocket.org"
 #define SSL_PORT            443
 
@@ -74,8 +75,8 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
   while (!Serial);
-
-  Serial.println("\nStart ESP8266_WebSocketClientSSL on " + String(ARDUINO_BOARD));
+  
+  Serial.print("\nStart ESP8266_WebSocketClientSSL on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);

@@ -30,11 +30,13 @@ WebSocketsClient  webSocket;
 #define USE_SSL         false
 
 #if USE_SSL
+  // Deprecated echo.websocket.org to be replaced
   #define WS_SERVER           "wss://echo.websocket.org"
   #define WS_PORT             443
-#else  
-  #define WS_SERVER           "ws://echo.websocket.org"
-  #define WS_PORT             80
+#else
+  // To run a local WebSocket Server
+  #define WS_SERVER           "192.168.2.30"
+  #define WS_PORT             8080
 #endif
 
 void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
@@ -121,7 +123,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart ESP32_WebSocketClient on " + String(ARDUINO_BOARD));
+  Serial.print("\nStarting ESP32_WebSocketClient on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.setDebugOutput(true);

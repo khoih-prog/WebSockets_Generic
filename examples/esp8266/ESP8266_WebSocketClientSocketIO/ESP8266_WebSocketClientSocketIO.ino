@@ -32,11 +32,8 @@ ESP8266WiFiMulti WiFiMulti;
 SocketIOclient socketIO;
 
 // Select the IP address according to your local network
-IPAddress serverIP(192, 168, 2, 51);
+IPAddress serverIP(192, 168, 2, 30);
 uint16_t  serverPort = 3000;
-
-//IPAddress serverIP(10, 11, 100, 100);
-//uint16_t  serverPort = 8880;
 
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
 {
@@ -94,7 +91,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart ESP8266_WebSocketClientSocketIO on " + String(ARDUINO_BOARD));
+  Serial.print("\nStart ESP8266_WebSocketClientSocketIO on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);

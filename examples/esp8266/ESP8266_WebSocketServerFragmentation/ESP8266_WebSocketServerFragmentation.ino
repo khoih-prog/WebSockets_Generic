@@ -86,7 +86,7 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
 
-  Serial.println("\nStart ESP8266_WebSocketServerFragmentation on " + String(ARDUINO_BOARD));
+  Serial.print("\nStart ESP8266_WebSocketServerFragmentation on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);

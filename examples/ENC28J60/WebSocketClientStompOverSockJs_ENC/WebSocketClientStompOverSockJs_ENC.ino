@@ -28,9 +28,9 @@
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     3
-#define WEBSOCKETS_NETWORK_TYPE   NETWORK_ENC28J60
 
-#define SHIELD_TYPE               "ENC28J60 using UIPEthernet Library"
+#define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
+#define SHIELD_TYPE               "ENC28J60 using EthernetENC Library"
 
 #include <WebSocketsClient_Generic.h>
 
@@ -121,7 +121,7 @@ void setup()
   while (!Serial);
 
   Serial.print("\nStart WebSocketClientStompOverSockJs_ENC on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

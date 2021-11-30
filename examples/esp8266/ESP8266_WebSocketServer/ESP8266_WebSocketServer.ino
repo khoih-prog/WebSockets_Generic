@@ -70,7 +70,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     default:
       break;
   }
-
 }
 
 void setup()
@@ -78,7 +77,7 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
 
-  Serial.println("\nStart ESP8266_WebSocketServer on " + String(ARDUINO_BOARD));
+  Serial.print("\nStart ESP8266_WebSocketServer on "); Serial.println(ARDUINO_BOARD);
   Serial.println("Version " + String(WEBSOCKETS_GENERIC_VERSION));
 
   //Serial.setDebugOutput(true);

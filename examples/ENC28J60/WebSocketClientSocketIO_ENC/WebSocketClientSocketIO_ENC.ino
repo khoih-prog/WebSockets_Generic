@@ -25,9 +25,9 @@
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     3
-#define WEBSOCKETS_NETWORK_TYPE   NETWORK_ENC28J60
 
-#define SHIELD_TYPE               "ENC28J60 using UIPEthernet Library"
+#define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
+#define SHIELD_TYPE               "ENC28J60 using EthernetENC Library"
 
 #include <ArduinoJson.h>
 
@@ -69,9 +69,6 @@ IPAddress clientIP(192, 168, 2, 225);
 // Select the IP address according to your local network
 IPAddress serverIP(192, 168, 2, 30);
 uint16_t  serverPort = 8080;
-
-//IPAddress serverIP(10, 11, 100, 100);
-//uint16_t  serverPort = 8880;
 
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
 {
@@ -130,7 +127,7 @@ void setup()
   while (!Serial);
 
   Serial.print("\nStart WebSocketClientIO_ENC on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

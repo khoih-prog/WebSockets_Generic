@@ -25,9 +25,9 @@
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     4
-#define WEBSOCKETS_NETWORK_TYPE   NETWORK_ENC28J60
 
-#define SHIELD_TYPE               "ENC28J60 using UIPEthernet Library"
+#define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
+#define SHIELD_TYPE               "ENC28J60 using EthernetENC Library"
 
 #include <WebSocketsClient_Generic.h>
 
@@ -39,11 +39,13 @@ uint8_t mac[6] =  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x08 };
 #define USE_SSL         false
 
 #if USE_SSL
+  // Deprecated echo.websocket.org to be replaced
   #define WS_SERVER           "wss://echo.websocket.org"
   #define WS_PORT             443
 #else
-  #define WS_SERVER           "ws://echo.websocket.org"
-  #define WS_PORT             80
+  // To run a local WebSocket Server
+  #define WS_SERVER           "192.168.2.30"
+  #define WS_PORT             8080
 #endif
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
@@ -89,7 +91,7 @@ void setup()
   while (!Serial);
 
   Serial.print("\nStart WebSocketClient_ENC on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

@@ -97,7 +97,7 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart ESP32_WebSocketServer on " + String(ARDUINO_BOARD));
+  Serial.print("\nStarting ESP32_WebSocketServer on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
