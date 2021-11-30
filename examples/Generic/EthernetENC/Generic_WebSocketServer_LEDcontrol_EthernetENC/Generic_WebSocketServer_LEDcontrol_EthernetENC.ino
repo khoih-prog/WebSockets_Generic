@@ -167,8 +167,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart Generic_WebSocketServer_LEDcontrol_EthernetENC on " + String(BOARD_NAME));
-  Serial.println(" with " + String(SHIELD_TYPE));
+  Serial.print("\nStarting Generic_WebSocketServer_LEDcontrol_EthernetENC on "); Serial.print(BOARD_NAME);
+  Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   pinMode(RED_LED, OUTPUT);
