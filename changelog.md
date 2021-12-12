@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.11.1](#release-v2111)
   * [Major Release v2.11.0](#major-release-v2110)
   * [Release v2.10.1](#release-v2101)
   * [Major Release v2.10.0](#major-release-v2100)
@@ -49,6 +50,11 @@
 ---
 
 ## Changelog
+
+### Release v2.11.1
+
+1. Add option to use `transport=websocket` with sticky-session SIO server. Check [Run websocket only mode for Socket.IO #16](https://github.com/khoih-prog/WebSockets_Generic/issues/16)
+2. Add some Sticky_SIO-related examples
 
 ### Major Release v2.11.0
 

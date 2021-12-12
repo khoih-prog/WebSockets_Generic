@@ -115,7 +115,8 @@
     * [13.2 Server](#132-server)
   * [14. WebSocketClientSocketIO_WiFi on Portenta_H7 using WiFi](#14-WebSocketClientSocketIO_WiFi-on-Portenta_H7-using-WiFi)
     * [14.1 Client](#141-client)
-    * [14.2 Server](#142-server) 
+    * [14.2 Server](#142-server)
+  * [15. Portenta_H7_WebSocketClient_Sticky_SocketIO on PORTENTA_H7_M7 using Ethernet](#15-Portenta_H7_WebSocketClient_Sticky_SocketIO-on-PORTENTA_H7_M7-using-Ethernet)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -235,7 +236,7 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
  9. [`ESP32 Core 2.0.1+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
 10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
 11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 2.6.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
-12. [`Earle Philhower's arduino-pico core v1.9.6+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
+12. [`Earle Philhower's arduino-pico core v1.9.8+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino Core for STM32 v2.1.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
 
 15. [`WiFiNINA_Generic library v1.8.14-1+`](https://github.com/khoih-prog/WiFiNINA_Generic) if for WiFiNINA. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiNINA_Generic.svg?)](https://www.ardu-badge.com/WiFiNINA_Generic).
@@ -243,10 +244,10 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
 17. [`EthernetWebServer_STM32 library v1.2.1+`](https://github.com/khoih-prog/EthernetWebServer_STM32) if necessary to use Ethernet modules/shields. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
 18. [`WebServer_WT32_ETH01 library v1.4.1+`](https://github.com/khoih-prog/WebServer_WT32_ETH01) if necessary to use WT32_ETH01 boards. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WebServer_WT32_ETH01.svg?)](https://www.ardu-badge.com/WebServer_WT32_ETH01)
 19. Depending on which Ethernet card you're using:
-   - [`Ethernet library v2.0.0+`](https://github.com/arduino-libraries/Ethernet) for W5100, W5200 and W5500.  [![GitHub release](https://img.shields.io/github/release/arduino-libraries/Ethernet.svg)](https://github.com/arduino-libraries/Ethernet/releases/latest)
-   - [`EthernetLarge library v2.0.0+`](https://github.com/OPEnSLab-OSU/EthernetLarge) for W5100, W5200 and W5500.
-   - [`Ethernet2 library v1.0.4+`](https://github.com/khoih-prog/Ethernet2) for W5500. [![GitHub release](https://img.shields.io/github/release/adafruit/Ethernet2.svg)](https://github.com/adafruit/Ethernet2/releases/latest)
-   - [`Ethernet3 library v1.5.5+`](https://github.com/sstaub/Ethernet3) for W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip. [![GitHub release](https://img.shields.io/github/release/sstaub/Ethernet3.svg)](https://github.com/sstaub/Ethernet3/releases/latest)
+   - [`Ethernet library v2.0.0+`](https://github.com/arduino-libraries/Ethernet) for W5100, W5200 and W5500.  [![GitHub release](https://img.shields.io/github/release/arduino-libraries/Ethernet.svg)](https://github.com/arduino-libraries/Ethernet/releases/latest). You can also use the forked and modified library at [Patched Ethernet](https://github.com/khoih-prog/Ethernet)
+   - [`EthernetLarge library v2.0.0+`](https://github.com/OPEnSLab-OSU/EthernetLarge) for W5100, W5200 and W5500. You can also use the forked and modified library at [Patched EthernetLarge](https://github.com/khoih-prog/EthernetLarge)
+   - [`Ethernet2 library v1.0.4+`](https://github.com/khoih-prog/Ethernet2) for W5500. [![GitHub release](https://img.shields.io/github/release/adafruit/Ethernet2.svg)](https://github.com/adafruit/Ethernet2/releases/latest). You can also use the forked and modified library at [Patched Ethernet2](https://github.com/khoih-prog/Ethernet2)
+   - [`Ethernet3 library v1.5.5+`](https://github.com/sstaub/Ethernet3) for W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip. [![GitHub release](https://img.shields.io/github/release/sstaub/Ethernet3.svg)](https://github.com/sstaub/Ethernet3/releases/latest). You can also use the forked and modified library at [Patched Ethernet3](https://github.com/khoih-prog/Ethernet3)
    - [`EthernetENC library v2.0.1+`](https://github.com/jandrassy/EthernetENC) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/jandrassy/EthernetENC.svg)](https://github.com/jandrassy/EthernetENC/releases/latest). **New and Better**
    - [`UIPEthernet library v2.0.10+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/UIPEthernet/UIPEthernet.svg)](https://github.com/UIPEthernet/UIPEthernet/releases/latest)
    - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/STM32Ethernet.svg)](https://github.com/stm32duino/STM32Ethernet/releases/latest). To be used with [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP). [![GitHub release](https://img.shields.io/github/release/stm32duino/LwIP.svg)](https://github.com/stm32duino/LwIP/releases/latest).
@@ -550,6 +551,8 @@ To fix [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet), just 
 - [w5100.h](LibraryPatches/Ethernet/src/utility/w5100.h)
 - [w5100.cpp](LibraryPatches/Ethernet/src/utility/w5100.cpp)
 
+You can also use the forked and modified library at [Patched Ethernet](https://github.com/khoih-prog/Ethernet)
+
 #### 3. For EthernetLarge library
 
 To fix [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge), just copy these following files into the [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge) directory to overwrite the old files:
@@ -559,6 +562,7 @@ To fix [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge),
 - [w5100.h](LibraryPatches/EthernetLarge/src/utility/w5100.h)
 - [w5100.cpp](LibraryPatches/EthernetLarge/src/utility/w5100.cpp)
 
+You can also use the forked and modified library at [Patched EthernetLarge](https://github.com/khoih-prog/EthernetLarge)
 
 #### 4. For Ethernet2 library
 
@@ -572,11 +576,15 @@ To add UDP Multicast support, necessary for the [**UPnP_Generic library**](https
 - [EthernetUdp2.h](LibraryPatches/Ethernet2/src/EthernetUdp2.h)
 - [EthernetUdp2.cpp](LibraryPatches/Ethernet2/src/EthernetUdp2.cpp)
 
+You can also use the forked and modified library at [Patched Ethernet2](https://github.com/khoih-prog/Ethernet2)
+
 #### 5. For Ethernet3 library
 
 5. To fix [`Ethernet3 library`](https://github.com/sstaub/Ethernet3), just copy these following files into the [`Ethernet3 library`](https://github.com/sstaub/Ethernet3) directory to overwrite the old files:
 - [Ethernet3.h](LibraryPatches/Ethernet3/src/Ethernet3.h)
 - [Ethernet3.cpp](LibraryPatches/Ethernet3/src/Ethernet3.cpp)
+
+You can also use the forked and modified library at [Patched Ethernet3](https://github.com/khoih-prog/Ethernet3)
 
 #### 6. For UIPEthernet library
 
@@ -875,7 +883,8 @@ typedef enum
 2. [WebSocketClientSocketIO_NINA](examples/WiFiNINA/WebSocketClientSocketIO_NINA)
 3. [WebSocketClientStomp_NINA](examples/WiFiNINA/WebSocketClientStomp_NINA)
 4. [WebSocketClientStompOverSockJs_NINA](examples/WiFiNINA/WebSocketClientStompOverSockJs_NINA)
-5. [WebSocketClientSSL_NINA](examples/WiFiNINA/WebSocketClientSSL_NINA).
+5. [WebSocketClientSSL_NINA](examples/WiFiNINA/WebSocketClientSSL_NINA)
+6. [WebSocketClient_Sticky_SocketIO_NINA](examples/WiFiNINA/WebSocketClient_Sticky_SocketIO_NINA). **New**
 
 ---
 
@@ -895,6 +904,7 @@ typedef enum
 2. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500)
 3. [WebSocketClientStomp_W5500](examples/W5500/WebSocketClientStomp_W5500)
 4. [WebSocketClientStompOverSockJs_W5500](examples/W5500/WebSocketClientStompOverSockJs_W5500)
+5. [WebSocketClient_Sticky_SocketIO_W5500](examples/W5500/WebSocketClient_Sticky_SocketIO_W5500). **New**
 
 ---
 
@@ -928,6 +938,7 @@ typedef enum
  9. [ESP8266_WebSocketServerFragmentation](examples/esp8266/ESP8266_WebSocketServerFragmentation)
 10. [ESP8266_WebSocketServerHttpHeaderValidation](examples/esp8266/ESP8266_WebSocketServerHttpHeaderValidation)
 11. [ESP8266_WebSocketServer_LEDcontrol](examples/esp8266/ESP8266_WebSocketServer_LEDcontrol)
+12. [ESP8266_WebSocketClient_Sticky_SocketIO](examples/esp8266/ESP8266_WebSocketClient_Sticky_SocketIO). **New**
 
 ---
 
@@ -1020,15 +1031,28 @@ typedef enum
 1. [app.js](examples/Nodejs_SocketIO_TestServer/app.js)
 2. [SIO_server.sh](examples/Nodejs_SocketIO_TestServer/SIO_server.sh)
 3. [HOWTO.md](examples/Nodejs_SocketIO_TestServer/HOWTO.md)
+4. [package.json](examples/Nodejs_SocketIO_TestServer/package.json)
+5. [package-lock.json](examples/Nodejs_SocketIO_TestServer/package-lock.json)
+
+---
+
+#### Nodejs_Sticky_SocketIO_TestServer to use with examples
+
+1. [Multi_Sticky_SIO.js](examples/Nodejs_Sticky_SocketIO_TestServer/Multi_Sticky_SIO.js)
+2. [Multi_Sticky_SIO_server.sh](examples/Nodejs_Sticky_SocketIO_TestServer/Multi_Sticky_SIO_server.sh)
+3. [HOWTO.md](examples/Nodejs_Sticky_SocketIO_TestServer/HOWTO.md)
+4. [package.json](examples/Nodejs_Sticky_SocketIO_TestServer/package.json)
+5. [package-lock.json](examples/Nodejs_Sticky_SocketIO_TestServer/package-lock.json)
 
 ---
 
 #### For WT32_ETH01 board
 
 1. [WT32_ETH01_WebSocketClient](examples/WT32_ETH01/WT32_ETH01_WebSocketClient).
-2. [WT32_ETH01_WebSocketClientSocketIO](examples/WT32_ETH01/WT32_ETH01_WebSocketClientSocketIO).
-3. [WT32_ETH01_WebSocketClientSSL](examples/WT32_ETH01/WT32_ETH01_WebSocketClientSSL).
+2. [WT32_ETH01_WebSocketClientSocketIO](examples/WT32_ETH01/WT32_ETH01_WebSocketClientSocketIO)
+3. [WT32_ETH01_WebSocketClientSSL](examples/WT32_ETH01/WT32_ETH01_WebSocketClientSSL)
 4. [WT32_ETH01_WebSocketServer](examples/WT32_ETH01/WT32_ETH01_WebSocketServer)
+5. [WT32_ETH01_WebSocketClient_Sticky_SocketIO](examples/WT32_ETH01/WT32_ETH01_WebSocketClient_Sticky_SocketIO). **New**
 
 ---
 
@@ -1039,11 +1063,13 @@ typedef enum
 
 1. [Portenta_H7_WebSocketClient](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClient).
 2. [Portenta_H7_WebSocketClientSocketIO](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClientSocketIO)
+3. [Portenta_H7_WebSocketClient_Sticky_SocketIO](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClient_Sticky_SocketIO). **New**
 
 ##### WiFi
 
-3. [WebSocketClientSocketIO_WiFi](examples/Portenta_H7/WiFi/WebSocketClientSocketIO_WiFi).
-4. [WebSocketClient_WiFi](examples/Portenta_H7/WiFi/WebSocketClient_WiFi)
+1. [WebSocketClientSocketIO_WiFi](examples/Portenta_H7/WiFi/WebSocketClientSocketIO_WiFi)
+2. [WebSocketClient_WiFi](examples/Portenta_H7/WiFi/WebSocketClient_WiFi)
+3. [WebSocketClient_Sticky_SocketIO_WiFi](examples/Portenta_H7/WiFi/WebSocketClient_Sticky_SocketIO_WiFi). **New**
 
 
 ---
@@ -1249,7 +1275,7 @@ void loop()
 
 ```
 Start Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1532,7 +1558,7 @@ Device 123456789012345678901234 set position to 0
 
 ```
 Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1615,7 +1641,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 
 ```
 Start Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1699,7 +1725,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 ```
 
 Start WIOTerminal_WebSocketClientSSL on WIO_TERMINAL
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 WebSockets Client started @ IP address: 192.168.2.150
 WebSockets Server : wss://account.duckdns.org
 Connected to WebSockets Server @ wss://account.duckdns.org
@@ -1729,7 +1755,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```
 Start Generic_WebSocketClientSSL_WiFiNINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1765,7 +1791,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```
 Start WebSocketClientSocketIO_NINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1776,7 +1802,7 @@ SSID: HueNet1
 WebSockets Client IP Address: 192.168.2.114
 signal strength (RSSI):-18 dBm
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.11.0
+[WS] WebSockets_Generic v2.11.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client] Connect ws...
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
@@ -1895,7 +1921,7 @@ Message from Client :  { now: 30001 }
 
 ```
 Start Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using EthernetLarge Library
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 [WS] Board :NRF52840_FEATHER, setCsPin:10
 [WS] Default SPI pinout:
 [WS] MOSI:25
@@ -1908,7 +1934,7 @@ W5100 init, using SS_PIN_DEFAULT = 10, new ss_pin = 10, W5100Class::ss_pin = 10
 W5100::init: W5500, SSIZE =8192
 WebSockets Client @ IP address: 192.168.2.94
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.11.0
+[WS] WebSockets_Generic v2.11.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2028,7 +2054,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```
 Start WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 [WS] Board :RASPBERRY_PI_PICO, setCsPin:17
 [WS] Default SPI pinout:
 [WS] MOSI:19
@@ -2038,7 +2064,7 @@ WebSockets_Generic v2.11.0
 [WS] =========================
 WebSockets Client @ IP address: 192.168.2.119
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.11.0
+[WS] WebSockets_Generic v2.11.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2174,7 +2200,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```
 Start WebSocketClientSocketIO_W5500 on RaspberryPi Pico with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 [WS] Board :RaspberryPi Pico, setCsPin:5
 [WS] Default SPI pinout:
 [WS] MOSI:3
@@ -2184,7 +2210,7 @@ WebSockets_Generic v2.11.0
 [WS] =========================
 WebSockets Client @ IP address: 192.168.2.98
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.11.0
+[WS] WebSockets_Generic v2.11.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2314,7 +2340,7 @@ The following are debug terminal output when running example [WT32_ETH01_WebSock
 ```
 Starting WT32_ETH01_WebSocketClient on ESP32_DEV with ETH_PHY_LAN8720
 WebServer_WT32_ETH01 v1.4.1
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 ETH MAC: A8:03:2A:A1:61:73, IPv4: 192.168.2.232, FULL_DUPLEX, 100Mbps
 WebSockets Client started @ IP address: 192.168.2.232
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2395,7 +2421,7 @@ The following are debug terminal output when running example [Teensy_WebSocketCl
 
 ```
 Starting Teensy_WebSocketClient_QNEthernet on TEENSY 4.1 using QNEthernet
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 =========== USE_QN_ETHERNET ===========
 Initialize Ethernet using static IP => Connected! IP address:192.168.2.222
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2442,7 +2468,7 @@ The following are debug terminal output when running example [Portenta_H7_WebSoc
 
 ```
 Start Portenta_H7_WebSocketClientSocketIO on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 WebSockets Client @ IP address: 192.168.2.132
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
@@ -2501,7 +2527,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```
 Start WebSocketClientSocketIO_WiFi on PORTENTA_H7_M7
-WebSockets_Generic v2.11.0
+WebSockets_Generic v2.11.1
 Connecting to SSID: HueNet1
 SSID: HueNet1
 WebSockets Client IP Address: 192.168.2.130
@@ -2546,6 +2572,75 @@ Message from Client :  { now: 90003 }
 Message from Client :  { now: 121501 }
 Message from Client :  { now: 151503 }
 Message from Client :  { now: 181506 }
+```
+
+---
+
+#### 15. [Portenta_H7_WebSocketClient_Sticky_SocketIO](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClient_Sticky_SocketIO) on Portenta_H7 using Ethernet
+
+The following are debug terminal output when running example [Portenta_H7_WebSocketClient_Sticky_SocketIO](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClient_Sticky_SocketIO) on Portenta_H7 using Vision-shield Ethernet.
+
+
+```
+Start Portenta_H7_WebSocketClient_Sticky_SocketIO on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
+WebSockets_Generic v2.11.1
+WebSockets Client @ IP address: 192.168.2.133
+Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
+[WS] WebSockets_Generic v2.11.1
+[WS] [wsIOc] found EIO=4 disable EIO ping on client
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] sendHeader: client->cKey = Kp/b0RFGMw/WSNGn35/s3A==
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=websocket HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Authorization: 1234567890
+User-Agent: arduino-WebSocket-Client
+
+
+[WS] [WS-Client] [sendHeader] Sending header... Done (us):712
+[WS] [WS-Client][handleHeader] RX:HTTP/1.1 200 OK
+[WS] [WS-Client][handleHeader] RX:Date: Sun, 12 Dec 2021 05:58:29 GMT
+[WS] [WS-Client][handleHeader] RX:Connection: keep-alive
+[WS] [WS-Client][handleHeader] RX:Keep-Alive: timeout=5
+[WS] [WS-Client][handleHeader] RX:Transfer-Encoding: chunked
+[WS] [WS-Client][handleHeader] Header read fin.
+[WS] [WS-Client][handleHeader] Client settings:
+[WS] [WS-Client][handleHeader] - cURL:/socket.io/?EIO=4
+[WS] [WS-Client][handleHeader] - cKey:Kp/b0RFGMw/WSNGn35/s3A==
+[WS] [WS-Client][handleHeader] Server header:
+[WS] [WS-Client][handleHeader] - cCode:200
+[WS] [WS-Client][handleHeader] - cIsUpgrade:0
+[WS] [WS-Client][handleHeader] - cIsWebsocket:1
+[WS] [WS-Client][handleHeader] - cAccept:
+[WS] [WS-Client][handleHeader] - cProtocol:arduino
+[WS] [WS-Client][handleHeader] - cExtensions:
+[WS] [WS-Client][handleHeader] - cVersion:0
+[WS] [WS-Client][handleHeader] - cSessionId:
+[WS] [WS-Client][handleHeader] Still missing cSessionId try Socket.IO
+[WS] [WS-Client][handleHeader] socket.io json: c
+hello world
+
+0
+[WS] [WS-Client][handleHeader] RX:c
+hello world
+
+0
+[WS] [WS-Client][handleHeader] Header error:c
+hello world
+
+0
+[WS] [WS-Client][handleClientData] Header response timeout.. Disconnecting!
+[IOc] Disconnected
+[WS] [wsIOc] Disconnected!
+[WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
+[WS] [WS-Client] [sendHeader] Sending header...
+[WS] sendHeader: client->cKey = dm6SsOCMRZwhNjKmQeo2lw==
+[WS] [WS-Client] [sendHeader] Handshake:GET /socket.io/?EIO=4&transport=websocket HTTP/1.1
+Host: 192.168.2.30:8080
+Connection: keep-alive
+Authorization: 1234567890
+User-Agent: arduino-WebSocket-Client
 ```
 
 ---
@@ -2612,6 +2707,7 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 22. Add support to **Portenta_H7**, using either `Murata WiFi` or `Vision-shield Ethernet`
 23. Auto detect ESP32 core to use for WT32_ETH01
 24. Fix bug in WT32_ETH01 examples to reduce connection time
+25. Add option to use transport=websocket with sticky-session SIO server
  
  
 ---
@@ -2621,13 +2717,15 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 
 1. Based on and modified from [Markus Sattler's **arduinoWebSockets** library](https://github.com/Links2004/arduinoWebSockets)
 2. Thanks to [Anson He](https://github.com/ansonhe97) for the PR [**Fix compile error for Wio Terminal**](https://github.com/khoih-prog/WebSockets_Generic/pull/5) to fix SeeedStudio **SEEED_WIO_TERMINAL** compile errors and leading to new version v2.3.3.
-3. Thanks to [Jose A.Molina](https://github.com/Josua2012) for the enhanement request [**WiFi101 and Arduino MKR1000.** #10](https://github.com/khoih-prog/WebSockets_Generic/issues/10), and help testing, leading to new version v2.5.0, and v2.6.0
+3. Thanks to [Jose A.Molina](https://github.com/Josua2012) for the enhancement request [**WiFi101 and Arduino MKR1000.** #10](https://github.com/khoih-prog/WebSockets_Generic/issues/10), and help testing, leading to new version v2.5.0, and v2.6.0
+4. Thanks to [Ideen Kaffee Korner](https://github.com/iKK001) for the enhancement request [**Run websocket only mode for Socket.IO** #16](https://github.com/khoih-prog/WebSockets_Generic/issues/16), leading to new version v2.11.1
 
 <table>
   <tr>
     <td align="center"><a href="https://github.com/Links2004"><img src="https://github.com/Links2004.png" width="100px;" alt="Links2004"/><br /><sub><b>⭐️ Markus Sattler</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/ansonhe97"><img src="https://github.com/ansonhe97.png" width="100px;" alt="ansonhe97"/><br /><sub><b>Anson He</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/Josua2012"><img src="https://github.com/Josua2012.png" width="100px;" alt="Josua2012"/><br /><sub><b>Jose A. Molina</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/iKK001"><img src="https://github.com/iKK001.png" width="100px;" alt="iKK001"/><br /><sub><b>Ideen Kaffee Korner</b></sub></a><br /></td>
   </tr> 
 </table>
 
