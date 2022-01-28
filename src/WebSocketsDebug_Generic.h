@@ -24,7 +24,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.11.1
+  Version: 2.12.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -51,6 +51,7 @@
   2.10.1  K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   2.11.0  K Hoang      30/11/2021 Auto detect ESP32 core version. Fix bug in examples
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
+  2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   *****************************************************************************************************************************/
 
 #pragma once

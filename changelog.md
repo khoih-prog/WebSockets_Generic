@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Major Release v2.12.0](#major-release-v2120)
   * [Release v2.11.1](#release-v2111)
   * [Major Release v2.11.0](#major-release-v2110)
   * [Release v2.10.1](#release-v2101)
@@ -50,6 +51,13 @@
 ---
 
 ## Changelog
+
+### Major Release v2.12.0
+
+1. Add SSL support to ESP32-based WT32_ETH01 boards using LAN8720 Ethernet
+2. Add WT32_ETH01-related [WT32_ETH01_SSL_SIO example](examples/WT32_ETH01/WT32_ETH01_SSL_SIO)
+3. Update `Packages' Patches`
+
 
 ### Release v2.11.1
 

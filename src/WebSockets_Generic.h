@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.11.1
+  Version: 2.12.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -55,6 +55,7 @@
   2.10.1  K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   2.11.0  K Hoang      30/11/2021 Auto detect ESP32 core version. Fix bug in examples
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
+  2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
  *****************************************************************************************************************************/
 
 #pragma once
@@ -62,7 +63,13 @@
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
 
-#define WEBSOCKETS_GENERIC_VERSION        "WebSockets_Generic v2.11.1"
+#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.12.0"
+
+#define WEBSOCKETS_GENERIC_VERSION_MAJOR      2
+#define WEBSOCKETS_GENERIC_VERSION_MINOR      12
+#define WEBSOCKETS_GENERIC_VERSION_PATCH      0
+
+#define WEBSOCKETS_GENERIC_VERSION_INT        2012000
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -492,9 +499,19 @@
 ////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ETH)
 
-  #include <ETH.h>
+  #include <ETH.h>  
+ 
+  #include <WiFi.h>
+  #include <WiFiClientSecure.h>
+  
+  // From v2.3.1
+  #define SSL_AXTLS
+  //////
+  
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
+  
 
 ////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
