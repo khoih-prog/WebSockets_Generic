@@ -55,8 +55,8 @@
 
 ### Release v2.13.0
 
-1. Add support to ESP32_S3.
-2. Add sIOtype_PING and sIOtype_PING SocketIO events. Check [Ping events propagated to main code socketIO events #18](https://github.com/khoih-prog/WebSockets_Generic/issues/18)
+1. Add support to `ESP32_S3`.
+2. Add `sIOtype_PING` and `sIOtype_PING` SocketIO events. Check [Ping events propagated to main code socketIO events #18](https://github.com/khoih-prog/WebSockets_Generic/issues/18)
 3. Add [ESP32_WebSocketClientSocketIO](examples/ESP32_WebSocketClientSocketIO) example
 4. Update `Packages' Patches`
 

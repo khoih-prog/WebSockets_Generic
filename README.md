@@ -87,7 +87,7 @@
     * [WiFi](#WiFi)
 * [Example Generic_WebSocketClient_WiFiNINA](#example-generic_websocketclient_wifinina)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
-  * [1.Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER](#1-generic_websocketclient_ethernetenc-on-nrf52840_feather)
+  * [1. Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER](#1-generic_websocketclient_ethernetenc-on-nrf52840_feather)
   * [2. Generic_Ethernet_Blinds on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#2-generic_ethernet_blinds-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library)
   * [3. WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5500 using Ethernet2 Library](#3-websocketclientsocketio_w5500-on-nrf52840_feather-with-w5500-using-ethernet2-library)
   * [4. Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#4-generic_websocketclientsocketio_ethernetenc-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library) 
@@ -118,6 +118,7 @@
     * [14.1 Client](#141-client)
     * [14.2 Server](#142-server)
   * [15. Portenta_H7_WebSocketClient_Sticky_SocketIO on PORTENTA_H7_M7 using Ethernet](#15-Portenta_H7_WebSocketClient_Sticky_SocketIO-on-PORTENTA_H7_M7-using-Ethernet)
+  * [16. ESP32_WebSocketClientSocketIO on ESP32S3_DEV](#16-ESP32_WebSocketClientSocketIO-on-ESP32S3_DEV) **New**
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -267,7 +268,7 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
    - [`UIPEthernet library v2.0.11+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/UIPEthernet/UIPEthernet.svg)](https://github.com/UIPEthernet/UIPEthernet/releases/latest)
    - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/STM32Ethernet.svg)](https://github.com/stm32duino/STM32Ethernet/releases/latest). To be used with [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP). [![GitHub release](https://img.shields.io/github/release/stm32duino/LwIP.svg)](https://github.com/stm32duino/LwIP/releases/latest).
    - [`NativeEthernet Library version stable111+`](https://github.com/vjmuzik/NativeEthernet) for Teensy 4.1 built-in Ethernet.
-   - [`QNEthernet Library version v0.13.0+`](https://github.com/ssilverman/QNEthernet) Teensy 4.1 built-in Ethernet. [![GitHub release](https://img.shields.io/github/release/ssilverman/QNEthernet.svg)](https://github.com/ssilverman/QNEthernet/releases/latest).  **New**
+   - [`QNEthernet Library version v0.13.0+`](https://github.com/ssilverman/QNEthernet) Teensy 4.1 built-in Ethernet. **New**
    
 20. [`WiFiWebServer library v1.6.1+`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
 21. [`FlashStorage_SAMD library v1.3.2+`](https://github.com/khoih-prog/FlashStorage_SAMD) for SAMD21 and SAMD51 boards (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit Itsy-Bitsy M4, etc.) if necessary to use certain features. [![GitHub release](https://img.shields.io/github/release/khoih-prog/FlashStorage_SAMD.svg)](https://github.com/khoih-prog/FlashStorage_SAMD/releases/latest)
@@ -2695,7 +2696,7 @@ User-Agent: arduino-WebSocket-Client
 
 ---
 
-#### 15. [ESP32_WebSocketClientSocketIO](examples/esp32/ESP32_WebSocketClientSocketIO) on ESP32S3_DEV
+#### 16. [ESP32_WebSocketClientSocketIO](examples/esp32/ESP32_WebSocketClientSocketIO) on ESP32S3_DEV
 
 The following are debug terminal output when running example [ESP32_WebSocketClientSocketIO](examples/esp32/ESP32_WebSocketClientSocketIO) on **ESP32S3_DEV**
 
