@@ -12,41 +12,39 @@
   Original Author: Markus Sattler
  *****************************************************************************************************************************/
 
-#if ( defined(ARDUINO_SAM_DUE) || defined(__SAM3X8E__) )
-  // Default pin 10 to SS/CS
-  #define USE_THIS_SS_PIN       10
-  #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
-  #error You have to use examples written for Teensy
+#if !defined(ESP32)
+  #error This code is intended to run only on the ESP32 boards ! Please check your Tools->Board setting.
 #endif
 
-#ifndef BOARD_NAME
-  #define BOARD_NAME    BOARD_TYPE
-#endif
+#define _WEBSOCKETS_LOGLEVEL_     4
 
-#define _WEBSOCKETS_LOGLEVEL_     3
-#define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
+#include <WiFi.h>
+#include <WiFiMulti.h>
+#include <WiFiClientSecure.h>
 
 #include <ArduinoJson.h>
 
 #include <WebSocketsClient_Generic.h>
 #include <SocketIOclient_Generic.h>
 
-SocketIOclient socketIO;
+WiFiMulti       WiFiMulti;
+SocketIOclient  socketIO;
 
 // Select the IP address according to your local network
-IPAddress clientIP(192, 168, 2, 225);
+IPAddress clientIP(192, 168, 2, 232);
 
 // Select the IP address according to your local network
-IPAddress serverIP(192, 168, 2, 51);
-uint16_t  serverPort = 3000;
+IPAddress serverIP(192, 168, 2, 30);
+uint16_t  serverPort = 8080;
 
 int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
-char ssid[] = "your_ssid";        // your network SSID (name)
-char pass[] = "12345678";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+char ssid[] = "HueNet1";        // your network SSID (name)
+char pass[] = "jenniqqs";    // your network password (use for WPA, or use as key for WEP), length must be 8+
+//char ssid[] = "your_ssid";        // your network SSID (name)
+//char pass[] = "12345678";    // your network password (use for WPA, or use as key for WEP), length must be 8+
 
 void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
 {
@@ -134,46 +132,27 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart Generic_WebSocketClientSocketIO_WiFiNINA on "); Serial.println(BOARD_NAME);
+  delay(200);
+
+  Serial.print("\nStart ESP32_WebSocketClientSocketIO on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
-  Serial.println("Used/default SPI pinout:");
-  Serial.print("MOSI:");
-  Serial.println(MOSI);
-  Serial.print("MISO:");
-  Serial.println(MISO);
-  Serial.print("SCK:");
-  Serial.println(SCK);
-  Serial.print("SS:");
-  Serial.println(SS);
+  WiFiMulti.addAP(ssid, pass);
 
-  // check for the WiFi module:
-  if (WiFi.status() == WL_NO_MODULE)
+  Serial.print("Connecting to "); Serial.println(ssid);
+
+  //WiFi.disconnect();
+  while (WiFiMulti.run() != WL_CONNECTED)
   {
-    Serial.println("Communication with WiFi module failed!");
-    // don't continue
-    while (true);
+    Serial.print(".");
+    delay(500);
   }
+  
+  Serial.println();
 
-  String fv = WiFi.firmwareVersion();
-  if (fv < WIFI_FIRMWARE_LATEST_VERSION)
-  {
-    Serial.println("Please upgrade the firmware");
-  }
-
-  // attempt to connect to Wifi network:
-  while (status != WL_CONNECTED)
-  {
-    Serial.print("Attempting to connect to SSID: ");
-    Serial.println(ssid);
-    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    status = WiFi.begin(ssid, pass);
-
-    // wait 10 seconds for connection:
-    //delay(10000);
-  }
-
-  printWifiStatus();
+  // Client address
+  Serial.print("WebSockets Client started @ IP address: ");
+  Serial.println(WiFi.localIP());
 
   // server address, port and URL
   Serial.print("Connecting to WebSockets Server @ IP address: ");

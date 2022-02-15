@@ -123,6 +123,8 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
+  delay(200);
+
   Serial.print("\nStarting ESP32_WebSocketClient on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
