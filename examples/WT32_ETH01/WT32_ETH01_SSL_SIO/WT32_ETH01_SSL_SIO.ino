@@ -108,8 +108,17 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length)
       //hexdump(payload, length);
       break;
 
+    case sIOtype_PING:
+      Serial.println("[IOc] Get PING");
+
+      break;
+
+   case sIOtype_PONG:
+      Serial.println("[IOc] Get PONG");
+
+      break;   
+      
     default:
-      Serial.println("[IOc] Default case...");
       break;
   }
 }
