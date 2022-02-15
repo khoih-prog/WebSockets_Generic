@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.13.0](#release-v2130)
   * [Major Release v2.12.0](#major-release-v2120)
   * [Release v2.11.1](#release-v2111)
   * [Major Release v2.11.0](#major-release-v2110)
@@ -51,6 +52,13 @@
 ---
 
 ## Changelog
+
+### Release v2.13.0
+
+1. Add support to ESP32_S3.
+2. Add sIOtype_PING and sIOtype_PING SocketIO events. Check [Ping events propagated to main code socketIO events #18](https://github.com/khoih-prog/WebSockets_Generic/issues/18)
+3. Add [ESP32_WebSocketClientSocketIO](examples/ESP32_WebSocketClientSocketIO) example
+4. Update `Packages' Patches`
 
 ### Major Release v2.12.0
 
