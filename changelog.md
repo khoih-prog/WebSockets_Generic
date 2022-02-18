@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.14.1](#release-v2141)
   * [Release v2.14.0](#release-v2140)
   * [Release v2.13.0](#release-v2130)
   * [Major Release v2.12.0](#major-release-v2120)
@@ -53,6 +54,11 @@
 ---
 
 ## Changelog
+
+### Release v2.14.1
+
+1. Fix setInsecure() bug for WIO_Terminal.
+5. Update `Packages' Patches` for `Seeeduino` core. Be sure to use the `Packages_Patches` of this library version v2.14.1+ to avoid compiler error.
 
 ### Release v2.14.0
 
