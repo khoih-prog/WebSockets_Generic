@@ -56,7 +56,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
 #include <WebSocketsClient_Generic.h>
@@ -101,7 +101,7 @@ void sendMessage(String & msg)
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -113,6 +113,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -123,7 +124,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
         sendMessage(msg);
       }
+      
       break;
+      
     case WStype_TEXT:
       {
         // #####################
@@ -156,6 +159,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
         break;
       }
+      
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -164,6 +168,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
 
     default:

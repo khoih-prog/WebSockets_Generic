@@ -26,7 +26,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     1
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 // Only one of the following to be true.
 #define USE_ETHERNET              false
@@ -109,13 +109,15 @@ SocketIOclient socketIO;
 IPAddress serverIP(192, 168, 2, 30);
 uint16_t  serverPort = 8080;      //3000;
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {
     case sIOtype_DISCONNECT:
       Serial.println("[IOc] Disconnected");
+      
       break;
+      
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
@@ -124,34 +126,43 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
       socketIO.send(sIOtype_CONNECT, "/");
       
       break;
+      
     case sIOtype_EVENT:
       Serial.print("[IOc] Get event: ");
       Serial.println((char*) payload);
       
       break;
+      
     case sIOtype_ACK:
       Serial.print("[IOc] Get ack: ");
       Serial.println(length);
       
       //hexdump(payload, length);
+      
       break;
+      
     case sIOtype_ERROR:
       Serial.print("[IOc] Get error: ");
       Serial.println(length);
       
       //hexdump(payload, length);
+      
       break;
+      
     case sIOtype_BINARY_EVENT:
       Serial.print("[IOc] Get binary: ");
       Serial.println(length);
       
       //hexdump(payload, length);
+      
       break;
+      
     case sIOtype_BINARY_ACK:
        Serial.print("[IOc] Get binary ack: ");
       Serial.println(length);
       
       //hexdump(payload, length);
+      
       break;
       
     case sIOtype_PING:
@@ -168,7 +179,6 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
       break;
   }
 }
-
 
 void setup()
 {

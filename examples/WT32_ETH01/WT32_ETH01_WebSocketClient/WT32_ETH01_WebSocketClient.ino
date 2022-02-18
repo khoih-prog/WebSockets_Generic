@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP32 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     1
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #include <WebServer_WT32_ETH01.h>     // https://github.com/khoih-prog/WebServer_WT32_ETH01
 
@@ -44,7 +44,7 @@ IPAddress myDNS(8, 8, 8, 8);
   #define WS_PORT             8080
 #endif
 
-void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
+void hexdump(const void *mem, const uint32_t& len, const uint8_t& cols = 16)
 {
   const uint8_t* src = (const uint8_t*) mem;
 
@@ -65,7 +65,7 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -77,6 +77,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -87,7 +88,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send message to server when Connected
         webSocket.sendTXT("Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
       if (alreadyConnected)
       {
@@ -96,7 +99,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send message to server
         //webSocket.sendTXT("message here");
       }
+      
       break;
+      
     case WStype_BIN:
       if (alreadyConnected)
       {
@@ -106,21 +111,27 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send data to server
         webSocket.sendBIN(payload, length);
       }
+      
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.printf("[WSc] get ping\n");
+      
       break;
+      
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");
-      break;      
+      
+      break;
+      
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
     case WStype_FRAGMENT:
     case WStype_FRAGMENT_FIN:
+    
       break;
 
     default:

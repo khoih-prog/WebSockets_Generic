@@ -53,7 +53,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define USE_UIP_ETHERNET        false
 
@@ -156,12 +156,13 @@ byte mac[][NUMBER_OF_MAC] =
 // Select the IP address according to your local network
 IPAddress ip(192, 168, 2, 222);
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
       //Serial.println( "[" + String(num) + "] Disconnected!");
+      
       break;
       
     case WStype_CONNECTED:
@@ -172,10 +173,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         // send message to client
         webSocket.sendTXT(num, "Connected");
       }
+      
       break;
       
     case WStype_TEXT:
       Serial.println( "[" + String(num) + "] get Text: " + String((char *) payload));
+      
       break;
       
     case WStype_BIN:
@@ -184,6 +187,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
       // send message to client
       webSocket.sendBIN(num, payload, length);
+      
       break;
 
     // Fragmentation / continuation opcode handling
@@ -191,17 +195,20 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     case WStype_FRAGMENT_TEXT_START:
       fragmentBuffer = (char*)payload;
       Serial.println( "[" + String(num) + "] get start start of Textfragment: " + String((char *) payload));
+      
       break;
       
     case WStype_FRAGMENT:
       fragmentBuffer += (char*)payload;
       Serial.println( "[" + String(num) + "] get Textfragment: " + String((char *) payload));
+      
       break;
       
     case WStype_FRAGMENT_FIN:
       fragmentBuffer += (char*)payload;
       Serial.println( "[" + String(num) + "] get end of Textfragment: " + String((char *) payload));
       Serial.println( "[" + String(num) + "] full frame: " + fragmentBuffer);
+      
       break;
 
     default:

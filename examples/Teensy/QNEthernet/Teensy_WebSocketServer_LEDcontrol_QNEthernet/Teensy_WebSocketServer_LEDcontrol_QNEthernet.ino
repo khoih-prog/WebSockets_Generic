@@ -26,7 +26,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 // Only one of the following to be true.
 #define USE_ETHERNET              false
@@ -112,13 +112,17 @@ EthernetWebServer server(80);
 
 WebSocketsServer webSocket = WebSocketsServer(81);
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
+  (void) length;
+ 
   switch (type)
   {
     case WStype_DISCONNECTED:
       //Serial.println( "[" + String(num) + "] Disconnected!");
+      
       break;
+      
     case WStype_CONNECTED:
       {
         //IPAddress ip = webSocket.remoteIP(num);
@@ -127,7 +131,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         // send message to client
         webSocket.sendTXT(num, "Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
       Serial.println( "[" + String(num) + "] get Text: " + String((char *) payload));
 
@@ -142,6 +148,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         analogWrite(GREEN_LED, ((rgb >> 8) & 0xFF));
         analogWrite(BLUE_LED, ((rgb >> 0) & 0xFF));
       }
+      
       break;
 
     default:

@@ -56,7 +56,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
 #include <WebSocketsClient_Generic.h>
@@ -90,7 +90,7 @@ char pass[] = "********";    // your network password (use for WPA, or use as ke
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -102,6 +102,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -109,7 +110,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         Serial.print("[WSc] Connected to url: ");
         Serial.println((char *) payload);
       }
+      
       break;
+      
     case WStype_TEXT:
       {
         // #####################
@@ -145,8 +148,10 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
           webSocket.sendTXT(msg);
           delay(1000);
         }
+        
         break;
       }
+      
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -154,6 +159,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
 
     default:

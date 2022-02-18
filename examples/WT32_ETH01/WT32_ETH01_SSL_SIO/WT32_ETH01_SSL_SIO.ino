@@ -13,8 +13,6 @@
   #error This code is intended to run only on the ESP32-based WT32_ETH01 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     4
-
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ESP32_ETH
 
 #include <WebServer_WT32_ETH01.h>
@@ -22,9 +20,7 @@
 #include "arduino_secrets.h"
 #include <ArduinoJson.h>
 
-#define BOARD_NAME "WT32_ETH01"
-
-#define _WEBSOCKETS_LOGLEVEL_     4
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ESP32_ETH
 
@@ -60,7 +56,7 @@ IPAddress myDNS(8, 8, 8, 8);
 
 unsigned long messageTimestamp = 0;
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length)
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   Serial.println("Receiving Payload:") ;
   Serial.println((char*)payload);
@@ -69,7 +65,9 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length)
   {
     case sIOtype_DISCONNECT:
       Serial.println("[IOc] Disconnected");
+      
       break;
+      
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*)payload);
@@ -78,34 +76,43 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t* payload, size_t length)
       socketIO.send(sIOtype_CONNECT, "/");
 
       break;
+      
     case sIOtype_EVENT:
       Serial.print("[IOc] Get event: ");
       Serial.println((char*)payload);
 
       break;
+      
     case sIOtype_ACK:
       Serial.print("[IOc] Get ack: ");
       Serial.println(length);
 
       //hexdump(payload, length);
+      
       break;
+      
     case sIOtype_ERROR:
       Serial.print("[IOc] Get error: ");
       Serial.println(length);
 
       //hexdump(payload, length);
+      
       break;
+      
     case sIOtype_BINARY_EVENT:
       Serial.print("[IOc] Get binary: ");
       Serial.println(length);
 
       //hexdump(payload, length);
+      
       break;
+      
     case sIOtype_BINARY_ACK:
       Serial.print("[IOc] Get binary ack: ");
       Serial.println(length);
 
       //hexdump(payload, length);
+      
       break;
 
     case sIOtype_PING:

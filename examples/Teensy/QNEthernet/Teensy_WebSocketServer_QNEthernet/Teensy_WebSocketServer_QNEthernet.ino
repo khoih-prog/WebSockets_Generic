@@ -23,7 +23,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 // Only one of the following to be true.
 #define USE_ETHERNET              false
@@ -98,16 +98,19 @@
 
 #include <WebSocketsServer_Generic.h>
 
-WebSocketsServer webSocket = WebSocketsServer(81);
+#define WS_PORT             8080
 
+WebSocketsServer  webSocket = WebSocketsServer(WS_PORT);;
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
       //Serial.println( "[" + String(num) + "] Disconnected!");
+      
       break;
+      
     case WStype_CONNECTED:
       {
         Serial.println( "[" + String(num) + "] Connected!");
@@ -117,16 +120,19 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         // send message to client
         webSocket.sendTXT(num, "Connected");
       }
+      
       break;
     case WStype_TEXT:
       Serial.println( "[" + String(num) + "] get Text: " + String((char *) payload));
 
       // send message to client
-      webSocket.sendTXT(num, "message here");
+      webSocket.sendTXT(num, "Message from Server on Teensy4.1 and QNEthernet");
 
       // send data to all connected clients
-       webSocket.broadcastTXT("message here");
+      //webSocket.broadcastTXT("message here");
+       
       break;
+      
     case WStype_BIN:
       Serial.println( "[" + String(num) + "] get binary length: " + String(length));
       
@@ -208,6 +214,10 @@ void setup()
  
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
+
+  // server address, port and URL
+  Serial.print("WebSockets Server started @ IP address: "); Serial.print(Ethernet.localIP());
+  Serial.print(", port: "); Serial.println(WS_PORT);
 }
 
 void loop()

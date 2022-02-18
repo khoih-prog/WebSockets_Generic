@@ -53,7 +53,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     0
+#define _WEBSOCKETS_LOGLEVEL_     2
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
 #include <WebSocketsServer_Generic.h>
@@ -68,13 +68,15 @@ char ssid[] = "****";        // your network SSID (name)
 char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
 
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
       //Serial.println( "[" + String(num) + "] Disconnected!");
+      
       break;
+      
     case WStype_CONNECTED:
       {
         //IPAddress ip = webSocket.remoteIP(num);
@@ -83,7 +85,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         // send message to client
         webSocket.sendTXT(num, "Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
       Serial.println( "[" + String(num) + "] get Text: " + String((char *) payload));
 
@@ -92,7 +96,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
       // send data to all connected clients
        webSocket.broadcastTXT("message here");
+       
       break;
+      
     case WStype_BIN:
       Serial.println( "[" + String(num) + "] get binary length: " + String(length));
       
@@ -100,6 +106,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
       // send message to client
       // webSocket.sendBIN(num, payload, length);
+      
       break;
 
       default:

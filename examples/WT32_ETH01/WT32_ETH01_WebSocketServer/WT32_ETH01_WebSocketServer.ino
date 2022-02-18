@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP32 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     1
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #include <WebServer_WT32_ETH01.h>     // https://github.com/khoih-prog/WebServer_WT32_ETH01
 
@@ -34,7 +34,7 @@ IPAddress mySN(255, 255, 255, 0);
 // Google DNS Server IP
 IPAddress myDNS(8, 8, 8, 8);
 
-void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
+void hexdump(const void *mem, const uint32_t& len, const uint8_t& cols = 16)
 {
   const uint8_t* src = (const uint8_t*) mem;
 
@@ -50,16 +50,19 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
     Serial.printf("%02X ", *src);
     src++;
   }
+  
   Serial.printf("\n");
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) 
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {
     case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
+      
       break;
+      
     case WStype_CONNECTED:
       {
         IPAddress ip = webSocket.remoteIP(num);
@@ -68,7 +71,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         // send message to client
         webSocket.sendTXT(num, "Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
       Serial.printf("[%u] get Text: %s\n", num, payload);
 
@@ -77,19 +82,24 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
       // send data to all connected clients
       // webSocket.broadcastTXT("message here");
+      
       break;
+      
     case WStype_BIN:
       Serial.printf("[%u] get binary length: %u\n", num, length);
       hexdump(payload, length);
 
       // send message to client
       webSocket.sendBIN(num, payload, length);
+      
       break;
+      
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
     case WStype_FRAGMENT:
     case WStype_FRAGMENT_FIN:
+    
       break;
 
     default:

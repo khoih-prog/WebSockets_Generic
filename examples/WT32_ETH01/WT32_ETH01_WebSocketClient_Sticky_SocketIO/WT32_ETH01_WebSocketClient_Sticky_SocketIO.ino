@@ -50,7 +50,7 @@ IPAddress myDNS(8, 8, 8, 8);
 
 /////////////////////////////////////////////
 
-void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
+void hexdump(const void *mem, const uint32_t& len, const uint8_t& cols = 16)
 {
   const uint8_t* src = (const uint8_t*) mem;
 
@@ -66,16 +66,19 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
     Serial.printf("%02X ", *src);
     src++;
   }
+  
   Serial.printf("\n");
 }
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {
     case sIOtype_DISCONNECT:
       Serial.println("[IOc] Disconnected");
+      
       break;
+      
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
@@ -84,34 +87,43 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
       socketIO.send(sIOtype_CONNECT, "/");
       
       break;
+      
     case sIOtype_EVENT:
       Serial.print("[IOc] Get event: ");
       Serial.println((char*) payload);
       
       break;
+      
     case sIOtype_ACK:
       Serial.print("[IOc] Get ack: ");
       Serial.println(length);
       
       hexdump(payload, length);
+      
       break;
+      
     case sIOtype_ERROR:
       Serial.print("[IOc] Get error: ");
       Serial.println(length);
       
       hexdump(payload, length);
+      
       break;
+      
     case sIOtype_BINARY_EVENT:
       Serial.print("[IOc] Get binary: ");
       Serial.println(length);
       
       hexdump(payload, length);
+      
       break;
+      
     case sIOtype_BINARY_ACK:
        Serial.print("[IOc] Get binary ack: ");
       Serial.println(length);
       
       hexdump(payload, length);
+      
       break;
       
     case sIOtype_PING:

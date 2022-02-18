@@ -20,7 +20,7 @@
 
 #warning Using SEEED_WIO_TERMINAL
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define WEBSOCKETS_NETWORK_TYPE           NETWORK_RTL8720DN
 
@@ -43,7 +43,7 @@ WebSocketsClient  webSocket;
 //IPAddress clientIP(192, 168, 2, 225);
 IPAddress serverIP(192, 168, 2, 30);
 
-void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
+void hexdump(const void *mem, const uint32_t& len, const uint8_t& cols = 16)
 {
   const uint8_t* src = (const uint8_t*) mem;
 
@@ -64,7 +64,7 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -76,6 +76,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -86,29 +87,38 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send message to server when Connected
         webSocket.sendTXT("Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
       Serial.printf("[WSc] get text: %s\n", payload);
 
       // send message to server
       webSocket.sendTXT("message here");
+      
       break;
+      
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
       hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.printf("[WSc] get ping\n");
+      
       break;
+      
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");
-      break;      
+      
+      break;
+      
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:

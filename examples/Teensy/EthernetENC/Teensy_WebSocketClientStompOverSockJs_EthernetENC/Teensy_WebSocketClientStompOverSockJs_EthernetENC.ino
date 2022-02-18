@@ -56,7 +56,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define USE_UIP_ETHERNET        false
 
@@ -175,7 +175,7 @@ IPAddress serverIP(192, 168, 2, 222);
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -187,6 +187,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -197,7 +198,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send message to server when Connected
         webSocket.sendTXT("Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
       {
         // #####################
@@ -233,8 +236,10 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
           webSocket.sendTXT(msg);
           delay(1000);
         }
+        
         break;
       }
+      
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -242,7 +247,18 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
+
+    case WStype_ERROR:
+    case WStype_FRAGMENT_TEXT_START:
+    case WStype_FRAGMENT_BIN_START:
+    case WStype_FRAGMENT:
+    case WStype_FRAGMENT_FIN:
+      break;
+
+    default:
+      break;      
   }
 }
 

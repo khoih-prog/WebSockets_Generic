@@ -30,7 +30,7 @@
   #endif  
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     4
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFI101
 
@@ -54,7 +54,7 @@ char pass[] = "12345678";         // your network password (use for WPA, or use 
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -66,6 +66,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -76,14 +77,18 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send message to server when Connected
         webSocket.sendTXT("Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
 
       // send message to server
        webSocket.sendTXT("message here");
+       
       break;
+      
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -93,15 +98,19 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.println("[WSc] get ping");
+      
       break;
+      
     case WStype_PONG:
       // answer to a ping we send
       Serial.println("[WSc] get pong");
+      
       break;
 
     default:
