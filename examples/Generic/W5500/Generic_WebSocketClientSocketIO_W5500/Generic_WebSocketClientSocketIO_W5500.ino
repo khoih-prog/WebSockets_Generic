@@ -22,7 +22,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define USE_UIP_ETHERNET        false
 
@@ -126,7 +126,7 @@ uint16_t  serverPort = 8080;
 // Only for W5100
 #define SDCARD_CS       4
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {

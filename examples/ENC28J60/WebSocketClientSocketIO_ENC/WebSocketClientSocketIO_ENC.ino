@@ -24,7 +24,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
 #define SHIELD_TYPE               "ENC28J60 using EthernetENC Library"
@@ -70,7 +70,7 @@ IPAddress clientIP(192, 168, 2, 225);
 IPAddress serverIP(192, 168, 2, 30);
 uint16_t  serverPort = 8080;
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {

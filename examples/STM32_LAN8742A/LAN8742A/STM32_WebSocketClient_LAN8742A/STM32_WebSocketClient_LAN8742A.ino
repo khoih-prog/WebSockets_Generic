@@ -21,11 +21,11 @@
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_       4
+#define _WEBSOCKETS_LOGLEVEL_       2
 
 #define WEBSOCKETS_NETWORK_TYPE     NETWORK_LAN8742A
 
-#warning Using LAN8742A Ethernet & STM32Ethernet lib
+//#warning Using LAN8742A Ethernet & STM32Ethernet lib
 #define SHIELD_TYPE           "LAN8742A Ethernet & STM32Ethernet Library"
 
 #include <WebSocketsClient_Generic.h>
@@ -74,7 +74,7 @@ byte mac[][NUMBER_OF_MAC] =
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -86,6 +86,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -96,7 +97,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send message to server when Connected
         webSocketClient.sendTXT("Connected");
       }
+      
       break;
+      
     case WStype_TEXT:
 
       if (alreadyConnected)
@@ -107,7 +110,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send message to server
         // webSocketClient.sendTXT("message here");
       }
+      
       break;
+      
     case WStype_BIN:
 
       if (alreadyConnected)
@@ -121,15 +126,19 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         // send data to server
         webSocketClient.sendBIN(payload, length);
       }
+      
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.println("[WSc] get ping");
+      
       break;
+      
     case WStype_PONG:
       // answer to a ping we send
       Serial.println("[WSc] get pong");
+      
       break;
       
     default:

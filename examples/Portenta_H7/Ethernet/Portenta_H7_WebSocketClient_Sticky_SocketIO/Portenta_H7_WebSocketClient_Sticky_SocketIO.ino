@@ -91,7 +91,7 @@ uint16_t  serverPort = 8080;
 
 /////////////////////////////////////////////
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {

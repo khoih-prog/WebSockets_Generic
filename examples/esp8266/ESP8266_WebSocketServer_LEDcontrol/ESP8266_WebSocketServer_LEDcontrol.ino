@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -40,8 +40,10 @@ IPAddress static_sn(192,168,2,1);
 ESP8266WebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(81);
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
+  (void) length;
+  
   switch (type)
   {
     case WStype_DISCONNECTED:
@@ -141,7 +143,7 @@ void setup()
   Serial.println(WiFi.localIP());
 }
 
-void heartBeatPrint(void)
+void heartBeatPrint()
 {
   static int num = 1;
 

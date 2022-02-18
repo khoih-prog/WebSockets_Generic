@@ -39,7 +39,7 @@
   
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     4
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_PORTENTA_H7_WIFI
 
@@ -68,7 +68,7 @@ char pass[] = "12345678";         // your network password (use for WPA, or use 
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -80,6 +80,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -91,6 +92,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         webSocket.sendTXT("Connected");
       }
       break;
+      
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
@@ -98,6 +100,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       // send message to server
        webSocket.sendTXT("message here");
       break;
+      
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);

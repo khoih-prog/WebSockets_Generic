@@ -18,12 +18,12 @@
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_       3
+#define _WEBSOCKETS_LOGLEVEL_       2
 
 #define WEBSOCKETS_NETWORK_TYPE     NETWORK_LAN8742A
 #define USE_BUILTIN_ETHERNET        true
 
-#warning Using LAN8742A Ethernet & STM32Ethernet lib
+//#warning Using LAN8742A Ethernet & STM32Ethernet lib
 #define SHIELD_TYPE           "LAN8742A Ethernet & STM32Ethernet Library"
 
 #include <ArduinoJson.h>
@@ -67,13 +67,15 @@ IPAddress clientIP(192, 168, 2, 225);
 IPAddress serverIP(192, 168, 2, 30);
 uint16_t  serverPort = 8080;
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {
     case sIOtype_DISCONNECT:
       Serial.println("[IOc] Disconnected");
+      
       break;
+      
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
@@ -82,29 +84,34 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
       socketIO.send(sIOtype_CONNECT, "/");
       
       break;
+      
     case sIOtype_EVENT:
       Serial.print("[IOc] Get event: ");
       Serial.println((char*) payload);
       
       break;
+      
     case sIOtype_ACK:
       Serial.print("[IOc] Get ack: ");
       Serial.println(length);
       
       //hexdump(payload, length);
       break;
+      
     case sIOtype_ERROR:
       Serial.print("[IOc] Get error: ");
       Serial.println(length);
       
       //hexdump(payload, length);
       break;
+      
     case sIOtype_BINARY_EVENT:
       Serial.print("[IOc] Get binary: ");
       Serial.println(length);
       
       //hexdump(payload, length);
       break;
+      
     case sIOtype_BINARY_ACK:
        Serial.print("[IOc] Get binary ack: ");
       Serial.println(length);

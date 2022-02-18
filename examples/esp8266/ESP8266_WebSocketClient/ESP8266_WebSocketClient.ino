@@ -16,7 +16,7 @@
 #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     4
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -56,7 +56,7 @@ void sendTXTMessage()
   }
 }
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -98,6 +98,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       // pong will be send automatically
       Serial.printf("[WSc] get ping\n");
       break;
+      
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");

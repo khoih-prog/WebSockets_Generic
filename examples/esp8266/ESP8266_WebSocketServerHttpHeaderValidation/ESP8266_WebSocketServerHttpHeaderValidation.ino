@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -35,7 +35,7 @@ const unsigned long int validSessionId = 12345; //some arbitrary value to act as
    Returns a bool value as an indicator to describe whether a user is allowed to initiate a websocket upgrade
    based on the value of a cookie. This function expects the rawCookieHeaderValue to look like this "sessionId=<someSessionIdNumberValue>|"
 */
-bool isCookieValid(String rawCookieHeaderValue)
+bool isCookieValid(const String& rawCookieHeaderValue)
 {
 
   if (rawCookieHeaderValue.indexOf("sessionId") != -1)
@@ -51,7 +51,7 @@ bool isCookieValid(String rawCookieHeaderValue)
 /*
    The WebSocketServerHttpHeaderValFunc delegate passed to webSocket.onValidateHttpHeader
 */
-bool validateHttpHeader(String headerName, String headerValue)
+bool validateHttpHeader(const String& headerName, const String& headerValue)
 {
 
   //assume a true response for any headers not handled by this validator

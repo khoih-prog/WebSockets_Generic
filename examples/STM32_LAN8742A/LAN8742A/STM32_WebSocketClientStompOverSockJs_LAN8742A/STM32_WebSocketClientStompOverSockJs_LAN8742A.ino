@@ -21,12 +21,12 @@
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_       3
+#define _WEBSOCKETS_LOGLEVEL_       2
 
 #define WEBSOCKETS_NETWORK_TYPE     NETWORK_LAN8742A
 #define USE_BUILTIN_ETHERNET        true
 
-#warning Using LAN8742A Ethernet & STM32Ethernet lib
+//#warning Using LAN8742A Ethernet & STM32Ethernet lib
 #define SHIELD_TYPE           "LAN8742A Ethernet & STM32Ethernet Library"
 
 #include <WebSocketsClient_Generic.h>
@@ -81,7 +81,7 @@ IPAddress serverIP(192, 168, 2, 222);
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -100,7 +100,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         Serial.print("[WSc] Connected to url: ");
         Serial.println((char *) payload);
       }
+      
       break;
+      
     case WStype_TEXT:
       {
         // #####################
@@ -136,8 +138,10 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
           webSocket.sendTXT(msg);
           delay(1000);
         }
+        
         break;
       }
+      
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -145,7 +149,18 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
+
+    case WStype_ERROR:
+    case WStype_FRAGMENT_TEXT_START:
+    case WStype_FRAGMENT_BIN_START:
+    case WStype_FRAGMENT:
+    case WStype_FRAGMENT_FIN:
+      break;
+
+    default:
+      break;      
   }
 }
 

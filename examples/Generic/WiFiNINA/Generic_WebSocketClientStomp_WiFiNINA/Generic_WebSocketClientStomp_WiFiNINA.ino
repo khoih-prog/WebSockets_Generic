@@ -27,7 +27,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
 #include <WebSocketsClient_Generic.h>
@@ -65,14 +65,14 @@ char pass[] = "********";    // your network password (use for WPA, or use as ke
    To solve this, we first convert the String to a NULL terminated char[] array
    via "c_str" and set the length of the payload to include the NULL value.
 */
-void sendMessage(String & msg)
+void sendMessage(const String& msg)
 {
   webSocket.sendTXT(msg.c_str(), msg.length() + 1);
 }
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {

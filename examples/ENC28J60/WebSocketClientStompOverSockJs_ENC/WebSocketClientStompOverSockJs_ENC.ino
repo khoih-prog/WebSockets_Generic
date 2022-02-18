@@ -27,7 +27,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
 #define SHIELD_TYPE               "ENC28J60 using EthernetENC Library"
@@ -53,7 +53,7 @@ const char* ws_baseurl            = "/socketentry/"; // don't forget leading and
 
 // FUNCTIONS
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -111,6 +111,26 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       // send data to server
       webSocket.sendBIN(payload, length);
       break;
+
+    case WStype_PING:
+      // pong will be send automatically
+      Serial.printf("[WSc] get ping\n");
+      break;
+      
+    case WStype_PONG:
+      // answer to a ping we send
+      Serial.printf("[WSc] get pong\n");
+      break;
+
+    case WStype_ERROR:
+    case WStype_FRAGMENT_TEXT_START:
+    case WStype_FRAGMENT_BIN_START:
+    case WStype_FRAGMENT:
+    case WStype_FRAGMENT_FIN:
+      break;
+
+    default:
+      break;      
   }
 }
 

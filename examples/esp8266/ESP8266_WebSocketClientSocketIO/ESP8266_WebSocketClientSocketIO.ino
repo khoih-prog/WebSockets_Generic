@@ -16,7 +16,7 @@
 #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -33,9 +33,9 @@ SocketIOclient socketIO;
 
 // Select the IP address according to your local network
 IPAddress serverIP(192, 168, 2, 30);
-uint16_t  serverPort = 3000;
+uint16_t  serverPort = 8080;    //3000;
 
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type) 
   {

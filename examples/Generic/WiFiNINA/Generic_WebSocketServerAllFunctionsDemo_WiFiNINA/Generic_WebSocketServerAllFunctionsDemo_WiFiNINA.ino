@@ -27,7 +27,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFININA
 
 #include <WiFiWebServer.h>
@@ -50,8 +50,10 @@ int status = WL_IDLE_STATUS;
 char ssid[] = "****";        // your network SSID (name)
 char pass[] = "********";    // your network password (use for WPA, or use as key for WEP), length must be 8+
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
+  (void) length;
+  
   switch (type)
   {
     case WStype_DISCONNECTED:

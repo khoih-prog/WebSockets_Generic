@@ -18,12 +18,12 @@
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_       3
+#define _WEBSOCKETS_LOGLEVEL_       2
 
 #define WEBSOCKETS_NETWORK_TYPE     NETWORK_LAN8742A
 #define USE_BUILTIN_ETHERNET        true
 
-#warning Using LAN8742A Ethernet & STM32Ethernet lib
+//#warning Using LAN8742A Ethernet & STM32Ethernet lib
 #define SHIELD_TYPE           "LAN8742A Ethernet & STM32Ethernet Library"
 
 #include <EthernetWebServer_STM32.h>
@@ -79,7 +79,7 @@ IPAddress ip(192, 168, 2, 222);
    Returns a bool value as an indicator to describe whether a user is allowed to initiate a websocket upgrade
    based on the value of a cookie. This function expects the rawCookieHeaderValue to look like this "sessionId=<someSessionIdNumberValue>|"
 */
-bool isCookieValid(String rawCookieHeaderValue)
+bool isCookieValid(const String& rawCookieHeaderValue)
 {
   if (rawCookieHeaderValue.indexOf("sessionId") != -1)
   {
@@ -95,7 +95,7 @@ bool isCookieValid(String rawCookieHeaderValue)
 /*
    The WebSocketServerHttpHeaderValFunc delegate passed to webSocket.onValidateHttpHeader
 */
-bool validateHttpHeader(String headerName, String headerValue)
+bool validateHttpHeader(const String& headerName, const String& headerValue)
 {
   //assume a true response for any headers not handled by this validator
   bool valid = true;

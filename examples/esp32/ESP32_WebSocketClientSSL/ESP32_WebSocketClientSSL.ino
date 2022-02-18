@@ -16,7 +16,7 @@
   #error This code is intended to run only on the ESP32 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     4
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #include <WiFi.h>
 #include <WiFiMulti.h>
@@ -31,7 +31,7 @@ WebSocketsClient webSocket;
 #define WS_SERVER           "wss://echo.websocket.org"
 #define SSL_PORT            443
 
-void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
+void hexdump(const void *mem, const uint32_t& len, const uint8_t& cols = 16)
 {
   const uint8_t* src = (const uint8_t*) mem;
 
@@ -50,37 +50,46 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16)
   Serial.printf("\n");
 }
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
     case WStype_DISCONNECTED:
       Serial.printf("[WSc] Disconnected!\n");
+      
       break;
+      
     case WStype_CONNECTED:
       Serial.printf("[WSc] Connected to url: %s\n", payload);
 
       // send message to server when Connected
       webSocket.sendTXT("Connected");
+      
       break;
+      
     case WStype_TEXT:
       Serial.printf("[WSc] get text: %s\n", payload);
 
       // send message to server
       webSocket.sendTXT("message here");
+      
       break;
+      
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
       hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
+      
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
     case WStype_FRAGMENT:
     case WStype_FRAGMENT_FIN:
+    
       break;
 
     default:
@@ -93,6 +102,8 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
   while (!Serial);
+
+  delay(200);
 
   Serial.print("\nStarting ESP32_WebSocketClientSSL on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);

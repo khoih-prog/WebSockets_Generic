@@ -22,7 +22,7 @@
   #define BOARD_NAME    BOARD_TYPE
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     3
+#define _WEBSOCKETS_LOGLEVEL_     2
 
 #define USE_UIP_ETHERNET        false
 
@@ -129,8 +129,10 @@ byte mac[][NUMBER_OF_MAC] =
 // Only for W5100
 #define SDCARD_CS       4
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
+  (void) length;
+ 
   switch (type)
   {
     case WStype_DISCONNECTED:

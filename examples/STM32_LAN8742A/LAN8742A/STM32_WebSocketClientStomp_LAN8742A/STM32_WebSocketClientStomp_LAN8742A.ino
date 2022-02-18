@@ -21,12 +21,12 @@
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_       3
+#define _WEBSOCKETS_LOGLEVEL_       2
 
 #define WEBSOCKETS_NETWORK_TYPE     NETWORK_LAN8742A
 #define USE_BUILTIN_ETHERNET        true
 
-#warning Using LAN8742A Ethernet & STM32Ethernet lib
+//#warning Using LAN8742A Ethernet & STM32Ethernet lib
 #define SHIELD_TYPE           "LAN8742A Ethernet & STM32Ethernet Library"
 
 #include <WebSocketsClient_Generic.h>
@@ -86,14 +86,14 @@ IPAddress serverIP(192, 168, 2, 222);
    To solve this, we first convert the String to a NULL terminated char[] array
    via "c_str" and set the length of the payload to include the NULL value.
 */
-void sendMessage(String & msg)
+void sendMessage(const String & msg)
 {
   webSocket.sendTXT(msg.c_str(), msg.length() + 1);
 }
 
 bool alreadyConnected = false;
 
-void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
+void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
@@ -105,6 +105,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
       
       break;
+      
     case WStype_CONNECTED:
       {
         alreadyConnected = true;
@@ -115,7 +116,9 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
         String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
         sendMessage(msg);
       }
+      
       break;
+      
     case WStype_TEXT:
       {
         // #####################
@@ -148,6 +151,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
         break;
       }
+      
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -156,6 +160,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
 
       // send data to server
       webSocket.sendBIN(payload, length);
+      
       break;
 
       default:
