@@ -1,0 +1,91 @@
+#######################################
+# Data types (KEYWORD1)
+#######################################
+WSclientsStatus_t	KEYWORD1
+WStype_t	KEYWORD1
+WSopcode_t	KEYWORD1
+WSMessageHeader_t	KEYWORD1
+WSclient_t	KEYWORD1
+WebSockets	KEYWORD1
+WebSocketsClient	KEYWORD1
+WebSocketsServerCore  KEYWORD1
+WebSocketsServer	KEYWORD1
+WebSocketServerEvent  KEYWORD1
+WebSocketServerHttpHeaderValFunc  KEYWORD1
+engineIOmessageType_t	KEYWORD1
+SocketIOclient	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+##############################
+# WebSocketsClient_Generic
+##############################
+
+begin	KEYWORD2
+beginSSL	KEYWORD2
+beginSslWithCA	KEYWORD2
+beginSocketIO	KEYWORD2
+beginSocketIOSSL	KEYWORD2
+beginSocketIOSSLWithCA	KEYWORD2
+loop	KEYWORD2
+onEvent	KEYWORD2
+sendTXT	KEYWORD2
+sendBIN	KEYWORD2
+sendPing	KEYWORD2
+disconnect	KEYWORD2
+setAuthorization	KEYWORD2
+setExtraHeaders	KEYWORD2
+setReconnectInterval  KEYWORD2
+enableHeartbeat  KEYWORD2
+disableHeartbeat KEYWORD2
+
+##############################
+# WebSocketsServer_Generic
+##############################
+
+close  KEYWORD2
+begin KEYWORD2
+loop KEYWORD2
+onEvent  KEYWORD2
+onValidateHttpHeader KEYWORD2
+sendTXT KEYWORD2
+broadcastTXT KEYWORD2
+sendBIN  KEYWORD2
+broadcastBIN  KEYWORD2
+sendPing  KEYWORD2
+broadcastPing KEYWORD2
+disconnect KEYWORD2
+setAuthorization KEYWORD2
+connectedClients  KEYWORD2
+clientIsConnected KEYWORD2
+enableHeartbeat  KEYWORD2
+disableHeartbeat KEYWORD2
+remoteIP KEYWORD2
+loop  KEYWORD2
+newClient KEYWORD2
+
+##############################
+# SocketIOclient_Generic
+##############################
+
+begin KEYWORD2
+isConnected KEYWORD2
+onEvent  KEYWORD2
+sendEVENT KEYWORD2
+send KEYWORD2
+loop KEYWORD2
+setReconnectInterval  KEYWORD2
+setExtraHeaders	KEYWORD2
+
+#######################################
+# Literals (LITERAL1)
+#######################################
+
+WEBSOCKETS_GENERIC_VERSION  LITERAL1
+WEBSOCKETS_GENERIC_VERSION_MAJOR  LITERAL1
+WEBSOCKETS_GENERIC_VERSION_MINOR  LITERAL1
+WEBSOCKETS_GENERIC_VERSION_PATCH  LITERAL1
+WEBSOCKETS_GENERIC_VERSION_INT  LITERAL1
+
