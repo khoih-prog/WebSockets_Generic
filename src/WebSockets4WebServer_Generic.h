@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.13.0
+  Version: 2.14.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -57,6 +57,7 @@
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
+  2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
  *****************************************************************************************************************************/
 
 #pragma once
@@ -82,7 +83,8 @@ class WebSockets4WebServer : public WebSocketsServerCore
     {
       onEvent(event);
 
-      return [&, wsRootDir](const String & method, const String & url, WiFiClient * tcpClient, ESP8266WebServer::ContentTypeFunction contentType) 
+      return [&, wsRootDir](const String & method, const String & url, WiFiClient * tcpClient, 
+                            ESP8266WebServer::ContentTypeFunction contentType) 
       {
         (void)contentType;
 

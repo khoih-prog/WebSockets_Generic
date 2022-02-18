@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.13.0
+  Version: 2.14.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -57,6 +57,7 @@
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
+  2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
  *****************************************************************************************************************************/
 
 #pragma once
@@ -80,11 +81,10 @@ WebSocketsServerCore::WebSocketsServerCore(const String & origin, const String &
     _mandatoryHttpHeaderCount = 0;
 }
 
-//WebSocketsServer::WebSocketsServer(uint16_t port, String origin, String protocol)
-WebSocketsServer::WebSocketsServer(uint16_t port, const String & origin, const String & protocol)
+WebSocketsServer::WebSocketsServer(const uint16_t& port, const String & origin, const String & protocol)
   : WebSocketsServerCore(origin, protocol)
 {
-  _port                   = port;
+  _port   = port;
 
   _server = new WEBSOCKETS_NETWORK_SERVER_CLASS(port);
 
@@ -195,7 +195,7 @@ void WebSocketsServerCore::onValidateHttpHeader(WebSocketServerHttpHeaderValFunc
    @param headerToPayload bool  (see sendFrame for more details)
    @return true if ok
 */
-bool WebSocketsServerCore::sendTXT(uint8_t num, uint8_t * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::sendTXT(const uint8_t& num, uint8_t * payload, size_t length, bool headerToPayload)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -217,22 +217,22 @@ bool WebSocketsServerCore::sendTXT(uint8_t num, uint8_t * payload, size_t length
   return false;
 }
 
-bool WebSocketsServerCore::sendTXT(uint8_t num, const uint8_t * payload, size_t length)
+bool WebSocketsServerCore::sendTXT(const uint8_t& num, const uint8_t * payload, size_t length)
 {
   return sendTXT(num, (uint8_t *)payload, length);
 }
 
-bool WebSocketsServerCore::sendTXT(uint8_t num, char * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::sendTXT(const uint8_t& num, char * payload, size_t length, bool headerToPayload)
 {
   return sendTXT(num, (uint8_t *)payload, length, headerToPayload);
 }
 
-bool WebSocketsServerCore::sendTXT(uint8_t num, const char * payload, size_t length)
+bool WebSocketsServerCore::sendTXT(const uint8_t& num, const char * payload, size_t length)
 {
   return sendTXT(num, (uint8_t *)payload, length);
 }
 
-bool WebSocketsServerCore::sendTXT(uint8_t num, String & payload)
+bool WebSocketsServerCore::sendTXT(const uint8_t& num, const String& payload)
 {
   return sendTXT(num, (uint8_t *)payload.c_str(), payload.length());
 }
@@ -287,7 +287,7 @@ bool WebSocketsServerCore::broadcastTXT(const char * payload, size_t length)
   return broadcastTXT((uint8_t *)payload, length);
 }
 
-bool WebSocketsServerCore::broadcastTXT(String & payload)
+bool WebSocketsServerCore::broadcastTXT(const String& payload)
 {
   return broadcastTXT((uint8_t *)payload.c_str(), payload.length());
 }
@@ -300,7 +300,7 @@ bool WebSocketsServerCore::broadcastTXT(String & payload)
    @param headerToPayload bool  (see sendFrame for more details)
    @return true if ok
 */
-bool WebSocketsServerCore::sendBIN(uint8_t num, uint8_t * payload, size_t length, bool headerToPayload)
+bool WebSocketsServerCore::sendBIN(const uint8_t& num, uint8_t * payload, size_t length, bool headerToPayload)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -317,7 +317,7 @@ bool WebSocketsServerCore::sendBIN(uint8_t num, uint8_t * payload, size_t length
   return false;
 }
 
-bool WebSocketsServerCore::sendBIN(uint8_t num, const uint8_t * payload, size_t length)
+bool WebSocketsServerCore::sendBIN(const uint8_t& num, const uint8_t * payload, size_t length)
 {
   return sendBIN(num, (uint8_t *)payload, length);
 }
@@ -364,7 +364,7 @@ bool WebSocketsServerCore::broadcastBIN(const uint8_t * payload, size_t length)
    @param length size_t
    @return true if ping is send out
 */
-bool WebSocketsServerCore::sendPing(uint8_t num, uint8_t * payload, size_t length)
+bool WebSocketsServerCore::sendPing(const uint8_t& num, uint8_t * payload, size_t length)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -381,7 +381,7 @@ bool WebSocketsServerCore::sendPing(uint8_t num, uint8_t * payload, size_t lengt
   return false;
 }
 
-bool WebSocketsServerCore::sendPing(uint8_t num, String & payload)
+bool WebSocketsServerCore::sendPing(const uint8_t& num, const String& payload)
 {
   return sendPing(num, (uint8_t *)payload.c_str(), payload.length());
 }
@@ -414,7 +414,7 @@ bool WebSocketsServerCore::broadcastPing(uint8_t * payload, size_t length)
   return ret;
 }
 
-bool WebSocketsServerCore::broadcastPing(String & payload)
+bool WebSocketsServerCore::broadcastPing(const String& payload)
 {
   return broadcastPing((uint8_t *)payload.c_str(), payload.length());
 }
@@ -441,7 +441,7 @@ void WebSocketsServerCore::disconnect()
    disconnect one client
    @param num uint8_t client id
 */
-void WebSocketsServerCore::disconnect(uint8_t num)
+void WebSocketsServerCore::disconnect(const uint8_t& num)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -513,7 +513,7 @@ int WebSocketsServerCore::connectedClients(bool ping)
    see if one client is connected
    @param num uint8_t client id
 */
-bool WebSocketsServerCore::clientIsConnected(uint8_t num)
+bool WebSocketsServerCore::clientIsConnected(const uint8_t& num)
 {
   if (num >= WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -532,7 +532,7 @@ bool WebSocketsServerCore::clientIsConnected(uint8_t num)
    @param num uint8_t client id
    @return IPAddress
 */
-IPAddress WebSocketsServerCore::remoteIP(uint8_t num)
+IPAddress WebSocketsServerCore::remoteIP(const uint8_t& num)
 {
   if (num < WEBSOCKETS_SERVER_CLIENT_MAX)
   {
@@ -590,7 +590,7 @@ WSclient_t * WebSocketsServerCore::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclien
       // KH Debug
       //client->status = WSC_NOT_CONNECTED;
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)\
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) \
      || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
   #ifndef NODEBUG_WEBSOCKETS
       IPAddress ip = client->tcp->remoteIP();
@@ -605,7 +605,8 @@ WSclient_t * WebSocketsServerCore::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclien
 
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
-      client->tcp->onDisconnect(std::bind([](WebSocketsServerCore * server, AsyncTCPbuffer * obj, WSclient_t * client) -> bool
+      client->tcp->onDisconnect(std::bind([](WebSocketsServerCore * server, AsyncTCPbuffer * obj, 
+                                WSclient_t * client) -> bool
       {
         WSK_LOGDEBUG1("Disconnect Client :", client->num);
 
@@ -887,7 +888,7 @@ void WebSocketsServerCore::handleClientData()
               // KH Debug
               //if ( client->cHttpHeadersValid )
               {
-                handleHeader(client, &headerLine);
+                handleHeader(client, headerLine);
               }
 
               // KH New
@@ -933,7 +934,7 @@ void WebSocketsServerCore::handleClientData()
    returns an indicator whether the given named header exists in the configured _mandatoryHttpHeaders collection
    @param headerName String ///< the name of the header being checked
 */
-bool WebSocketsServerCore::hasMandatoryHeader(String headerName)
+bool WebSocketsServerCore::hasMandatoryHeader(const String& headerName)
 {
   for (size_t i = 0; i < _mandatoryHttpHeaderCount; i++)
   {
@@ -949,28 +950,31 @@ bool WebSocketsServerCore::hasMandatoryHeader(String headerName)
    @param client WSclient_t * ///< pointer to the client struct
    @param headerLine String ///< the header being read / processed
 */
-void WebSocketsServerCore::handleHeader(WSclient_t * client, String * headerLine)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void WebSocketsServerCore::handleHeader(WSclient_t * client, String& headerLine)
 {
   static const char * NEW_LINE = "\r\n";
   
-  //WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX before trim:", headerLine->c_str());
+  //WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX before trim:", headerLine.c_str());
 
-  headerLine->trim();    // remove \r
+  headerLine.trim();    // remove \r
   
-  //WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX after trim:", headerLine->c_str());
+  //WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX after trim:", headerLine.c_str());
 
-  if (headerLine->length() > 0)
+  if (headerLine.length() > 0)
   {
-    WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX:", headerLine->c_str());
+    WSK_LOGINFO3("[handleHeader] Client:", client->num, ", RX:", headerLine.c_str());
 
     //KH New
-    WSK_LOGINFO1("[handleHeader] RX: HeaderLine Len =", headerLine->length());
+    WSK_LOGINFO1("[handleHeader] RX: HeaderLine Len =", headerLine.length());
 
     // websocket requests always start with GET see rfc6455
-    if (headerLine->startsWith("GET "))
+    if (headerLine.startsWith("GET "))
     {
       // cut URL out
-      client->cUrl = headerLine->substring(4, headerLine->indexOf(' ', 4));
+      client->cUrl = headerLine.substring(4, headerLine.indexOf(' ', 4));
       
       //KH New
       WSK_LOGINFO1("[handleHeader] RX: client->cUrl =", client->cUrl);
@@ -980,10 +984,10 @@ void WebSocketsServerCore::handleHeader(WSclient_t * client, String * headerLine
       client->cMandatoryHeadersCount = 0;
 
     }
-    else if (headerLine->indexOf(':') >= 0)
+    else if (headerLine.indexOf(':') >= 0)
     {
-      String headerName  = headerLine->substring(0, headerLine->indexOf(':'));
-      String headerValue = headerLine->substring(headerLine->indexOf(':') + 1);
+      String headerName  = headerLine.substring(0, headerLine.indexOf(':'));
+      String headerValue = headerLine.substring(headerLine.indexOf(':') + 1);
 
       // remove space in the beginning (RFC2616)
       if (headerValue[0] == ' ')
@@ -1040,12 +1044,14 @@ void WebSocketsServerCore::handleHeader(WSclient_t * client, String * headerLine
     }
     else
     {
-      WSK_LOGINFO1("[handleHeader] Header error. RX:", headerLine->c_str());
+      WSK_LOGINFO1("[handleHeader] Header error. RX:", headerLine.c_str());
     }
 
-    (*headerLine) = "";
+    headerLine = "";
+    
 #if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
-    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsServerCore::handleHeader, this, client, &(client->cHttpLine)));
+    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsServerCore::handleHeader, 
+                                 this, client, &(client->cHttpLine)));
 #endif
   }
   else
@@ -1161,6 +1167,8 @@ void WebSocketsServerCore::handleHeader(WSclient_t * client, String * headerLine
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
    send heartbeat ping to server in set intervals
 */
@@ -1189,7 +1197,8 @@ void WebSocketsServerCore::handleHBPing(WSclient_t * client)
    @param pongTimeout uint32_t millis after which pong should timout if not received
    @param disconnectTimeoutCount uint8_t how many timeouts before disconnect, 0=> do not disconnect
 */
-void WebSocketsServerCore::enableHeartbeat(uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount)
+void WebSocketsServerCore::enableHeartbeat(const uint32_t& pingInterval, const uint32_t& pongTimeout, 
+                                           const uint8_t& disconnectTimeoutCount)
 {
   _pingInterval           = pingInterval;
   _pongTimeout            = pongTimeout;

@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.13.0
+  Version: 2.14.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -57,6 +57,7 @@
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
+  2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
  *****************************************************************************************************************************/
 
 #pragma once
@@ -112,18 +113,30 @@ class SocketIOclient : protected WebSocketsClient
     virtual ~SocketIOclient();
 
     // KH, change to default EIO=4. v2.5.1
-    void begin(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * protocol = "arduino");
-    void begin(String host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+    void begin(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+               const char * protocol = "arduino");
+               
+    void begin(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+               const String& protocol = "arduino");
     // KH
-    void begin(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+    void begin(const IPAddress& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+               const String& protocol = "arduino");
 
 #ifdef HAS_SSL
-    void beginSSL(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * protocol = "arduino");
-    void beginSSL(String host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+    void beginSSL(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+                  const char * protocol = "arduino");
+                  
+    void beginSSL(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+                  const String& protocol = "arduino");
 #ifndef SSL_AXTLS
-    void beginSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * CA_cert = NULL, const char * protocol = "arduino");
-    void beginSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
+    void beginSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+                        const char * CA_cert = NULL, const char * protocol = "arduino");
+                        
+    void beginSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+                        BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
+                        
     void setSSLClientCertKey(const char * clientCert = NULL, const char * clientPrivateKey = NULL);
+    
     void setSSLClientCertKey(BearSSL::X509List * clientCert = NULL, BearSSL::PrivateKey * clientPrivateKey = NULL);
 #endif
 #endif
@@ -136,20 +149,20 @@ class SocketIOclient : protected WebSocketsClient
     bool sendEVENT(const uint8_t * payload, size_t length = 0);
     bool sendEVENT(char * payload, size_t length = 0, bool headerToPayload = false);
     bool sendEVENT(const char * payload, size_t length = 0);
-    bool sendEVENT(String & payload);
+    bool sendEVENT(const String& payload);
 
     bool send(socketIOmessageType_t type, uint8_t * payload, size_t length = 0, bool headerToPayload = false);
     bool send(socketIOmessageType_t type, const uint8_t * payload, size_t length = 0);
     bool send(socketIOmessageType_t type, char * payload, size_t length = 0, bool headerToPayload = false);
     bool send(socketIOmessageType_t type, const char * payload, size_t length = 0);
-    bool send(socketIOmessageType_t type, String & payload);
+    bool send(socketIOmessageType_t type, const String& payload);
 
     void loop();
     
     void configureEIOping(bool disableHeartbeat = false);
     
     // KH, add v2.5.1
-    void setReconnectInterval(unsigned long time)
+    void setReconnectInterval(const unsigned long& time)
     {
       _reconnectInterval = time;
     }

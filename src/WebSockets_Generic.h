@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.13.0
+  Version: 2.14.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -57,6 +57,7 @@
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
+  2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
  *****************************************************************************************************************************/
 
 #pragma once
@@ -64,13 +65,13 @@
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
 
-#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.13.0"
+#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.14.0"
 
 #define WEBSOCKETS_GENERIC_VERSION_MAJOR      2
-#define WEBSOCKETS_GENERIC_VERSION_MINOR      13
+#define WEBSOCKETS_GENERIC_VERSION_MINOR      14
 #define WEBSOCKETS_GENERIC_VERSION_PATCH      0
 
-#define WEBSOCKETS_GENERIC_VERSION_INT        2013000
+#define WEBSOCKETS_GENERIC_VERSION_INT        2014000
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -88,7 +89,9 @@
 #else
   #ifdef max
     // KH
-    #warning Undef min/max in WebSockets_Generic
+    #if(_WEBSOCKETS_LOGLEVEL_>3)
+      #warning Undef min/max in WebSockets_Generic
+    #endif
     #undef max
   #endif
   #ifdef min
@@ -97,8 +100,6 @@
   
   #include <functional>
 #endif
-
-#include "WebSocketsVersion_Generic.h"
 
 #if defined(TEENSYDUINO)
   namespace std
@@ -148,11 +149,18 @@
   //#define WEBSOCKETS_SAVE_RAM
 
   #if defined(ESP8266)
-    #warning Use ESP8266 in WebSockets_Generic
+    #if(_WEBSOCKETS_LOGLEVEL_>3)
+      #warning Use ESP8266 in WebSockets_Generic
+    #endif
+    
     #define WEBSOCKETS_YIELD()      delay(0)
     #define WEBSOCKETS_YIELD_MORE() delay(1)
   #elif defined(ESP32)
-    #warning Use ESP32 in WebSockets_Generic
+  
+    #if(_WEBSOCKETS_LOGLEVEL_>3)
+      #warning Use ESP32 in WebSockets_Generic
+    #endif 
+     
     #define WEBSOCKETS_YIELD()      yield()
     #define WEBSOCKETS_YIELD_MORE() delay(1)
   #endif
@@ -161,7 +169,9 @@
         defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
         defined(STM32WB) || defined(STM32MP1) )
   // KH
-  #warning Use STM32F/L/H/G/WB/MP1 in WebSockets_Generic
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use STM32F/L/H/G/WB/MP1 in WebSockets_Generic
+  #endif
 
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
   
@@ -173,7 +183,10 @@
   #define WEBSOCKETS_YIELD_MORE()
 
 #elif defined(STM32_DEVICE)
-  #warning Use STM32_DEVICE in WebSockets_Generic
+
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use STM32_DEVICE in WebSockets_Generic
+  #endif
 
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
   #define WEBSOCKETS_USE_BIG_MEM
@@ -185,7 +198,9 @@
         defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
         defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
   // KH
-  #warning Use nRF52 in WebSockets_Generic
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use nRF52 in WebSockets_Generic
+  #endif
 
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
 
@@ -207,7 +222,9 @@
       || defined(__SAMD51G19A__) || defined(__SAMD51P19A__) || defined(__SAMD21G18A__) )
 
   // KH
-  #warning Use SAMD21/SAMD51 in WebSockets_Generic
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use SAMD21/SAMD51 in WebSockets_Generic
+  #endif
 
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
 
@@ -227,8 +244,10 @@
 #elif ( defined(ARDUINO_SAM_DUE) || defined(__SAM3X8E__) )
 
   // KH
-  #warning Use SAM DUE in WebSockets_Generic
-
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use SAM DUE in WebSockets_Generic
+  #endif
+  
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
 
   // Try to use GET_FREE_HEAP and large mem
@@ -245,7 +264,9 @@
 #elif defined(TEENSYDUINO)
 
   // KH
-  #warning Use Teensy in WebSockets_Generic
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use Teensy in WebSockets_Generic
+  #endif
 
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
 
@@ -264,7 +285,9 @@
 #elif ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) )
 
   // KH
-  #warning Use RP2040 in WebSockets_Generic
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use RP2040 in WebSockets_Generic
+  #endif
 
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
 
@@ -278,8 +301,10 @@
   
 #elif ( ( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) ) && defined(ARDUINO_ARCH_MBED) )
 
-    // KH
-  #warning Use Portenta_H7 in WebSockets_Generic
+  // KH
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use Portenta_H7 in WebSockets_Generic
+  #endif
 
   #define WEBSOCKETS_MAX_DATA_SIZE (15 * 1024)
 
@@ -292,7 +317,10 @@
   #define WEBSOCKETS_YIELD_MORE()   delay(1)
     
 #else
-  #warning Use atmega328p in WebSockets_Generic
+
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Use atmega328p in WebSockets_Generic
+  #endif
 
   //atmega328p has only 2KB ram!
   #define WEBSOCKETS_MAX_DATA_SIZE (1024)
@@ -336,14 +364,20 @@
   // select Network type based
   #if defined(ESP8266) || defined(ESP31B)
     //KH
-    #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266
+    #if(_WEBSOCKETS_LOGLEVEL_>2)
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266
+    #endif
+    
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP8266
     //#define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP8266_ASYNC
     //#define WEBSOCKETS_NETWORK_TYPE NETWORK_W5100
 
   #elif defined(ESP32)
     //KH
-    #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32
+    #if(_WEBSOCKETS_LOGLEVEL_>2)
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32
+    #endif
+    
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32
     //#define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32_ETH
 
@@ -351,7 +385,10 @@
           defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
           defined(NRF52840_METRO) || defined(NRF52840_PCA10056) || defined(PARTICLE_XENON) || defined(NINA_B302_ublox) || defined(NINA_B112_ublox) )
     //KH
-    #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
+    #if(_WEBSOCKETS_LOGLEVEL_>2)
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA
+    #endif
+    
     #define WEBSOCKETS_NETWORK_TYPE     NETWORK_WIFININA
 
   #elif ( defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) \
@@ -363,21 +400,33 @@
        
     #if defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) 
       //KH
-      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101     
+      #if(_WEBSOCKETS_LOGLEVEL_>2)
+        #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101  
+      #endif
+         
       #define WEBSOCKETS_NETWORK_TYPE     NETWORK_WIFI101
     #elif defined(SEEED_WIO_TERMINAL)
       //KH, from v2.3.2
-      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN
+      #if(_WEBSOCKETS_LOGLEVEL_>2)
+        #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN
+      #endif
+      
       #define WEBSOCKETS_NETWORK_TYPE     NETWORK_RTL8720DN
     #else  
       //KH
-      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA     
+      #if(_WEBSOCKETS_LOGLEVEL_>2)
+        #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA     
+      #endif
+      
       #define WEBSOCKETS_NETWORK_TYPE     NETWORK_WIFININA
     #endif
     
   #else
     //KH
-    #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100
+    #if(_WEBSOCKETS_LOGLEVEL_>2)
+      #warning WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100
+    #endif
+    
     #define WEBSOCKETS_NETWORK_TYPE       NETWORK_W5100
 
   #endif  //#if defined(ESP8266) || defined(ESP31B)
@@ -452,19 +501,35 @@
     // KH, New v2.2.3 to support Ethernet2, Ethernet3, EthernetLarge Lib
     #if USE_ETHERNET    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET_)
       #include <Ethernet.h>
-      #warning Using Ethernet W5x00 Library
+      
+      #if(_WEBSOCKETS_LOGLEVEL_>3)
+        #warning Using Ethernet W5x00 Library
+      #endif
     #elif USE_ETHERNET_LARGE    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET_LARGE_)
       #include <EthernetLarge.h>
-      #warning Using EthernetLarge W5x00 Library
+      
+      #if(_WEBSOCKETS_LOGLEVEL_>3)
+       #warning Using EthernetLarge W5x00 Library
+      #endif
+      
     #elif USE_ETHERNET2    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET2_)
       #include <Ethernet2.h>
-      #warning Using Ethernet2 W5x00 Library
+      
+      #if(_WEBSOCKETS_LOGLEVEL_>3)
+        #warning Using Ethernet2 W5x00 Library
+      #endif
     #elif USE_ETHERNET3    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET3_)
       #include <Ethernet3.h>
-      #warning Using Ethernet3 W5x00 Library
+      
+      #if(_WEBSOCKETS_LOGLEVEL_>3)
+        #warning Using Ethernet3 W5x00 Library
+      #endif
     #else  
       #include <Ethernet.h>
-      #warning Using default Ethernet W5x00 Library    
+      
+      #if(_WEBSOCKETS_LOGLEVEL_>3)
+        #warning Using default Ethernet W5x00 Library  
+      #endif  
     #endif
     //////
     
@@ -545,7 +610,10 @@
 
   //KH
   #include <EthernetENC.h>
-  #warning Using ENC28J60 EthernetENC Library
+  
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using ENC28J60 EthernetENC Library
+  #endif
   
   #define WEBSOCKETS_NETWORK_CLASS            EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     EthernetServer
@@ -556,7 +624,10 @@
   //KH, from v2.3.2
   #include <rpcWiFi.h>
   #include <WiFiClientSecure.h>
-  #warning Using RTL8720DN Seeed_Arduino_rpcWiFi Library
+  
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using RTL8720DN Seeed_Arduino_rpcWiFi Library
+  #endif
   
   #define SSL_AXTLS
   
@@ -569,7 +640,10 @@
 
   //KH, from v2.4.0
   #include <NativeEthernet.h>
-  #warning Using Teensy 4.1 NativeEthernet Library
+  
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using Teensy 4.1 NativeEthernet Library
+  #endif
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
@@ -581,7 +655,9 @@
   #include <QNEthernet.h>
   using namespace qindesign::network;
   
-  #warning Using Teensy 4.1 QNEthernet Library
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using Teensy 4.1 QNEthernet Library
+  #endif
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
@@ -593,7 +669,9 @@
   #include <WiFi.h>
   //#include <WiFiSSLClient.h>
   
-  #warning Using Portenta_H7 WiFi Library
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using Portenta_H7 WiFi Library
+  #endif
    
   #define WEBSOCKETS_NETWORK_CLASS          WiFiClient
   //#define WEBSOCKETS_NETWORK_SSL_CLASS      WiFiSSLClient
@@ -605,7 +683,9 @@
   //KH, from v2.10.0
   #include <PortentaEthernet.h>
   
-  #warning Using Portenta_H7 Ethernet Library
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using Portenta_H7 Ethernet Library
+  #endif
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   //#define WEBSOCKETS_NETWORK_SSL_CLASS      EthernetSSLClient
@@ -619,7 +699,10 @@
   //KH, from v2.4.0
   #include <LwIP.h>
   #include <STM32Ethernet.h>
-  #warning Using LAN8742A Ethernet & STM32Ethernet lib
+  
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using LAN8742A Ethernet & STM32Ethernet lib
+  #endif
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
@@ -633,7 +716,11 @@
 //////////////////////////////////////////////////////////////
 
 #ifdef WEBSOCKETS_NETWORK_SSL_CLASS
-  #warning This network type Supporting SSL for WebSockets
+
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning This network type Supporting SSL for WebSockets
+  #endif
+  
   #define HAS_SSL
 #endif
 
@@ -696,7 +783,8 @@ typedef struct
 
 typedef struct
 {
-  void init(uint8_t num, uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount) 
+  void init(const uint8_t& num, const uint32_t& pingInterval, const uint32_t& pongTimeout,
+            const uint8_t& disconnectTimeoutCount) 
   {
     this->num                    = num;
     this->pingInterval           = pingInterval;
@@ -770,11 +858,16 @@ class WebSockets
 
     void clientDisconnect(WSclient_t * client, uint16_t code, char * reason = NULL, size_t reasonLen = 0);
 
-    virtual void messageReceived(WSclient_t * client, WSopcode_t opcode, uint8_t * payload, size_t length, bool fin) = 0;
+    virtual void messageReceived(WSclient_t * client, WSopcode_t opcode, uint8_t * payload, 
+                                 size_t length, bool fin) = 0;
 
-    uint8_t createHeader(uint8_t * buf, WSopcode_t opcode, size_t length, bool mask, uint8_t maskKey[4], bool fin);
+    uint8_t createHeader(uint8_t * buf, WSopcode_t opcode, size_t length, bool mask, 
+                         uint8_t maskKey[4], bool fin);
+                         
     bool sendFrameHeader(WSclient_t * client, WSopcode_t opcode, size_t length = 0, bool fin = true);
-    bool sendFrame(WSclient_t * client, WSopcode_t opcode, uint8_t * payload = NULL, size_t length = 0, bool fin = true, bool headerToPayload = false);
+    
+    bool sendFrame(WSclient_t * client, WSopcode_t opcode, uint8_t * payload = NULL, size_t length = 0, 
+                   bool fin = true, bool headerToPayload = false);
 
     void headerDone(WSclient_t * client);
 
@@ -791,13 +884,15 @@ class WebSockets
     virtual size_t write(WSclient_t * client, uint8_t * out, size_t n);
     size_t write(WSclient_t * client, const char * out);
 
-    void enableHeartbeat(WSclient_t * client, uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount);
+    void enableHeartbeat(WSclient_t * client, const uint32_t& pingInterval, const uint32_t& pongTimeout, 
+                         const uint8_t& disconnectTimeoutCount);
+                         
     void handleHBTimeout(WSclient_t * client);
 };
 
 
 // KH
-String WS_IPAddressToString(IPAddress _address)
+String WS_IPAddressToString(const IPAddress& _address)
 {
   String str = String(_address[0]);
   str += ".";
@@ -806,11 +901,12 @@ String WS_IPAddressToString(IPAddress _address)
   str += String(_address[2]);
   str += ".";
   str += String(_address[3]);
+  
   return str;
 }
 
 #ifndef UNUSED
-#define UNUSED(var) (void)(var)
+  #define UNUSED(var) (void)(var)
 #endif
 
 #include "WebSockets_Generic-Impl.h"

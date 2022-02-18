@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.14.0](#release-v2140)
   * [Release v2.13.0](#release-v2130)
   * [Major Release v2.12.0](#major-release-v2120)
   * [Release v2.11.1](#release-v2111)
@@ -52,6 +53,14 @@
 ---
 
 ## Changelog
+
+### Release v2.14.0
+
+1. Suppress unnecessary warnings.
+2. Don't use `deprecated sha.h` for ESP32 core v1.0.6+. Check [warning sha.h is deprecated, use sha_parallel_engine.h #738](https://github.com/Links2004/arduinoWebSockets/issues/738)
+3. Optimize code by passing by `reference` instead of `value`
+4. Modify nearly all examples
+5. Update `Packages' Patches`
 
 ### Release v2.13.0
 

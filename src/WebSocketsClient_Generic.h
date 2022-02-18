@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.13.0
+  Version: 2.14.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -57,6 +57,7 @@
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
+  2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
  *****************************************************************************************************************************/
 
 #pragma once
@@ -78,64 +79,81 @@ class WebSocketsClient : protected WebSockets
     WebSocketsClient();
     virtual ~WebSocketsClient();
 
-    void begin(const char * host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
-    void begin(String host, uint16_t port, String url = "/", String protocol = "arduino");
-    void begin(IPAddress host, uint16_t port, const char * url = "/", const char * protocol = "arduino");
+    void begin(const char * host, const uint16_t& port, const char * url = "/", const char * protocol = "arduino");
+    void begin(const String& host, const uint16_t& port, const String& url = "/", const String& protocol = "arduino");
+    void begin(const IPAddress& host, const uint16_t& port, const char * url = "/", const char * protocol = "arduino");
 
     // KH
-    void begin(IPAddress host, uint16_t port, String url = "/", String protocol = "arduino");
+    void begin(const IPAddress& host, const uint16_t& port, const String& url = "/", const String& protocol = "arduino");
 
 #if defined(HAS_SSL)
 #ifdef SSL_AXTLS
 
-    void beginSSL(const char * host, uint16_t port, const char * url = "/", const char * fingerprint = "", const char * protocol = "arduino");
+    void beginSSL(const char * host, const uint16_t& port, const char * url = "/", const char * fingerprint = "", 
+                  const char * protocol = "arduino");
     
     // KH
-    void beginSSL(IPAddress host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
+    void beginSSL(const IPAddress& host, const uint16_t& port, const String& url = "/", const String& fingerprint = "", 
+                  const String& protocol = "arduino");
     //////
     
-    void beginSSL(String host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
+    void beginSSL(const String& host, const uint16_t& port, const String& url = "/", const String& fingerprint = "", 
+                  const String& protocol = "arduino");
 
 #else
 
-    void beginSSL(const char * host, uint16_t port, const char * url = "/", const uint8_t * fingerprint = NULL, const char * protocol = "arduino");
+    void beginSSL(const char * host, const uint16_t& port, const char * url = "/", const uint8_t * fingerprint = NULL, 
+                  const char * protocol = "arduino");
     
     // KH
-    void beginSSL(IPAddress host, uint16_t port, String url = "/", String fingerprint = "", String protocol = "arduino");
+    void beginSSL(const IPAddress& host, const uint16_t& port, const String& url = "/", const String& fingerprint = "", 
+                  const String& protocol = "arduino");
     //////
     
-    void beginSslWithCA(const char * host, uint16_t port, const char * url = "/", BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
+    void beginSslWithCA(const char * host, const uint16_t& port, const char * url = "/", BearSSL::X509List * CA_cert = NULL, 
+                        const char * protocol = "arduino");
     
     // New in v2.3.5
     void setSSLClientCertKey(BearSSL::X509List * clientCert = NULL, BearSSL::PrivateKey * clientPrivateKey = NULL);
+    
     void setSSLClientCertKey(const char * clientCert = NULL, const char * clientPrivateKey = NULL);
     //////
 
 #endif    // SSL_AXTLS
 
-    void beginSslWithCA(const char * host, uint16_t port, const char * url = "/", const char * CA_cert = NULL, const char * protocol = "arduino");
+    void beginSslWithCA(const char * host, const uint16_t& port, const char * url = "/", const char * CA_cert = NULL, const char * protocol = "arduino");
 
 #endif    // HAS_SSL
 
-    void beginSocketIO(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * protocol = "arduino");
-    void beginSocketIO(String host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+    void beginSocketIO(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+                       const char * protocol = "arduino");
+                       
+    void beginSocketIO(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+                       const String& protocol = "arduino");
     
     // KH
-    void beginSocketIO(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+    void beginSocketIO(const IPAddress& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+                       const String& protocol = "arduino");
     //////
 
 #if defined(HAS_SSL)
-    void beginSocketIOSSL(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * protocol = "arduino");
-    void beginSocketIOSSL(String host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+    void beginSocketIOSSL(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+                          const char * protocol = "arduino");
+                          
+    void beginSocketIOSSL(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+                          const String& protocol = "arduino");
     
     // KH
-    void beginSocketIOSSL(IPAddress host, uint16_t port, String url = "/socket.io/?EIO=4", String protocol = "arduino");
+    void beginSocketIOSSL(const IPAddress& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+                          const String& protocol = "arduino");
     //////
     
-    void beginSocketIOSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", const char * CA_cert = NULL, const char * protocol = "arduino");
+    void beginSocketIOSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+                                const char * CA_cert = NULL, const char * protocol = "arduino");
     
 #if defined(SSL_BARESSL)
-    void beginSocketIOSSLWithCA(const char * host, uint16_t port, const char * url = "/socket.io/?EIO=4", BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
+    void beginSocketIOSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+                                BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
 #endif    // SSL_BARESSL
     
 #endif    // HAS_SSL
@@ -153,14 +171,14 @@ class WebSocketsClient : protected WebSockets
     bool sendTXT(const uint8_t * payload, size_t length = 0);
     bool sendTXT(char * payload, size_t length = 0, bool headerToPayload = false);
     bool sendTXT(const char * payload, size_t length = 0);
-    bool sendTXT(String & payload);
+    bool sendTXT(const String& payload);
     bool sendTXT(char payload);
 
     bool sendBIN(uint8_t * payload, size_t length, bool headerToPayload = false);
     bool sendBIN(const uint8_t * payload, size_t length);
 
     bool sendPing(uint8_t * payload = NULL, size_t length = 0);
-    bool sendPing(String & payload);
+    bool sendPing(const String& payload);
 
     void disconnect();
 
@@ -169,9 +187,9 @@ class WebSocketsClient : protected WebSockets
 
     void setExtraHeaders(const char * extraHeaders = NULL);
 
-    void setReconnectInterval(unsigned long time);
+    void setReconnectInterval(const unsigned long& time);
 
-    void enableHeartbeat(uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount);
+    void enableHeartbeat(const uint32_t& pingInterval, const uint32_t& pongTimeout, const uint8_t& disconnectTimeoutCount);
     void disableHeartbeat();
 
     bool isConnected();
@@ -218,7 +236,8 @@ class WebSocketsClient : protected WebSockets
 #endif
 
     void sendHeader(WSclient_t * client);
-    void handleHeader(WSclient_t * client, String * headerLine);
+       
+    void handleHeader(WSclient_t * client, String& headerLine); 
 
     void connectedCb();
     void connectFailedCb();

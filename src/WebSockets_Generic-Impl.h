@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.13.0
+  Version: 2.14.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -57,6 +57,7 @@
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
+  2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
  *****************************************************************************************************************************/
 
 #pragma once
@@ -79,10 +80,16 @@ extern "C"
   // Kludge to fix compile error for boards using libraries with lib64. From v2.3.3.
   // To find better way, such as reused #ifdef ABC_H or #define LIBRARY_USING_LIB64 or #define CORE_HAS_LIBB64 in those libraries
   #if defined(CORE_HAS_LIBB64) || defined(base64_encode_expected_len) || defined(base64_decode_expected_len)
-    #warning CORE_HAS_LIBB64
+    #if(_WEBSOCKETS_LOGLEVEL_>3)
+      #warning CORE_HAS_LIBB64
+    #endif
+    
     #include <libb64/cencode.h>
   #else
-    #warning No CORE_HAS_LIBB64
+    #if(_WEBSOCKETS_LOGLEVEL_>3)
+      #warning No CORE_HAS_LIBB64
+    #endif
+    
     #include "libb64/cencode_inc.h"
   #endif
 }
@@ -150,7 +157,8 @@ void WebSockets::clientDisconnect(WSclient_t * client, uint16_t code, char * rea
    @param maskkey uint8_t[4]    key used for payload
    @param fin bool              can be used to send data in more then one frame (set fin on the last frame)
 */
-uint8_t WebSockets::createHeader(uint8_t * headerPtr, WSopcode_t opcode, size_t length, bool mask, uint8_t maskKey[4], bool fin) 
+uint8_t WebSockets::createHeader(uint8_t * headerPtr, WSopcode_t opcode, size_t length, bool mask, 
+                                 uint8_t maskKey[4], bool fin) 
 {
   uint8_t headerSize;
 
@@ -280,7 +288,8 @@ bool WebSockets::sendFrameHeader(WSclient_t * client, WSopcode_t opcode, size_t 
                                 add the Header (payload neet to be in RAM!)
    @return true if ok
 */
-bool WebSockets::sendFrame(WSclient_t * client, WSopcode_t opcode, uint8_t * payload, size_t length, bool fin, bool headerToPayload)
+bool WebSockets::sendFrame(WSclient_t * client, WSopcode_t opcode, uint8_t * payload, size_t length, 
+                           bool fin, bool headerToPayload)
 {
   if (client->tcp && !client->tcp->connected())
   {
@@ -504,7 +513,7 @@ bool WebSockets::handleWebsocketWaitFor(WSclient_t * client, size_t size)
                     
                     
   readCb(client, &client->cWsHeader[client->cWsRXsize], (size - client->cWsRXsize), 
-      std::bind([](WebSockets * server, size_t size, WSclient_t * client, bool ok)
+         std::bind([](WebSockets * server, size_t size, WSclient_t * client, bool ok)
   {
     WSK_LOGDEBUG3("[handleWebsocketWaitFor][readCb] Client: ", client->num, ", size:", size);
     WSK_LOGDEBUG1("ok:", ok);   
@@ -639,7 +648,7 @@ void WebSockets::handleWebsocketCb(WSclient_t * client)
     }
 
     readCb(client, payload, header->payloadLen, std::bind(&WebSockets::handleWebsocketPayloadCb, 
-            this, std::placeholders::_1, std::placeholders::_2, payload));
+           this, std::placeholders::_1, std::placeholders::_2, payload));
   }
   else
   {
@@ -681,14 +690,16 @@ void WebSockets::handleWebsocketPayloadCb(WSclient_t * client, bool ok, uint8_t 
         
       case WSop_ping:
         // send pong back
-        WSK_LOGDEBUG3("[handleWebsocketPayloadCb] Client: ", client->num, ", ping received", payload ? (const char *)payload : "");               
+        WSK_LOGDEBUG3("[handleWebsocketPayloadCb] Client: ", client->num, 
+                      ", ping received", payload ? (const char *)payload : "");               
                           
         sendFrame(client, WSop_pong, payload, header->payloadLen);
         messageReceived(client, header->opCode, payload, header->payloadLen, header->fin);
         break;
         
       case WSop_pong:
-        WSK_LOGDEBUG3("[handleWebsocketPayloadCb] Client: ", client->num, ", get pong", payload ? (const char *)payload : "");             
+        WSK_LOGDEBUG3("[handleWebsocketPayloadCb] Client: ", client->num, 
+                      ", get pong", payload ? (const char *)payload : "");             
                           
         client->pongReceived = true;
         messageReceived(client, header->opCode, payload, header->payloadLen, header->fin);
@@ -995,7 +1006,8 @@ size_t WebSockets::write(WSclient_t * client, const char * out)
    @param pongTimeout uint32_t millis after which pong should timout if not received
    @param disconnectTimeoutCount uint8_t how many timeouts before disconnect, 0=> do not disconnect
 */
-void WebSockets::enableHeartbeat(WSclient_t * client, uint32_t pingInterval, uint32_t pongTimeout, uint8_t disconnectTimeoutCount)
+void WebSockets::enableHeartbeat(WSclient_t * client, const uint32_t& pingInterval, const uint32_t& pongTimeout, 
+                                 const uint8_t& disconnectTimeoutCount)
 {
   if (client == NULL)
     return;

@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.13.0
+  Version: 2.14.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -57,6 +57,7 @@
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
+  2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
  *****************************************************************************************************************************/
 
 #pragma once
@@ -74,21 +75,21 @@ SocketIOclient::~SocketIOclient()
 {
 }
 
-void SocketIOclient::begin(const char * host, uint16_t port, const char * url, const char * protocol)
+void SocketIOclient::begin(const char * host, const uint16_t& port, const char * url, const char * protocol)
 {
   WebSocketsClient::beginSocketIO(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
   initClient();
 }
 
-void SocketIOclient::begin(String host, uint16_t port, String url, String protocol)
+void SocketIOclient::begin(const String& host, const uint16_t& port, const String& url, const String& protocol)
 {
   WebSocketsClient::beginSocketIO(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
   initClient();
 }
 
-void SocketIOclient::begin(IPAddress host, uint16_t port, String url, String protocol)
+void SocketIOclient::begin(const IPAddress& host, const uint16_t& port, const String& url, const String& protocol)
 {
   WebSocketsClient::beginSocketIO(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
@@ -96,14 +97,14 @@ void SocketIOclient::begin(IPAddress host, uint16_t port, String url, String pro
 }
 
 #if defined(HAS_SSL)
-void SocketIOclient::beginSSL(const char * host, uint16_t port, const char * url, const char * protocol) 
+void SocketIOclient::beginSSL(const char * host, const uint16_t& port, const char * url, const char * protocol) 
 {
   WebSocketsClient::beginSocketIOSSL(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
   initClient();
 }
 
-void SocketIOclient::beginSSL(String host, uint16_t port, String url, String protocol) 
+void SocketIOclient::beginSSL(const String& host, const uint16_t& port, const String& url, const String& protocol) 
 {
   WebSocketsClient::beginSocketIOSSL(host, port, url, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
@@ -111,14 +112,16 @@ void SocketIOclient::beginSSL(String host, uint16_t port, String url, String pro
 }
 
 #if defined(SSL_BARESSL)
-void SocketIOclient::beginSSLWithCA(const char * host, uint16_t port, const char * url, const char * CA_cert, const char * protocol) 
+void SocketIOclient::beginSSLWithCA(const char * host, const uint16_t& port, const char * url, 
+                     const char * CA_cert, const char * protocol) 
 {
   WebSocketsClient::beginSocketIOSSLWithCA(host, port, url, CA_cert, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
   initClient();
 }
 
-void SocketIOclient::beginSSLWithCA(const char * host, uint16_t port, const char * url, BearSSL::X509List * CA_cert, const char * protocol) 
+void SocketIOclient::beginSSLWithCA(const char * host, const uint16_t& port, const char * url, 
+                                    BearSSL::X509List * CA_cert, const char * protocol) 
 {
   WebSocketsClient::beginSocketIOSSLWithCA(host, port, url, CA_cert, protocol);
   WebSocketsClient::enableHeartbeat(60 * 1000, 90 * 1000, 5);
@@ -229,7 +232,7 @@ bool SocketIOclient::send(socketIOmessageType_t type, const char * payload, size
   return send(type, (uint8_t *)payload, length);
 }
 
-bool SocketIOclient::send(socketIOmessageType_t type, String & payload)
+bool SocketIOclient::send(socketIOmessageType_t type, const String& payload)
 {
   return send(type, (uint8_t *)payload.c_str(), payload.length());
 }
@@ -262,7 +265,7 @@ bool SocketIOclient::sendEVENT(const char * payload, size_t length)
   return sendEVENT((uint8_t *)payload, length);
 }
 
-bool SocketIOclient::sendEVENT(String & payload)
+bool SocketIOclient::sendEVENT(const String& payload)
 {
   return sendEVENT((uint8_t *)payload.c_str(), payload.length());
 }
