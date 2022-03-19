@@ -28,8 +28,6 @@
 #include <WebSocketsClient_Generic.h>
 #include <SocketIOclient_Generic.h>
 
-#include <Hash.h>
-
 SocketIOclient socketIO;
 
 /////////////////////////////////////////////
