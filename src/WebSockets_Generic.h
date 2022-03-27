@@ -28,37 +28,20 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.14.1
+  Version: 2.14.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
-  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
-                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
-  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
-  2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
-  2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
-  2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
-  2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
-                                  Sync with v2.3.4 of original WebSockets library
-  2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
-  2.5.0   K Hoang      22/05/2021 Add support to WiFi101
-  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
-  2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
-  2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core
-  2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
-  2.9.0   K Hoang      05/09/2021 Add support to QNEthernet Library for Teensy 4.1
-  2.10.0  K Hoang      18/09/2021 Add support to Portenta_H7, using either WiFi or Vision-shield Ethernet
-  2.10.1  K Hoang      12/10/2021 Update `platform.ini` and `library.json`
+  ...
   2.11.0  K Hoang      30/11/2021 Auto detect ESP32 core version. Fix bug in examples
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
   2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
   2.14.1  K Hoang      18/02/2022 Fix setInsecure() bug for WIO_Terminal. Update Packages_Patches for Seeeduino
+  2.14.2  K Hoang      27/03/2022 Fix Async bug for ESP8266 when using NETWORK_ESP8266_ASYNC
  *****************************************************************************************************************************/
 
 #pragma once
@@ -66,13 +49,13 @@
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
 
-#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.14.1"
+#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.14.2"
 
 #define WEBSOCKETS_GENERIC_VERSION_MAJOR      2
 #define WEBSOCKETS_GENERIC_VERSION_MINOR      14
-#define WEBSOCKETS_GENERIC_VERSION_PATCH      1
+#define WEBSOCKETS_GENERIC_VERSION_PATCH      2
 
-#define WEBSOCKETS_GENERIC_VERSION_INT        2014001
+#define WEBSOCKETS_GENERIC_VERSION_INT        2014002
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -354,6 +337,16 @@
 #define NETWORK_PORTENTA_H7_WIFI          (13)
 #define NETWORK_PORTENTA_H7_ETHERNET      (14)
 
+// KH, For new Async
+#define NETWORK_ESP32_ASYNC								(15)
+
+#if ( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
+	// Combined for all Async
+	#define NETWORK_ASYNC				true
+#else
+	#define NETWORK_ASYNC				false
+#endif
+
 ////////////////////////////////
 
 // max size of the WS Message Header
@@ -381,6 +374,7 @@
     
     #define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32
     //#define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32_ETH
+    //#define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP32_ASYNC
 
   #elif ( defined(NRF52840_FEATHER) || defined(NRF52832_FEATHER) || defined(NRF52_SERIES) || defined(ARDUINO_NRF52_ADAFRUIT) || \
           defined(NRF52840_FEATHER_SENSE) || defined(NRF52840_ITSYBITSY) || defined(NRF52840_CIRCUITPLAY) || defined(NRF52840_CLUE) || \
@@ -490,7 +484,7 @@
   #define WEBSOCKETS_NETWORK_CLASS          WiFiClient
   #define WEBSOCKETS_NETWORK_SSL_CLASS      WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   WiFiServer
-
+  
 ////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100)
 
@@ -562,6 +556,31 @@
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
+  
+////////////////////////////////////////////////////////////////  
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
+
+	#error "Network type NETWORK_ESP32_ASYNC not ready yet"
+  // Note:
+  //   No SSL/WSS support for client in Async mode
+  //   TLS lib need a sync interface!
+
+  #if defined(ESP32)
+    #include <WiFi.h>
+    #include <WiFiClientSecure.h>
+    
+    // From v2.3.1
+    #define SSL_AXTLS
+    //////
+    
+  #else
+    #error "Network type NETWORK_ESP32_ASYNC only for ESP32"
+  #endif
+
+  #include <AsyncTCP.h>
+
+  #define WEBSOCKETS_NETWORK_CLASS            AsyncClient
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     AsyncServer    
 
 ////////////////////////////////////////////////////////////////  
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ETH)
@@ -839,7 +858,7 @@ typedef struct
   uint8_t disconnectTimeoutCount = 0;    // after how many subsequent pong timeouts discconnect will happen, 0 means "do not disconnect"
   uint8_t pongTimeoutCount       = 0;    // current pong timeout count
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
   String cHttpLine;    ///< HTTP header lines
 #endif
 

@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.14.2](#release-v2142)
   * [Release v2.14.1](#release-v2141)
   * [Release v2.14.0](#release-v2140)
   * [Release v2.13.0](#release-v2130)
@@ -55,10 +56,17 @@
 
 ## Changelog
 
+### Release v2.14.2
+
+1. Fix Async bug for ESP8266 when using NETWORK_ESP8266_ASYNC
+2. Add example [ESP8266_AsyncWSClient](examples/Async/ESP8266_AsyncWSClient)
+3. Update `platformio.ini` to temporarily use ESP32 core v2.0.0+ and use [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) library for ESP8266 Async
+4. Update `Packages' Patches`
+
 ### Release v2.14.1
 
 1. Fix setInsecure() bug for WIO_Terminal.
-5. Update `Packages' Patches` for `Seeeduino` core. Be sure to use the `Packages_Patches` of this library version v2.14.1+ to avoid compiler error.
+2. Update `Packages' Patches` for `Seeeduino` core. Be sure to use the `Packages_Patches` of this library version v2.14.1+ to avoid compiler error.
 
 ### Release v2.14.0
 

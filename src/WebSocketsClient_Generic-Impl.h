@@ -28,43 +28,28 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.14.1
+  Version: 2.14.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   2.1.3   K Hoang      15/05/2020 Initial porting to support SAMD21, SAMD51, nRF52 boards, such as AdaFruit Feather nRF52832,
                                   nRF52840 Express, BlueFruit Sense, Itsy-Bitsy nRF52840 Express, Metro nRF52840 Express, etc.
-  2.2.1   K Hoang      18/05/2020 Bump up to sync with v2.2.1 of original WebSockets library
-  2.2.2   K Hoang      25/05/2020 Add support to Teensy, SAM DUE and STM32. Enable WebSocket Server for new supported boards.
-  2.2.3   K Hoang      02/08/2020 Add support to W5x00's Ethernet2, Ethernet3, EthernetLarge Libraries. 
-                                  Add support to STM32F/L/H/G/WB/MP1 and Seeeduino SAMD21/SAMD51 boards.
-  2.3.1   K Hoang      07/10/2020 Sync with v2.3.1 of original WebSockets library. Add ENC28J60 EthernetENC library support
-  2.3.2   K Hoang      12/11/2020 Add RTL8720DN Seeed_Arduino_rpcWiFi library support
-  2.3.3   K Hoang      28/11/2020 Fix compile error for WIO_TERMINAL and boards using libraries with lib64.
-  2.3.4   K Hoang      12/12/2020 Add SSL support to SAMD21 Nano-33-IoT using WiFiNINA. Upgrade WS and WSS examples.
-  2.4.0   K Hoang      06/02/2021 Add support to Teensy 4.1 NativeEthernet and STM32 built-in LAN8742A. 
-                                  Sync with v2.3.4 of original WebSockets library
-  2.4.1   K Hoang      19/03/2021 Sync with v2.3.5 of original WebSockets library to adapt to ESP32 SSL changes 
-  2.5.0   K Hoang      22/05/2021 Add support to WiFi101
-  2.5.1   K Hoang      22/05/2021 Default to EIO4 for Socket.IO. Permit increase reconnectInterval in Socket.IO
-  2.6.0   K Hoang      23/05/2021 Fix breaking problem with SocketIO. Add setExtraHeaders to SocketIO
-  2.7.0   K Hoang      24/05/2021 Add support to RP2040-based boards using Arduino-pico and Arduino mbed_rp2040 core
-  2.8.0   K Hoang      08/07/2021 Add support to WT32_ETH01 (ESP32 + LAN8720) boards
-  2.9.0   K Hoang      05/09/2021 Add support to QNEthernet Library for Teensy 4.1
-  2.10.0  K Hoang      18/09/2021 Add support to Portenta_H7, using either WiFi or Vision-shield Ethernet
-  2.10.1  K Hoang      12/10/2021 Update `platform.ini` and `library.json`
+  ...
   2.11.0  K Hoang      30/11/2021 Auto detect ESP32 core version. Fix bug in examples
   2.11.1  K Hoang      12/12/2021 Add option to use transport=websocket with sticky-session SIO server
   2.12.0  K Hoang      28/01/2022 Supporting SSL for ESP32-based WT32_ETH01 boards
   2.13.0  K Hoang      14/02/2022 Add support to ESP32_S3. Add PING and PONG SocketIO events
   2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
   2.14.1  K Hoang      18/02/2022 Fix setInsecure() bug for WIO_Terminal. Update Packages_Patches for Seeeduino
+  2.14.2  K Hoang      27/03/2022 Fix Async bug for ESP8266 when using NETWORK_ESP8266_ASYNC
  *****************************************************************************************************************************/
 
 #pragma once
 
 #ifndef WEBSOCKETS_CLIENT_GENERIC_IMPL_H_
 #define WEBSOCKETS_CLIENT_GENERIC_IMPL_H_
+
+#include "WebSockets_Generic.h"
 
 WebSocketsClient::WebSocketsClient()
 {
@@ -132,7 +117,7 @@ void WebSocketsClient::begin(const char * host, const uint16_t& port, const char
   randomSeed(millis());
 #endif
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if ( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
   asyncConnect();
 #endif
 
@@ -328,9 +313,9 @@ void WebSocketsClient::beginSocketIOSSLWithCA(const char * host, const uint16_t&
 
 #endif    // HAS_SSL
 
-#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
   #if(_WEBSOCKETS_LOGLEVEL_>3)
-    #warning WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC
+    #warning WEBSOCKETS_NETWORK_TYPE != NETWORK ASYNC
   #endif
 /**
    called in arduino loop
@@ -521,7 +506,7 @@ void WebSocketsClient::loop()
     }
   }
 }
-#endif    // (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#endif    // #if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
 
 /**
    set callback function
@@ -770,18 +755,20 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
   {
     if (client->tcp->connected())
     {
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
       client->tcp->flush();
 #endif
       client->tcp->stop();
     }
 
     event = true;
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+    
+#if ( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
     client->status = WSC_NOT_CONNECTED;
 #else
     delete client->tcp;
 #endif
+
     client->tcp = NULL;
   }
 
@@ -794,6 +781,9 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
   client->cSessionId   = "";
 
   client->status = WSC_NOT_CONNECTED;
+  
+  // KH, update 2.14.2
+  _lastConnectionFail = millis();
 
   WSK_LOGDEBUG("[WS-Client] client disconnected.");
 
@@ -841,7 +831,8 @@ bool WebSocketsClient::clientIsConnected(WSclient_t * client)
 
   return false;
 }
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+
+#if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
 /**
    Handle incomming data from Client
 */
@@ -864,7 +855,7 @@ void WebSocketsClient::handleClientData()
       case WSC_HEADER:
         {
           String headerLine = _client.tcp->readStringUntil('\n');         
-          handleHeader(&_client, headerLine);
+          handleHeader(&_client, &headerLine);
         }
         
         break;
@@ -873,7 +864,7 @@ void WebSocketsClient::handleClientData()
           char buf[256] = { 0 };
           _client.tcp->readBytes(&buf[0], std::min((size_t)len, sizeof(buf)));
           String bodyLine = buf;         
-          handleHeader(&_client, bodyLine);
+          handleHeader(&_client, &bodyLine);
         } 
         
         break;  
@@ -998,10 +989,12 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
   WSK_LOGINFO1("[WS-Client] [sendHeader] Handshake:", handshake);
 
   write(client, (uint8_t *)handshake.c_str(), handshake.length());
+  
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
-  client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader,
-                               this, client, &(client->cHttpLine)));
+	client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader, 
+                                 this, client, &(client->cHttpLine)));
+  //////
 #endif
 
   WSK_LOGINFO1("[WS-Client] [sendHeader] Sending header... Done (us):", (micros() - start));
@@ -1016,45 +1009,46 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void WebSocketsClient::handleHeader(WSclient_t * client, String& headerLine)
+
+void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
 {
-  headerLine.trim();    // remove \r
+  headerLine->trim();    // remove \r
 
   // this code handels the http body for Socket.IO requests
-  if ( (headerLine.length() > 0) && (client->isSocketIO) && (client->status == WSC_BODY) && \
+  if ( (headerLine->length() > 0) && (client->isSocketIO) && (client->status == WSC_BODY) && \
        (client->cSessionId.length() == 0) )
   {
-    WSK_LOGINFO1("[WS-Client][handleHeader] socket.io json: ", headerLine.c_str());
+    WSK_LOGINFO1("[WS-Client][handleHeader] socket.io json: ", headerLine->c_str());
     
     String sid_begin = WEBSOCKETS_STRING("\"sid\":\"");
     
-    if (headerLine.indexOf(sid_begin) > -1) 
+    if (headerLine->indexOf(sid_begin) > -1) 
     {
-      int start          = headerLine.indexOf(sid_begin) + sid_begin.length();
-      int end            = headerLine.indexOf('"', start);
-      client->cSessionId = headerLine.substring(start, end);
+      int start          = headerLine->indexOf(sid_begin) + sid_begin.length();
+      int end            = headerLine->indexOf('"', start);
+      client->cSessionId = headerLine->substring(start, end);
       
       WSK_LOGINFO1("[WS-Client][handleHeader] - cSessionId: ", client->cSessionId.c_str());
       
       // Trigger websocket connection code path
-      headerLine = "";
+      *headerLine = "";
     }
   }     
        
   // handle HTTP header
-  if (headerLine.length() > 0)   
+  if (headerLine->length() > 0)   
   {
-    WSK_LOGINFO1("[WS-Client][handleHeader] RX:", headerLine.c_str());
+    WSK_LOGINFO1("[WS-Client][handleHeader] RX:", headerLine->c_str());
 
-    if (headerLine.startsWith(WEBSOCKETS_STRING("HTTP/1.")))
+    if (headerLine->startsWith(WEBSOCKETS_STRING("HTTP/1.")))
     {
       // "HTTP/1.1 101 Switching Protocols"
-      client->cCode = headerLine.substring(9, headerLine.indexOf(' ', 9)).toInt();
+      client->cCode = headerLine->substring(9, headerLine->indexOf(' ', 9)).toInt();
     }
-    else if (headerLine.indexOf(':') >= 0)
+    else if (headerLine->indexOf(':') >= 0)
     {
-      String headerName  = headerLine.substring(0, headerLine.indexOf(':'));
-      String headerValue = headerLine.substring(headerLine.indexOf(':') + 1);
+      String headerName  = headerLine->substring(0, headerLine->indexOf(':'));
+      String headerValue = headerLine->substring(headerLine->indexOf(':') + 1);
 
       // remove space in the beginning  (RFC2616)
       if (headerValue[0] == ' ')
@@ -1107,14 +1101,16 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String& headerLine)
     }
     else
     {
-      WSK_LOGINFO1("[WS-Client][handleHeader] Header error:", headerLine.c_str());
+      WSK_LOGINFO1("[WS-Client][handleHeader] Header error:", headerLine->c_str());
     }
 
-    headerLine = "";
+		*headerLine = "";
+		
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
-    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader,
+    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader, 
                                  this, client, &(client->cHttpLine)));
+                            
 #endif
   }
   else
@@ -1138,7 +1134,8 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String& headerLine)
     {
       WSK_LOGINFO("[WS-Client][handleHeader] Still missing cSessionId try Socket.IO");
       client->status = WSC_BODY;
-      return;
+      
+      return; 
     } 
     else 
     {
@@ -1194,7 +1191,9 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String& headerLine)
 
       runCbEvent(WStype_CONNECTED, (uint8_t *)client->cUrl.c_str(), client->cUrl.length());
     }
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+    
+#if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
+
     else if (client->isSocketIO) 
     {
       if (client->cSessionId.length() > 0) 
@@ -1215,7 +1214,9 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String& headerLine)
         sendHeader(client);
       }
     }
+    
 #endif
+
     else
     {
       WSK_LOGDEBUG("[WS-Client][handleHeader] no Websocket connection close.");
@@ -1238,9 +1239,12 @@ void WebSocketsClient::connectedCb()
 {
   WSK_LOGWARN3("[WS-Client][connectedCb] Connected to Host:",  _host, ", Port:", _port);
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+
   _client.tcp->onDisconnect(std::bind([](WebSocketsClient * c, AsyncTCPbuffer * obj, WSclient_t * client) -> bool
   {
+  	(void) obj;
+  	
     WSK_LOGWARN1("[WS-Client][connectedCb] Disconnect client :", client->num);
 
     client->status = WSC_NOT_CONNECTED;
@@ -1255,7 +1259,7 @@ void WebSocketsClient::connectedCb()
 
   _client.status = WSC_HEADER;
 
-#if(WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
   // set Timeout for readBytesUntil and readStringUntil
   _client.tcp->setTimeout(WEBSOCKETS_TCP_TIMEOUT);
 #endif
@@ -1304,7 +1308,7 @@ void WebSocketsClient::connectFailedCb()
   WSK_LOGDEBUG3("[WS-Client][connectFailedCb] Failed connection to host:",  _host, ", port:", _port);
 }
 
-#if(WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if ( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
 
 void WebSocketsClient::asyncConnect()
 {
@@ -1321,6 +1325,8 @@ void WebSocketsClient::asyncConnect()
 
   tcpclient->onDisconnect([](void * obj, AsyncClient * c)
   {
+  	(void) obj;
+  	
     c->free();
     delete c;
   });
@@ -1342,6 +1348,8 @@ void WebSocketsClient::asyncConnect()
 
   tcpclient->onError(std::bind([](WebSocketsClient * ws, AsyncClient * tcp)
   {
+  	(void) tcp;
+  	
     ws->connectFailedCb();
 
     // reconnect
