@@ -33,7 +33,7 @@ SocketIOclient socketIO;
 
 // Select the IP address according to your local network
 IPAddress serverIP(192, 168, 2, 30);
-uint16_t  serverPort = 8080;    //3000;
+uint16_t  serverPort = 5000;    //8080;    //3000;
 
 void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {

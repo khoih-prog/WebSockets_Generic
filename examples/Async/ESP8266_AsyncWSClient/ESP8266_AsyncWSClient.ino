@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  ESP8266_WebSocketClient.ino
+  ESP8266_AsyncWSClient.ino
   For ESP8266
 
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
@@ -13,10 +13,12 @@
 *****************************************************************************************************************************/
 
 #if !defined(ESP8266)
-#error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
+  #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
-#define _WEBSOCKETS_LOGLEVEL_     2
+#define _WEBSOCKETS_LOGLEVEL_       2
+
+#define WEBSOCKETS_NETWORK_TYPE     NETWORK_ESP8266_ASYNC
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -44,7 +46,7 @@ WebSocketsClient webSocket;
 
 bool alreadyConnected = false;
 
-String messageToSend = "From " ARDUINO_BOARD;
+String messageToSend = "From Async " ARDUINO_BOARD;
 
 void sendTXTMessage()
 {
@@ -151,7 +153,7 @@ void setup()
 
   delay(200);
 
-  Serial.print("\nStart ESP8266_WebSocketClient on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_AsyncWSClient on "); Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
@@ -205,7 +207,7 @@ void setup()
 
 void loop()
 {
-  webSocket.loop();
+  // No more webSocket.loop() in Async
 
   sendTXTMessage();
 }
