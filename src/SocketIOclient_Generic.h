@@ -148,12 +148,12 @@ class SocketIOclient : protected WebSocketsClient
     void configureEIOping(bool disableHeartbeat = false);
     
     // KH, add v2.5.1
-    void setReconnectInterval(const unsigned long& time)
+    inline void setReconnectInterval(const unsigned long& time)
     {
       _reconnectInterval = time;
     }
 
-    void setExtraHeaders(const char * extraHeaders = nullptr)
+    inline void setExtraHeaders(const char * extraHeaders = nullptr)
     {
       WebSocketsClient::setExtraHeaders(extraHeaders);
     }
