@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.14.2
+  Version: 2.15.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -42,6 +42,7 @@
   2.14.0  K Hoang      17/02/2022 Suppress unnecessary warnings. Optimize code by passing by reference instead of value
   2.14.1  K Hoang      18/02/2022 Fix setInsecure() bug for WIO_Terminal. Update Packages_Patches for Seeeduino
   2.14.2  K Hoang      27/03/2022 Fix Async bug for ESP8266 when using NETWORK_ESP8266_ASYNC
+  2.15.0  K Hoang      06/04/2022 Use Ethernet_Generic library as default. Sync with arduinoWebSockets v2.3.6
  *****************************************************************************************************************************/
 
 #pragma once
@@ -49,13 +50,13 @@
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
 
-#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.14.2"
+#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.15.0"
 
 #define WEBSOCKETS_GENERIC_VERSION_MAJOR      2
-#define WEBSOCKETS_GENERIC_VERSION_MINOR      14
-#define WEBSOCKETS_GENERIC_VERSION_PATCH      2
+#define WEBSOCKETS_GENERIC_VERSION_MINOR      15
+#define WEBSOCKETS_GENERIC_VERSION_PATCH      0
 
-#define WEBSOCKETS_GENERIC_VERSION_INT        2014002
+#define WEBSOCKETS_GENERIC_VERSION_INT        2015000
 
 #include "WebSocketsDebug_Generic.h"
 
@@ -494,36 +495,17 @@
   #else
     #include <SPI.h>
     // KH, New v2.2.3 to support Ethernet2, Ethernet3, EthernetLarge Lib
-    #if USE_ETHERNET    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET_)
-      #include <Ethernet.h>
+    #if USE_ETHERNET_GENERIC    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET_)
+      #include <Ethernet_Generic.h>
       
       #if(_WEBSOCKETS_LOGLEVEL_>3)
-        #warning Using Ethernet W5x00 Library
-      #endif
-    #elif USE_ETHERNET_LARGE    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET_LARGE_)
-      #include <EthernetLarge.h>
-      
-      #if(_WEBSOCKETS_LOGLEVEL_>3)
-       #warning Using EthernetLarge W5x00 Library
-      #endif
-      
-    #elif USE_ETHERNET2    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET2_)
-      #include <Ethernet2.h>
-      
-      #if(_WEBSOCKETS_LOGLEVEL_>3)
-        #warning Using Ethernet2 W5x00 Library
-      #endif
-    #elif USE_ETHERNET3    //(WEBSOCKETS_NETWORK_LIB == _ETHERNET3_)
-      #include <Ethernet3.h>
-      
-      #if(_WEBSOCKETS_LOGLEVEL_>3)
-        #warning Using Ethernet3 W5x00 Library
+        #warning Using Ethernet_Generic W5x00 Library
       #endif
     #else  
-      #include <Ethernet.h>
+      #include <Ethernet_Generic.h>
       
       #if(_WEBSOCKETS_LOGLEVEL_>3)
-        #warning Using default Ethernet W5x00 Library  
+        #warning Using default Ethernet_Generic W5x00 Library  
       #endif  
     #endif
     //////

@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.15.0](#release-v2150)
   * [Release v2.14.2](#release-v2142)
   * [Release v2.14.1](#release-v2141)
   * [Release v2.14.0](#release-v2140)
@@ -55,6 +56,14 @@
 ---
 
 ## Changelog
+
+### Release v2.15.0
+
+1. Use new [Ethernet_Generic library](https://github.com/khoih-prog/Ethernet_Generic) as default for W5x00.
+2. Sync with `arduinoWebSockets v2.3.6`
+3. Add examples and rewrite all the examples to support new features
+4. Update `Packages' Patches`
+
 
 ### Release v2.14.2
 

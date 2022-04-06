@@ -94,20 +94,20 @@
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER](#1-generic_websocketclient_ethernetenc-on-nrf52840_feather)
   * [2. Generic_Ethernet_Blinds on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#2-generic_ethernet_blinds-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library)
-  * [3. WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5500 using Ethernet2 Library](#3-websocketclientsocketio_w5500-on-nrf52840_feather-with-w5500-using-ethernet2-library)
+  * [3. WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5500 using Ethernet_Generic Library](#3-websocketclientsocketio_w5500-on-nrf52840_feather-with-w5500-using-Ethernet_Generic-library)
   * [4. Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library](#4-generic_websocketclientsocketio_ethernetenc-on-nrf52840_feather-with-enc28j60-using-ethernetenc-library) 
   * [5. WIOTerminal_WebSocketClientSSL on SeeedStudio SAMD51 WIO_TERMINAL with Realtek RTL8720DN WiFi using Seeed_Arduino_rpcWiFi Library](#5-wioterminal_websocketclientssl-on-seeedstudio-samd51-wio_terminal-with-realtek-rtl8720dn-wifi-using-seeed_arduino_rpcwifi-library)
   * [6. Generic_WebSocketClientSSL_WiFiNINA on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library](#6-generic_websocketclientssl_wifinina-on-arduino-samd21-nano-33-iot-with-wifinina-using-wifinina_generic-library)
   * [7. WebSocketClientSocketIO_NINA on Arduino SAMD21 Nano-33-IoT with WiFiNINA using WiFiNINA_Generic Library](#7-websocketclientsocketio_nina-on-arduino-samd21-nano-33-iot-with-wifinina-using-wifinina_generic-library)
     * [7.1 Client](#71-client)
     * [7.2 Server](#72-server)
-  * [8. Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using EthernetLarge Library](#8-generic_websocketclientsocketio_w5500-on-nrf52840_feather-with-w5x00-using-ethernetlarge-library)
+  * [8. Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library](#8-generic_websocketclientsocketio_w5500-on-nrf52840_feather-with-w5x00-using-Ethernet_Generic-library)
     * [8.1 Client](#81-client)
     * [8.2 Server](#82-server)
-  * [9. WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library](#9-websocketclientsocketio_w5500-on-raspberry_pi_pico-with-w5x00-using-ethernet2-library)
+  * [9. WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library](#9-websocketclientsocketio_w5500-on-raspberry_pi_pico-with-w5x00-using-Ethernet_Generic-library)
     * [9.1 Client](#91-client)
     * [9.2 Server](#92-server)
-  * [10. WebSocketClientSocketIO_W5500 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library](#10-websocketclientsocketio_w5500-on-mbed-raspberry_pi_pico-with-w5x00-using-ethernet2-library)
+  * [10. WebSocketClientSocketIO_W5500 on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library](#10-websocketclientsocketio_w5500-on-mbed-raspberry_pi_pico-with-w5x00-using-Ethernet_Generic-library)
     * [10.1 Client](#101-client)
     * [10.2 Server](#102-server)
   * [11. WT32_ETH01_WebSocketClientSocketIO on WT32_ETH01](#11-wt32_eth01_websocketclientsocketio-on-wt32_eth01)
@@ -139,9 +139,10 @@
 
 ### Important notes about Portenta_H7 Ethernet
 
-**Portenta_H7 Ethernet** doesn't work in mbed_portenta core v3.0.0. Check [[Portenta_H7] Ethernet not working in core v3.0.0 #436](https://github.com/arduino/ArduinoCore-mbed/issues/436).
+**Portenta_H7 Ethernet** doesn't work in mbed_portenta core v3.0.0, and has been fixed in core v3.0.1. 
+Check [[Portenta_H7] Ethernet not working in core v3.0.0 #436](https://github.com/arduino/ArduinoCore-mbed/issues/436).
 
-Please use mbed_portenta core v2.8.0 for **Portenta_H7 Ethernet** until the issue fixed.
+Please use mbed_portenta core **v2.8.0- or v3.0.1+ for Portenta_H7 Ethernet**.
 
 ---
 ---
@@ -265,28 +266,25 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
  8. [`Adafruit nRF52 v1.3.0+`](https://github.com/adafruit/Adafruit_nRF52_Arduino) for nRF52 boards such as Adafruit NRF52840_FEATHER, NRF52832_FEATHER, NRF52840_FEATHER_SENSE, NRF52840_ITSYBITSY, NRF52840_CIRCUITPLAY, NRF52840_CLUE, NRF52840_METRO, NRF52840_PCA10056, PARTICLE_XENON, **NINA_B302_ublox**, etc. [![GitHub release](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino/releases/latest)
  9. [`ESP32 Core 2.0.2+`](https://github.com/espressif/arduino-esp32) for ESP32-based boards. [![Latest release](https://img.shields.io/github/release/espressif/arduino-esp32.svg)](https://github.com/espressif/arduino-esp32/releases/latest/)
 10. [`ESP8266 Core 3.0.2+`](https://github.com/esp8266/Arduino) for ESP8266-based boards. [![Latest release](https://img.shields.io/github/release/esp8266/Arduino.svg)](https://github.com/esp8266/Arduino/releases/latest/). To use ESP8266 core 2.7.1+ for LittleFS.
-11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.0.0+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
+11. [`ArduinoCore-mbed mbed_rp2040, mbed_nano, mbed_portenta core 3.0.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino (Use Arduino Board Manager) **Portenta_H7, RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
 12. [`Earle Philhower's arduino-pico core v1.13.1+`](https://github.com/earlephilhower/arduino-pico) for RP2040-based boards such as **RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040 and GENERIC_RP2040**, etc. [![GitHub release](https://img.shields.io/github/release/earlephilhower/arduino-pico.svg)](https://github.com/earlephilhower/arduino-pico/releases/latest)
 13. [`Arduino Core for STM32 v2.2.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
 14. [`Arduino AmebaD core 3.1.2+`](https://github.com/ambiot/ambd_arduino) for Realtek RTL8720DN, RTL8722DM and RTL8722CSM. [![GitHub release](https://img.shields.io/github/release/ambiot/ambd_arduino.svg)](https://github.com/ambiot/ambd_arduino/releases/latest)
 
 
 15. [`WiFiNINA_Generic library v1.8.14-3+`](https://github.com/khoih-prog/WiFiNINA_Generic) if for WiFiNINA. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiNINA_Generic.svg?)](https://www.ardu-badge.com/WiFiNINA_Generic).
-16. [`EthernetWebServer library v2.0.2+`](https://github.com/khoih-prog/EthernetWebServer) if necessary to use Ethernet modules/shields. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer.svg?)](https://www.ardu-badge.com/EthernetWebServer)
-17. [`EthernetWebServer_STM32 library v1.3.4+`](https://github.com/khoih-prog/EthernetWebServer_STM32) if necessary to use Ethernet modules/shields. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
+16. [`EthernetWebServer library v2.1.1+`](https://github.com/khoih-prog/EthernetWebServer) if necessary to use Ethernet modules/shields. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer.svg?)](https://www.ardu-badge.com/EthernetWebServer)
+17. [`EthernetWebServer_STM32 library v1.4.0+`](https://github.com/khoih-prog/EthernetWebServer_STM32) if necessary to use Ethernet modules/shields. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
 18. [`WebServer_WT32_ETH01 library v1.4.1+`](https://github.com/khoih-prog/WebServer_WT32_ETH01) if necessary to use WT32_ETH01 boards. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WebServer_WT32_ETH01.svg?)](https://www.ardu-badge.com/WebServer_WT32_ETH01)
 19. Depending on which Ethernet card you're using:
-   - [`Ethernet library v2.0.0+`](https://github.com/arduino-libraries/Ethernet) for W5100, W5200 and W5500.  [![GitHub release](https://img.shields.io/github/release/arduino-libraries/Ethernet.svg)](https://github.com/arduino-libraries/Ethernet/releases/latest). You can also use the forked and modified library at [Patched Ethernet](https://github.com/khoih-prog/Ethernet)
-   - [`EthernetLarge library v2.0.0+`](https://github.com/OPEnSLab-OSU/EthernetLarge) for W5100, W5200 and W5500. You can also use the forked and modified library at [Patched EthernetLarge](https://github.com/khoih-prog/EthernetLarge)
-   - [`Ethernet2 library v1.0.4+`](https://github.com/khoih-prog/Ethernet2) for W5500. [![GitHub release](https://img.shields.io/github/release/adafruit/Ethernet2.svg)](https://github.com/adafruit/Ethernet2/releases/latest). You can also use the forked and modified library at [Patched Ethernet2](https://github.com/khoih-prog/Ethernet2)
-   - [`Ethernet3 library v1.5.5+`](https://github.com/sstaub/Ethernet3) for W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip. [![GitHub release](https://img.shields.io/github/release/sstaub/Ethernet3.svg)](https://github.com/sstaub/Ethernet3/releases/latest). You can also use the forked and modified library at [Patched Ethernet3](https://github.com/khoih-prog/Ethernet3)
+   - [`Ethernet_Generic library v2.0.0+`](https://github.com/khoih-prog/Ethernet_Generic) for W5100, W5200 and W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip.  [![GitHub release](https://img.shields.io/github/release/khoih-prog/Ethernet_Generic.svg)](https://github.com/khoih-prog/Ethernet_Generic/releases/latest)
    - [`EthernetENC library v2.0.2+`](https://github.com/jandrassy/EthernetENC) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/jandrassy/EthernetENC.svg)](https://github.com/jandrassy/EthernetENC/releases/latest). **New and Better**
    - [`UIPEthernet library v2.0.11+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/UIPEthernet/UIPEthernet.svg)](https://github.com/UIPEthernet/UIPEthernet/releases/latest)
    - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/STM32Ethernet.svg)](https://github.com/stm32duino/STM32Ethernet/releases/latest). To be used with [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP). [![GitHub release](https://img.shields.io/github/release/stm32duino/LwIP.svg)](https://github.com/stm32duino/LwIP/releases/latest).
    - [`NativeEthernet Library version stable111+`](https://github.com/vjmuzik/NativeEthernet) for Teensy 4.1 built-in Ethernet.
    - [`QNEthernet Library version v0.13.0+`](https://github.com/ssilverman/QNEthernet) Teensy 4.1 built-in Ethernet. **New**
    
-20. [`WiFiWebServer library v1.6.3+`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
+20. [`WiFiWebServer library v1.7.0+`](https://github.com/khoih-prog/WiFiWebServer) if necessary to use certain WiFi/WiFiNINA features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/WiFiWebServer.svg?)](https://www.ardu-badge.com/WiFiWebServer)
 21. [`FlashStorage_SAMD library v1.3.2+`](https://github.com/khoih-prog/FlashStorage_SAMD) for SAMD21 and SAMD51 boards (ZERO, MKR, NANO_33_IOT, M0, M0 Pro, AdaFruit Itsy-Bitsy M4, etc.) if necessary to use certain features. [![GitHub release](https://img.shields.io/github/release/khoih-prog/FlashStorage_SAMD.svg)](https://github.com/khoih-prog/FlashStorage_SAMD/releases/latest)
 22. [`FlashStorage_STM32 library v1.2.0+`](https://github.com/khoih-prog/FlashStorage_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/khoih-prog/FlashStorage_STM32.svg)](https://github.com/khoih-prog/FlashStorage_STM32/releases/latest) if necessary to use certain features.
 23. [`DueFlashStorage library v1.0.0+`](https://github.com/sebnil/DueFlashStorage) for SAM DUE if necessary to use certain features. To install, check [![arduino-library-badge](https://www.ardu-badge.com/badge/DueFlashStorage.svg?)](https://www.ardu-badge.com/DueFlashStorage).
@@ -543,12 +541,12 @@ With core after v1.5.0, this step is not necessary anymore thanks to the PR [Add
 
 #### 9. For Portenta_H7 boards using Arduino IDE in Linux
 
-  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh). 
+  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.0.1/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.1/portenta_post_install.sh). 
   
   Then run the following command using `sudo`
   
 ```
-$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0
+$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.1
 $ chmod 755 portenta_post_install.sh
 $ sudo ./portenta_post_install.sh
 ```
@@ -561,9 +559,9 @@ This will create the file `/etc/udev/rules.d/49-portenta_h7.rules` as follows:
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="035b", GROUP="plugdev", MODE="0666"
 ```
 
-Supposing the ArduinoCore-mbed core version is 3.0.0. Now only one file must be copied into the directory:
+Supposing the ArduinoCore-mbed core version is 3.0.1. Now only one file must be copied into the directory:
 
-- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.0/portenta_post_install.sh`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.0.1/portenta_post_install.sh`
 
 Whenever a new version is installed, remember to copy this files into the new version directory. For example, new version is x.yy.zz
 
@@ -993,8 +991,8 @@ typedef enum
  9. [ESP8266_WebSocketServerFragmentation](examples/esp8266/ESP8266_WebSocketServerFragmentation)
 10. [ESP8266_WebSocketServerHttpHeaderValidation](examples/esp8266/ESP8266_WebSocketServerHttpHeaderValidation)
 11. [ESP8266_WebSocketServer_LEDcontrol](examples/esp8266/ESP8266_WebSocketServer_LEDcontrol)
-12. [ESP8266_WebSocketClient_Sticky_SocketIO](examples/esp8266/ESP8266_WebSocketClient_Sticky_SocketIO). **New**
-
+12. [ESP8266_WebSocketClient_Sticky_SocketIO](examples/esp8266/ESP8266_WebSocketClient_Sticky_SocketIO) **New**
+13. [ESP8266_WebSocketClientOTA](examples/esp8266/ESP8266_WebSocketClientOTA) **New**
 ---
 
 #### For SeeedStudio WIO Terminal using Realtek RTL8720DN WiFi
@@ -1151,7 +1149,7 @@ https://github.com/khoih-prog/WebSockets_Generic/blob/cb5740fa01ed6fd460f3b4dc85
 
 ```
 Start Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1430,11 +1428,11 @@ Device 123456789012345678901234 set position to 0
 
 ---
 
-#### 3. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5500 using Ethernet2 Library
+#### 3. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5500 using Ethernet_Generic Library
 
 ```
-Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.14.2
+Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
+WebSockets_Generic v2.15.0
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1517,7 +1515,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 
 ```
 Start Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1601,7 +1599,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 ```
 
 Start WIOTerminal_WebSocketClientSSL on WIO_TERMINAL
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 WebSockets Client started @ IP address: 192.168.2.150
 WebSockets Server : wss://account.duckdns.org
 Connected to WebSockets Server @ wss://account.duckdns.org
@@ -1631,7 +1629,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```
 Start Generic_WebSocketClientSSL_WiFiNINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1667,7 +1665,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```
 Start WebSocketClientSocketIO_NINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1678,7 +1676,7 @@ SSID: HueNet1
 WebSockets Client IP Address: 192.168.2.114
 signal strength (RSSI):-18 dBm
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.14.2
+[WS] WebSockets_Generic v2.15.0
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client] Connect ws...
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
@@ -1792,14 +1790,14 @@ Message from Client :  { now: 30001 }
 
 ---
 
-#### 8. [Generic_WebSocketClientSocketIO_W5500](examples/Generic/W5500/Generic_WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5x00 using EthernetLarge Library
+#### 8. [Generic_WebSocketClientSocketIO_W5500](examples/Generic/W5500/Generic_WebSocketClientSocketIO_W5500) on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
 
 
 #### 8.1 Client
 
 ```
-Start Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using EthernetLarge Library
-WebSockets_Generic v2.14.2
+Start Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
+WebSockets_Generic v2.15.0
 [WS] Board :NRF52840_FEATHER, setCsPin:10
 [WS] Default SPI pinout:
 [WS] MOSI:25
@@ -1812,7 +1810,7 @@ W5100 init, using SS_PIN_DEFAULT = 10, new ss_pin = 10, W5100Class::ss_pin = 10
 W5100::init: W5500, SSIZE =8192
 WebSockets Client @ IP address: 192.168.2.94
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.14.2
+[WS] WebSockets_Generic v2.15.0
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -1924,16 +1922,16 @@ Message from Client :  { now: 30001 }
 
 ---
 
-#### 9. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library
+#### 9. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library
 
-The following are debug terminal output when running example [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 and Ethernet2 Library using [**Earle Philhower's arduino-pico core** v1.12.0](https://github.com/earlephilhower/arduino-pico)
+The following are debug terminal output when running example [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 and Ethernet_Generic Library using [**Earle Philhower's arduino-pico core** v1.12.0](https://github.com/earlephilhower/arduino-pico)
 
 
 #### 9.1 Client
 
 ```
-Start WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.14.2
+Start WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library
+WebSockets_Generic v2.15.0
 [WS] Board :RASPBERRY_PI_PICO, setCsPin:17
 [WS] Default SPI pinout:
 [WS] MOSI:19
@@ -1943,7 +1941,7 @@ WebSockets_Generic v2.14.2
 [WS] =========================
 WebSockets Client @ IP address: 192.168.2.119
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.14.2
+[WS] WebSockets_Generic v2.15.0
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2073,16 +2071,16 @@ Message from Client :  { now: 150005 }
 
 ---
 
-#### 10. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet2 Library
+#### 10. [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on MBED RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library
 
-The following are debug terminal output when running example [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 and Ethernet2 Library using [**Arduino-mbed RP2040** core v3.0.0](https://github.com/arduino/ArduinoCore-mbed)
+The following are debug terminal output when running example [WebSocketClientSocketIO_W5500](examples/W5500/WebSocketClientSocketIO_W5500) on RASPBERRY_PI_PICO with W5x00 and Ethernet_Generic Library using [**Arduino-mbed RP2040** core](https://github.com/arduino/ArduinoCore-mbed)
 
 
 #### 10.1 Client
 
 ```
-Start WebSocketClientSocketIO_W5500 on RaspberryPi Pico with W5x00 using Ethernet2 Library
-WebSockets_Generic v2.14.2
+Start WebSocketClientSocketIO_W5500 on RaspberryPi Pico with W5x00 using Ethernet_Generic Library
+WebSockets_Generic v2.15.0
 [WS] Board :RaspberryPi Pico, setCsPin:17
 [WS] Default SPI pinout:
 [WS] MOSI:19
@@ -2092,7 +2090,7 @@ WebSockets_Generic v2.14.2
 [WS] =========================
 WebSockets Client @ IP address: 192.168.2.98
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.14.2
+[WS] WebSockets_Generic v2.15.0
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2225,7 +2223,7 @@ The following are debug terminal output when running example [WT32_ETH01_WebSock
 ```
 Starting WT32_ETH01_WebSocketClient on ESP32_DEV with ETH_PHY_LAN8720
 WebServer_WT32_ETH01 v1.4.1
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 ETH MAC: A8:03:2A:A1:61:73, IPv4: 192.168.2.232, FULL_DUPLEX, 100Mbps
 WebSockets Client started @ IP address: 192.168.2.232
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2309,7 +2307,7 @@ The following are debug terminal output when running example [Teensy_WebSocketCl
 
 ```
 Starting Teensy_WebSocketClient_QNEthernet on TEENSY 4.1 using QNEthernet
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 =========== USE_QN_ETHERNET ===========
 Initialize Ethernet using static IP => Connected! IP address:192.168.2.222
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2356,7 +2354,7 @@ The following are debug terminal output when running example [Portenta_H7_WebSoc
 
 ```
 Start Portenta_H7_WebSocketClientSocketIO on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 WebSockets Client @ IP address: 192.168.2.132
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
@@ -2417,7 +2415,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```
 Start WebSocketClientSocketIO_WiFi on PORTENTA_H7_M7
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 Connecting to SSID: HueNet1
 SSID: HueNet1
 WebSockets Client IP Address: 192.168.2.130
@@ -2473,10 +2471,10 @@ The following are debug terminal output when running example [Portenta_H7_WebSoc
 
 ```
 Start Portenta_H7_WebSocketClient_Sticky_SocketIO on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 WebSockets Client @ IP address: 192.168.2.133
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.14.2
+[WS] WebSockets_Generic v2.15.0
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2544,7 +2542,7 @@ The following are debug terminal output when running example [ESP32_WebSocketCli
 
 ```
 Start ESP32_WebSocketClientSocketIO on ESP32S3_DEV
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 Connecting to HueNet1
 WebSockets Client started @ IP address: 192.168.2.83
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2717,7 +2715,7 @@ The following are debug terminal output when running example [ESP8266_AsyncWSCli
 
 ```
 Start ESP8266_AsyncWSClient on ESP8266_NODEMCU_ESP12E
-WebSockets_Generic v2.14.2
+WebSockets_Generic v2.15.0
 
 WebSockets Client started @ IP address: 192.168.2.145
 Connecting to WebSockets Server @ 192.168.2.30
@@ -2825,6 +2823,7 @@ Submit issues to: [WebSockets_Generic issues](https://github.com/khoih-prog/WebS
 29. Don't use `deprecated sha.h` for ESP32 core v1.0.6+.
 30. Optimize code by passing by `reference` instead of `value`
 31. Fix ASYNC bug for ESP8266 when using **NETWORK_ESP8266_ASYNC**
+32. Use new [**Ethernet_Generic** library](https://github.com/khoih-prog/Ethernet_Generic) as default for W5x00.
  
 ---
 ---
