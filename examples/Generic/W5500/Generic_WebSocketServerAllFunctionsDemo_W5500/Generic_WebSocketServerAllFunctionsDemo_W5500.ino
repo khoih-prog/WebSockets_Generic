@@ -29,31 +29,25 @@
 #define USE_UIP_ETHERNET        false
 
 // Only one if the following to be true
-#define USE_ETHERNET            false
-#define USE_ETHERNET2           false
-#define USE_ETHERNET3           false
-#define USE_ETHERNET_LARGE      true
+#define USE_ETHERNET_GENERIC    true
 #define USE_ETHERNET_ESP8266    false
 #define USE_ETHERNET_ENC        false
 
-#if ( USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE || USE_ETHERNET )
+#if ( USE_ETHERNET_GENERIC )
   #define WEBSOCKETS_NETWORK_TYPE   NETWORK_W5100
 #elif (USE_ETHERNET_ENC)
   #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
 #endif
 
-#if USE_ETHERNET3
-  #include "Ethernet3.h"
-  #warning Using Ethernet3 lib
-  #define SHIELD_TYPE           "W5x00 using Ethernet3 Library"
-#elif USE_ETHERNET2
-  #include "Ethernet2.h"
-  #warning Using Ethernet2 lib
-  #define SHIELD_TYPE           "W5x00 using Ethernet2 Library"
-#elif USE_ETHERNET_LARGE
-  #include "EthernetLarge.h"
-  #warning Using EthernetLarge lib
-  #define SHIELD_TYPE           "W5x00 using EthernetLarge Library"
+#if USE_ETHERNET_GENERIC
+  #include "Ethernet_Generic.h"
+  #warning Using Ethernet_Generic lib
+
+  #define ETHERNET_LARGE_BUFFERS
+
+  #define _ETG_LOGLEVEL_        1
+      
+  #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
   #warning Using Ethernet_ESP8266 lib 
@@ -63,10 +57,10 @@
   #warning Using EthernetENC lib
   #define SHIELD_TYPE           "ENC28J60 using EthernetENC Library"
 #else
-  #define USE_ETHERNET          true
+  #define USE_ETHERNET_GENERIC  true
   #include "Ethernet.h"
-  #warning Using Ethernet lib
-  #define SHIELD_TYPE           "W5x00 using Ethernet Library"
+  #warning Using Ethernet_Generic lib
+  #define SHIELD_TYPE           "W5x00 using default Ethernet_Generic Library"
 #endif
 
 #if ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) )
@@ -191,31 +185,22 @@ void setup()
   digitalWrite(GREEN_LED, 1);
   digitalWrite(BLUE_LED, 1);
 
-  WS_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
+  WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
 
-  WS_LOGWARN(F("Default SPI pinout:"));
-  WS_LOGWARN1(F("MOSI:"), MOSI);
-  WS_LOGWARN1(F("MISO:"), MISO);
-  WS_LOGWARN1(F("SCK:"),  SCK);
-  WS_LOGWARN1(F("SS:"),   SS);
-  WS_LOGWARN(F("========================="));
+  WSK_LOGWARN(F("Default SPI pinout:"));
+  WSK_LOGWARN1(F("MOSI:"), MOSI);
+  WSK_LOGWARN1(F("MISO:"), MISO);
+  WSK_LOGWARN1(F("SCK:"),  SCK);
+  WSK_LOGWARN1(F("SS:"),   SS);
+  WSK_LOGWARN(F("========================="));
 
   #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
     // For other boards, to change if necessary
-    #if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2  || USE_ETHERNET_ENC )
+    #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
       // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
       Ethernet.init (USE_THIS_SS_PIN);
-    
-    #elif USE_ETHERNET3
-      // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
-      #ifndef ETHERNET3_MAX_SOCK_NUM
-        #define ETHERNET3_MAX_SOCK_NUM      4
-      #endif
-    
-      Ethernet.setCsPin (USE_THIS_SS_PIN);
-      Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
-       
-    #endif  //( ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2  || USE_ETHERNET_ENC )
+           
+    #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
   #endif
 
   // start the ethernet connection and the server:
