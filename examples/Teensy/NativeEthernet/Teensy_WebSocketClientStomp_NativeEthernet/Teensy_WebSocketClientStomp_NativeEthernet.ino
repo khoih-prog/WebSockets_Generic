@@ -62,20 +62,17 @@
 #define USE_UIP_ETHERNET        false
 
 // Only one if the following to be true
-#define USE_ETHERNET            false
-#define USE_ETHERNET2           false
-#define USE_ETHERNET3           false
-#define USE_ETHERNET_LARGE      false
+#define USE_ETHERNET_GENERIC    false
 #define USE_ETHERNET_ESP8266    false
 #define USE_ETHERNET_ENC        false
 
-#if ( USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE || USE_ETHERNET )
+#if ( USE_ETHERNET_GENERIC )
   #define WEBSOCKETS_NETWORK_TYPE   NETWORK_W5100
 #elif (USE_ETHERNET_ENC)
   #define WEBSOCKETS_NETWORK_TYPE   NETWORK_ETHERNET_ENC
 #endif
 
-#if ( USE_ETHERNET2 || USE_ETHERNET3 || USE_ETHERNET_LARGE || USE_ETHERNET_ESP8266 || USE_ETHERNET_ENC || USE_NATIVE_ETHERNET )
+#if ( USE_ETHERNET_GENERIC || USE_ETHERNET_ESP8266 || USE_ETHERNET_ENC || USE_NATIVE_ETHERNET )
   #ifdef USE_CUSTOM_ETHERNET
     #undef USE_CUSTOM_ETHERNET
   #endif
@@ -86,18 +83,15 @@
   #include "NativeEthernet.h"
   #warning Using NativeEthernet lib for Teensy 4.1. Must also use Teensy Packages Patch or error
   #define SHIELD_TYPE           "Custom Ethernet using Teensy 4.1 NativeEthernet Library"
-#elif USE_ETHERNET3
-  #include "Ethernet3.h"
-  #warning Using Ethernet3 lib
-  #define SHIELD_TYPE           "W5x00 using Ethernet3 Library"
-#elif USE_ETHERNET2
-  #include "Ethernet2.h"
-  #warning Using Ethernet2 lib
-  #define SHIELD_TYPE           "W5x00 using Ethernet2 Library"
-#elif USE_ETHERNET_LARGE
-  #include "EthernetLarge.h"
-  #warning Using EthernetLarge lib
-  #define SHIELD_TYPE           "W5x00 using EthernetLarge Library"
+#elif USE_ETHERNET_GENERIC
+  #include "Ethernet_Generic.h"
+  #warning Using Ethernet_Generic lib
+
+  #define ETHERNET_LARGE_BUFFERS
+
+  #define _ETG_LOGLEVEL_        1
+      
+  #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
   #warning Using Ethernet_ESP8266 lib 
@@ -108,17 +102,17 @@
   #define SHIELD_TYPE           "ENC28J60 using EthernetENC Library"
 #elif USE_CUSTOM_ETHERNET
   //#include "Ethernet_XYZ.h"
-  #include "EthernetENC.h"
+  #include "Ethernet.h"
   //#warning Using Custom Ethernet library. You must include a library and initialize.
   #define SHIELD_TYPE           "Custom Ethernet using Ethernet_XYZ Library"
 #else
-  #ifdef USE_ETHERNET
-    #undef USE_ETHERNET
+  #ifdef USE_ETHERNET_GENERIC
+    #undef USE_ETHERNET_GENERIC
   #endif
-  #define USE_ETHERNET   true
-  #include "Ethernet.h"
+  #define USE_ETHERNET_GENERIC   true
+  #include "Ethernet_Generic.h"
   #warning Using Ethernet lib
-  #define SHIELD_TYPE           "W5x00 using Ethernet Library"
+  #define SHIELD_TYPE           "W5x00 using default Ethernet_Generic Library"
 #endif
 
 // Default pin 10 to SS/CS
@@ -285,23 +279,14 @@ void setup()
   WS_LOGWARN(F("========================="));
 #endif
 
-  #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
-    // For other boards, to change if necessary
-    #if ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2  || USE_ETHERNET_ENC )
-      // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-      Ethernet.init (USE_THIS_SS_PIN);
-    
-    #elif USE_ETHERNET3
-      // Use  MAX_SOCK_NUM = 4 for 4K, 2 for 8K, 1 for 16K RX/TX buffer
-      #ifndef ETHERNET3_MAX_SOCK_NUM
-        #define ETHERNET3_MAX_SOCK_NUM      4
-      #endif
-    
-      Ethernet.setCsPin (USE_THIS_SS_PIN);
-      Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
-       
-    #endif  //( ( USE_ETHERNET || USE_ETHERNET_LARGE || USE_ETHERNET2  || USE_ETHERNET_ENC )
-  #endif
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // For other boards, to change if necessary
+  #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
+    // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+    Ethernet.init (USE_THIS_SS_PIN);
+         
+  #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
+#endif
 
   // start the ethernet connection and the server:
   // Use DHCP dynamic IP and random mac
