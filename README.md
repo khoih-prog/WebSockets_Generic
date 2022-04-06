@@ -2464,7 +2464,7 @@ Message from Client :  { now: 181506 }
 
 ---
 
-#### 15. [Portenta_H7_WebSocketClient_Sticky_SocketIO](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClient_Sticky_SocketIO) on Portenta_H7 using Ethernet
+#### 15. [Portenta_H7_WebSocketClient_Sticky_SocketIO](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClient_Sticky_SocketIO) on PORTENTA_H7_M7 using Ethernet
 
 The following are debug terminal output when running example [Portenta_H7_WebSocketClient_Sticky_SocketIO](examples/Portenta_H7/Ethernet/Portenta_H7_WebSocketClient_Sticky_SocketIO) on Portenta_H7 using Vision-shield Ethernet.
 
