@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.15.0
+  Version: 2.16.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -43,6 +43,7 @@
   2.14.1  K Hoang      18/02/2022 Fix setInsecure() bug for WIO_Terminal. Update Packages_Patches for Seeeduino
   2.14.2  K Hoang      27/03/2022 Fix Async bug for ESP8266 when using NETWORK_ESP8266_ASYNC
   2.15.0  K Hoang      06/04/2022 Use Ethernet_Generic library as default. Sync with arduinoWebSockets v2.3.6
+  2.16.0  K Hoang      13/10/2022 Add WS and WSS support to RP2040W using CYW43439 WiFi
  *****************************************************************************************************************************/
 
 #pragma once
@@ -50,15 +51,21 @@
 #ifndef WEBSOCKETS_GENERIC_IMPL_H_
 #define WEBSOCKETS_GENERIC_IMPL_H_
 
+////////////////////////////////////////
+
 #ifdef ESP8266
   #include <core_esp8266_features.h>
 #endif
+
+////////////////////////////////////////
 
 #if defined(ESP32) || defined(WIO_TERMINAL)
   #ifndef CORE_HAS_LIBB64
     #define CORE_HAS_LIBB64
   #endif
 #endif
+
+////////////////////////////////////////
 
 extern "C"
 {
@@ -78,6 +85,8 @@ extern "C"
     #include "libb64/cencode_inc.h"
   #endif
 }
+
+////////////////////////////////////////
 
 #ifdef ESP8266
   #include <Hash.h>
@@ -103,6 +112,8 @@ extern "C"
 }
 
 #endif
+
+////////////////////////////////////////
 
 /**
 
@@ -132,6 +143,8 @@ void WebSockets::clientDisconnect(WSclient_t * client, uint16_t code, char * rea
   
   clientDisconnect(client);
 }
+
+////////////////////////////////////////
 
 /**
 
@@ -239,6 +252,8 @@ uint8_t WebSockets::createHeader(uint8_t * headerPtr, WSopcode_t opcode, size_t 
   return headerSize;
 }
 
+////////////////////////////////////////
+
 /**
 
    @param client WSclient_t *   ptr to the client struct
@@ -261,6 +276,8 @@ bool WebSockets::sendFrameHeader(WSclient_t * client, WSopcode_t opcode, size_t 
 
   return true;
 }
+
+////////////////////////////////////////
 
 /**
 
@@ -440,6 +457,8 @@ bool WebSockets::sendFrame(WSclient_t * client, WSopcode_t opcode, uint8_t * pay
   return ret;
 }
 
+////////////////////////////////////////
+
 /**
    callen when HTTP header is done
    @param client WSclient_t *  ptr to the client struct
@@ -457,6 +476,8 @@ void WebSockets::headerDone(WSclient_t * client)
 #endif
 }
 
+////////////////////////////////////////
+
 /**
    handle the WebSocket stream
    @param client WSclient_t *  ptr to the client struct
@@ -468,6 +489,8 @@ void WebSockets::handleWebsocket(WSclient_t * client)
     handleWebsocketCb(client);
   }
 }
+
+////////////////////////////////////////
 
 /**
    wait for
@@ -518,8 +541,11 @@ bool WebSockets::handleWebsocketWaitFor(WSclient_t * client, size_t size)
     }
   },
   this, size, std::placeholders::_1, std::placeholders::_2));
+  
   return false;
 }
+
+////////////////////////////////////////
 
 void WebSockets::handleWebsocketCb(WSclient_t * client)
 {
@@ -598,18 +624,19 @@ void WebSockets::handleWebsocketCb(WSclient_t * client)
   WSK_LOGDEBUG3("[handleWebsocket] Client: ", client->num, ", mask:", header->mask);
   WSK_LOGDEBUG1("payloadLen:", header->payloadLen);
   
-  
   if (header->payloadLen > WEBSOCKETS_MAX_DATA_SIZE)
   {
     WSK_LOGDEBUG3("[handleWebsocket] Client: ", client->num, ", payload too big:", header->payloadLen); 
     
     clientDisconnect(client, 1009);
+    
     return;
   }
 
   if (header->mask)
   {
     headerLen += 4;
+    
     if (!handleWebsocketWaitFor(client, headerLen))
     {
       return;
@@ -629,6 +656,7 @@ void WebSockets::handleWebsocketCb(WSclient_t * client)
       WSK_LOGDEBUG3("[handleWebsocket] Client: ", client->num, ", No memory to handle payload", header->payloadLen);
       
       clientDisconnect(client, 1011);
+      
       return;
     }
 
@@ -640,6 +668,8 @@ void WebSockets::handleWebsocketCb(WSclient_t * client)
     handleWebsocketPayloadCb(client, true, NULL);
   }
 }
+
+////////////////////////////////////////
 
 void WebSockets::handleWebsocketPayloadCb(WSclient_t * client, bool ok, uint8_t * payload)
 {
@@ -739,6 +769,8 @@ void WebSockets::handleWebsocketPayloadCb(WSclient_t * client, bool ok, uint8_t 
   }
 }
 
+////////////////////////////////////////
+
 /**
    generate the key for Sec-WebSocket-Accept
    @param clientKey String
@@ -767,6 +799,7 @@ String WebSockets::acceptKey(String & clientKey)
   return key;
 }
 
+////////////////////////////////////////
 
 /**
    base64_encode
@@ -799,11 +832,14 @@ String WebSockets::base64_encode(uint8_t * data, size_t length)
     //WSK_LOGDEBUG3("[base64_encode] base64:", base64, ", buffer:", buffer);
     
     free(buffer);
+    
     return base64;
   }
   
   return String("-FAIL-");
 }
+
+////////////////////////////////////////
 
 /**
    read x byte from tcp or get timeout
@@ -814,10 +850,10 @@ String WebSockets::base64_encode(uint8_t * data, size_t length)
 */
 bool WebSockets::readCb(WSclient_t * client, uint8_t * out, size_t n, WSreadWaitCb cb)
 {
-	(void) out;
-	(void) n;
-	(void) cb;
-	(void) client;
+	UNUSED (out);
+	UNUSED (n);
+	UNUSED (cb);
+	UNUSED (client);
 	
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 	
@@ -828,7 +864,7 @@ bool WebSockets::readCb(WSclient_t * client, uint8_t * out, size_t n, WSreadWait
 
   client->tcp->readBytes(out, n, std::bind([](WSclient_t * client, bool ok, WSreadWaitCb cb)
   {
-    (void) client;
+    UNUSED (client);
     
     if (cb)
     {
@@ -916,6 +952,8 @@ bool WebSockets::readCb(WSclient_t * client, uint8_t * out, size_t n, WSreadWait
   return true;
 }
 
+////////////////////////////////////////
+
 /**
    write x byte to tcp or get timeout
    @param client WSclient_t
@@ -984,6 +1022,8 @@ size_t WebSockets::write(WSclient_t * client, uint8_t * out, size_t n)
   return total;
 }
 
+////////////////////////////////////////
+
 size_t WebSockets::write(WSclient_t * client, const char * out)
 {
   if (client == NULL)
@@ -994,6 +1034,8 @@ size_t WebSockets::write(WSclient_t * client, const char * out)
 
   return write(client, (uint8_t *)out, strlen(out));
 }
+
+////////////////////////////////////////
 
 /**
    enable ping/pong heartbeat process
@@ -1013,6 +1055,8 @@ void WebSockets::enableHeartbeat(WSclient_t * client, const uint32_t& pingInterv
   client->disconnectTimeoutCount = disconnectTimeoutCount;
   client->pongReceived           = false;
 }
+
+////////////////////////////////////////
 
 /**
    handle ping/pong heartbeat timeout process
@@ -1050,5 +1094,7 @@ void WebSockets::handleHBTimeout(WSclient_t * client)
     }
   }
 }
+
+////////////////////////////////////////
 
 #endif    // WEBSOCKETS_GENERIC_IMPL_H_

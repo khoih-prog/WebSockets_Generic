@@ -1,8 +1,8 @@
 {
   "name": "WebSockets_Generic",
-  "version": "2.15.0",
-  "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, Portenta_H7, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, RP2040-based boards, besides ESP8266/ESP32 ESP32 (ESP32, ESP32_S2, ESP32_S3 and ESP32_C3) and WT32_ETH01. Ethernet shields W5100, W5200, W5500, ENC28J60, Teensy 4.1 NativeEthernet/QNEthernet or Portenta_H7 WiFi/Ethernet.  Now supporting websocket only mode for Socket.IO. Ethernet_Generic library is used as default for W5x00",
-  "keywords": "wifi, WiFiNINA, websocket, websockets-server, websockets-client, Teensy, SAM DUE, SAMD, STM32, nRF52, QNEthernet, rp2040, Portenta-H7, ESP32, ESP8266, W5x00, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EthernetENC, UIPEthernet, NativeEthernet, ENC28J60, rpi-pico, http, web, server, client, Mega",
+  "version": "2.16.0",
+  "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, Portenta_H7, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, RP2040-based boards, besides ESP8266/ESP32 ESP32 (ESP32, ESP32_S2, ESP32_S3 and ESP32_C3) and WT32_ETH01. Ethernet shields W5100, W5200, W5500, ENC28J60, Teensy 4.1 NativeEthernet/QNEthernet or Portenta_H7 WiFi/Ethernet. Supporting websocket only mode for Socket.IO. Ethernet_Generic library is used as default for W5x00. Now supporting RP2040W",
+  "keywords": "wifi, WiFiNINA, websocket, websockets-server, websockets-client, Teensy, SAM DUE, SAMD, STM32, nRF52, QNEthernet, rp2040, Portenta-H7, ESP32, ESP8266, W5x00, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EthernetENC, UIPEthernet, NativeEthernet, ENC28J60, rpi-pico, http, web, server, client, Mega, rp2040w, pico-w",
   "authors": [
     {
       "name":  "Markus Sattler",
@@ -33,20 +33,20 @@
     {
       "owner": "khoih-prog",
       "name": "WiFiNINA_Generic",
-      "version": ">=1.8.14-3",
+      "version": ">=1.8.14-6",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "DoubleResetDetector_Generic",
-      "version": ">=1.8.0",
+      "version": ">=1.8.1",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "FlashStorage_SAMD",
       "version": ">=1.3.2",
-      "platforms": ["*"]
+      "platforms": ["atmelsam"]
     },
     {
       "owner": "sebnil",
@@ -57,36 +57,37 @@
     {
       "owner": "khoih-prog",
       "name": "WiFiWebServer",
-      "version": ">=1.6.1",
+      "version": ">=1.9.5",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
       "name": "EthernetWebServer",
-      "version": ">=2.0.0",
+      "version": ">=2.2.3",
       "platforms": ["*"]
     },
     {
       "owner": "khoih-prog",
-      "name": "Ethernet_Generic",
-      "version": "^2.0.0"
-    },
-    {
-      "owner": "khoih-prog",
       "name": "WebServer_WT32_ETH01",
-      "version": "^1.4.1",
+      "version": "^1.5.1",
       "platforms": ["espressif32"]
     },
     {
       "owner": "khoih-prog",
       "name": "EthernetWebServer_STM32",
-      "version": ">=1.3.3",
+      "version": ">=1.5.0",
+      "platforms": ["ststm32"]
+    },
+    {
+      "owner": "khoih-prog",
+      "name": "FlashStorage_STM32",
+      "version": ">=1.2.0",
       "platforms": ["ststm32"]
     },
     {
       "owner": "khoih-prog",
       "name": "SinricPro_Generic",
-      "version": ">=2.8.4",
+      "version": ">=2.8.5",
       "platforms": ["*"]
     },
     {
@@ -98,26 +99,31 @@
     {
       "owner": "stm32duino",
       "name": "STM32Ethernet",
-      "version": ">=1.2.0",
+      "version": ">=1.3.0",
       "platforms": ["ststm32"]
     },
     {
       "owner": "uipethernet",
       "name": "UIPEthernet",
-      "version": ">=2.0.8",
-      "platforms": ["atmelavr", "atmelmegaavr", "atmelsam", "espressif8266", "intel_arc32", "nordicnrf51", "nxplpc", "ststm32", "teensy"]
+      "version": ">=2.0.12",
+      "platforms": ["*"]
     },
     {
       "owner": "jandrassy",
       "name": "EthernetENC",
-      "version": ">=2.0.2",
+      "version": ">=2.0.3",
       "platforms": ["*"]
     },
     {
       "owner": "jandrassy",
       "name": "WiFiEspAT",
-      "version": ">=1.3.2",
+      "version": ">=1.4.1",
       "platforms": ["*"]
+    },
+    {
+      "owner": "khoih-prog",
+      "name": "Ethernet_Generic",
+      "version": "^2.6.1"
     },
     {
       "name": "WiFi101",
@@ -126,7 +132,7 @@
     {
       "owner": "ssilverman",
       "name": "QNEthernet",
-      "version": ">=0.13.0",
+      "version": ">=0.15.0",
       "platforms": ["teensy"]
     }
   ],

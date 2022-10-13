@@ -28,7 +28,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   
-  Version: 2.15.0
+  Version: 2.16.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -43,6 +43,7 @@
   2.14.1  K Hoang      18/02/2022 Fix setInsecure() bug for WIO_Terminal. Update Packages_Patches for Seeeduino
   2.14.2  K Hoang      27/03/2022 Fix Async bug for ESP8266 when using NETWORK_ESP8266_ASYNC
   2.15.0  K Hoang      06/04/2022 Use Ethernet_Generic library as default. Sync with arduinoWebSockets v2.3.6
+  2.16.0  K Hoang      13/10/2022 Add WS and WSS support to RP2040W using CYW43439 WiFi
  *****************************************************************************************************************************/
 
 #pragma once
@@ -50,15 +51,21 @@
 #ifndef WEBSOCKETS_GENERIC_H_
 #define WEBSOCKETS_GENERIC_H_
 
-#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.15.0"
+////////////////////////////////////////
+
+#define WEBSOCKETS_GENERIC_VERSION            "WebSockets_Generic v2.16.0"
 
 #define WEBSOCKETS_GENERIC_VERSION_MAJOR      2
-#define WEBSOCKETS_GENERIC_VERSION_MINOR      15
+#define WEBSOCKETS_GENERIC_VERSION_MINOR      16
 #define WEBSOCKETS_GENERIC_VERSION_PATCH      0
 
-#define WEBSOCKETS_GENERIC_VERSION_INT        2015000
+#define WEBSOCKETS_GENERIC_VERSION_INT        2016000
+
+////////////////////////////////////////
 
 #include "WebSocketsDebug_Generic.h"
+
+////////////////////////////////////////
 
 #ifdef STM32_DEVICE
   #include <application.h>
@@ -67,6 +74,8 @@
   #include <Arduino.h>
   #include <IPAddress.h>
 #endif
+
+////////////////////////////////////////
 
 #ifdef ARDUINO_ARCH_AVR
   #error Version 2.x.x currently does not support Arduino with AVR since there is no support for std namespace of c++.
@@ -86,6 +95,8 @@
   #include <functional>
 #endif
 
+////////////////////////////////////////
+
 #if defined(TEENSYDUINO)
   namespace std
   {
@@ -103,6 +114,8 @@
     }
   }
 #endif
+
+////////////////////////////////////////
 
 #ifndef NODEBUG_WEBSOCKETS
   #ifdef DEBUG_ESP_PORT
@@ -140,6 +153,7 @@
     
     #define WEBSOCKETS_YIELD()      delay(0)
     #define WEBSOCKETS_YIELD_MORE() delay(1)
+    
   #elif defined(ESP32)
   
     #if(_WEBSOCKETS_LOGLEVEL_>3)
@@ -266,7 +280,6 @@
   #define WEBSOCKETS_YIELD()        yield()
   #define WEBSOCKETS_YIELD_MORE()   delay(1)
   
-  
 #elif ( defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_GENERIC_RP2040) )
 
   // KH
@@ -319,7 +332,11 @@
 
 //////////////////////////////////////////////////////////////
 
-#define WEBSOCKETS_TCP_TIMEOUT (5000)
+#ifndef WEBSOCKETS_TCP_TIMEOUT
+   #define WEBSOCKETS_TCP_TIMEOUT (5000)
+#endif
+
+//////////////////////////////////////////////////////////////
 
 #define NETWORK_ESP8266_ASYNC             (0)
 #define NETWORK_ESP8266                   (1)
@@ -341,6 +358,10 @@
 // KH, For new Async
 #define NETWORK_ESP32_ASYNC								(15)
 
+#define NETWORK_RP2040W_WIFI              (16)
+
+////////////////////////////////////////
+
 #if ( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
 	// Combined for all Async
 	#define NETWORK_ASYNC				true
@@ -348,12 +369,12 @@
 	#define NETWORK_ASYNC				false
 #endif
 
-////////////////////////////////
+////////////////////////////////////////
 
 // max size of the WS Message Header
 #define WEBSOCKETS_MAX_HEADER_SIZE (14)
 
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 #ifndef WEBSOCKETS_NETWORK_TYPE
   // select Network type based
@@ -429,7 +450,7 @@
   
 #endif    //#ifndef WEBSOCKETS_NETWORK_TYPE
 
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////
 
 // Includes and defined based on Network Type
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
@@ -459,7 +480,8 @@
   #define WEBSOCKETS_NETWORK_CLASS          AsyncTCPbuffer
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   AsyncServer
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)
 
   #if !defined(ESP8266) && !defined(ESP31B)
@@ -485,8 +507,9 @@
   #define WEBSOCKETS_NETWORK_CLASS          WiFiClient
   #define WEBSOCKETS_NETWORK_SSL_CLASS      WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   WiFiServer
-  
-////////////////////////////////////////////////////////////////  
+
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_W5100)
 
   #ifdef STM32_DEVICE
@@ -518,14 +541,16 @@
     
   #endif
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ENC28J60)
 
   #include <UIPEthernet.h>
   #define WEBSOCKETS_NETWORK_CLASS UIPClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS UIPServer
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
 
   #include <WiFi.h>
@@ -538,8 +563,9 @@
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
-  
-////////////////////////////////////////////////////////////////  
+
+////////////////////////////////////////
+ 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
 
 	#error "Network type NETWORK_ESP32_ASYNC not ready yet"
@@ -564,7 +590,8 @@
   #define WEBSOCKETS_NETWORK_CLASS            AsyncClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     AsyncServer    
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ETH)
 
   #include <ETH.h>  
@@ -579,9 +606,9 @@
   #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
-  
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
 
   //KH
@@ -594,7 +621,8 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
-////////////////////////////////////////////////////////////////    
+////////////////////////////////////////
+ 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101)
 
   //KH
@@ -607,7 +635,8 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer  
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ETHERNET_ENC)
 
   //KH
@@ -620,7 +649,8 @@
   #define WEBSOCKETS_NETWORK_CLASS            EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     EthernetServer
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+ 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
 
   //KH, from v2.3.2
@@ -637,7 +667,8 @@
   #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
   #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_NATIVEETHERNET)
 
   //KH, from v2.4.0
@@ -650,7 +681,8 @@
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
 
-//////////////////////////////////////////////////////////////// 
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_QN_ETHERNET)
 
   //KH, from v2.9.0
@@ -663,8 +695,9 @@
   
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
-  
-////////////////////////////////////////////////////////////////  
+
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_PORTENTA_H7_WIFI)
 
   //KH, from v2.10.0
@@ -678,8 +711,9 @@
   #define WEBSOCKETS_NETWORK_CLASS          WiFiClient
   //#define WEBSOCKETS_NETWORK_SSL_CLASS      WiFiSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   WiFiServer
-  
-////////////////////////////////////////////////////////////////  
+
+////////////////////////////////////////
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_PORTENTA_H7_ETHERNET)
 
   //KH, from v2.10.0
@@ -693,9 +727,8 @@
   //#define WEBSOCKETS_NETWORK_SSL_CLASS      EthernetSSLClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
 
-
-
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+ 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_LAN8742A)
 
   //KH, from v2.4.0
@@ -709,13 +742,32 @@
   #define WEBSOCKETS_NETWORK_CLASS          EthernetClient
   #define WEBSOCKETS_NETWORK_SERVER_CLASS   EthernetServer
 
-////////////////////////////////////////////////////////////////  
+////////////////////////////////////////
+  
+#elif ( defined(ARDUINO_RASPBERRY_PI_PICO_W) && (WEBSOCKETS_NETWORK_TYPE == NETWORK_RP2040W_WIFI) )
+
+  //KH, from v2.16.0
+  #include <WiFi.h>
+  
+  #if(_WEBSOCKETS_LOGLEVEL_>3)
+    #warning Using RP2040W CYC43439 WiFi
+  #endif
+  
+  #define SSL_BARESSL
+  #define SSL_BEARSSL
+  
+  #define WEBSOCKETS_NETWORK_CLASS            WiFiClient
+  #define WEBSOCKETS_NETWORK_SSL_CLASS        WiFiClientSecure
+  #define WEBSOCKETS_NETWORK_SERVER_CLASS     WiFiServer
+
+////////////////////////////////////////
   
 #else
   #error "no network type selected!"
 #endif
 
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////
+////////////////////////////////////////
 
 #ifdef WEBSOCKETS_NETWORK_SSL_CLASS
 
@@ -726,12 +778,16 @@
   #define HAS_SSL
 #endif
 
+////////////////////////////////////////
+
 // moves all Header strings to Flash (~300 Byte)
 #ifdef WEBSOCKETS_SAVE_RAM
   #define WEBSOCKETS_STRING(var) F(var)
 #else
   #define WEBSOCKETS_STRING(var) var
 #endif
+
+////////////////////////////////////////
 
 typedef enum
 {
@@ -740,6 +796,8 @@ typedef enum
   WSC_BODY,
   WSC_CONNECTED
 } WSclientsStatus_t;
+
+////////////////////////////////////////
 
 typedef enum
 {
@@ -756,6 +814,8 @@ typedef enum
   WStype_PONG,
 } WStype_t;
 
+////////////////////////////////////////
+
 typedef enum
 {
   WSop_continuation = 0x00,    ///< %x0 denotes a continuation frame
@@ -767,6 +827,8 @@ typedef enum
   WSop_pong  = 0x0A            ///< %xA denotes a pong
                ///< %xB-F are reserved for further control frames
 } WSopcode_t;
+
+////////////////////////////////////////
 
 typedef struct
 {
@@ -782,6 +844,8 @@ typedef struct
 
   uint8_t * maskKey;
 } WSMessageHeader_t;
+
+////////////////////////////////////////
 
 typedef struct
 {
@@ -846,6 +910,9 @@ typedef struct
 
 } WSclient_t;
 
+////////////////////////////////////////
+////////////////////////////////////////
+
 class WebSockets
 {
   protected:
@@ -892,6 +959,8 @@ class WebSockets
     void handleHBTimeout(WSclient_t * client);
 };
 
+////////////////////////////////////////
+////////////////////////////////////////
 
 // KH
 String WS_IPAddressToString(const IPAddress& _address)
@@ -906,6 +975,8 @@ String WS_IPAddressToString(const IPAddress& _address)
   
   return str;
 }
+
+////////////////////////////////////////
 
 #ifndef UNUSED
   #define UNUSED(var) (void)(var)

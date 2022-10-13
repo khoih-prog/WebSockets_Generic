@@ -12,6 +12,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.16.0](#release-v2160)
   * [Release v2.15.0](#release-v2150)
   * [Release v2.14.2](#release-v2142)
   * [Release v2.14.1](#release-v2141)
@@ -56,6 +57,18 @@
 ---
 
 ## Changelog
+
+### Release v2.16.0
+
+1. Add support to **RP2040-based boards, such as Nano_RP2040_Connect, RASPBERRY_PI_PICO, ADAFRUIT_FEATHER_RP2040**, using WiFiNINA or Ethernet
+2. Add `WS` and `BearSSL WSS` support to `RP2040W` using `CYW43439 WiFi` with `arduino-pico` core
+3. Optional user-defined 
+- `WEBSOCKETS_TCP_TIMEOUT`, default 5,000ms
+- `EIO_HEARTBEAT_INTERVAL`, default 20,000ms
+- `SIO_PING_INTERVAL`, default 60,000ms
+- `SIO_PONG_TIMEOUT`, default 90,000ms
+- `SIO_DISCONNECT_TIMEOUT_COUNT`, default 5
+4. Update `Packages' Patches`
 
 ### Release v2.15.0
 
