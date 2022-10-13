@@ -137,6 +137,7 @@
 * [Contributions and Thanks](#contributions-and-thanks)
 * [Contributing](#contributing)
 * [License and credits](#license-and-credits)
+* [Copyright](#copyright)
 
 ---
 ---
@@ -1187,7 +1188,7 @@ typedef enum
 
 #### For RP2040W boards using built-in WiFi
 
-1. [WebSocketClient_RP2040W-AdvancedWebServer](examples/RP2040W/WebSocketClient_RP2040W)
+1. [WebSocketClient_RP2040W](examples/RP2040W/WebSocketClient_RP2040W)
 2. [WebSocketClientSocketIO_RP2040W](examples/RP2040W/WebSocketClientSocketIO_RP2040W)
 3. [WebSocketClientSSL_RP2040W](examples/RP2040W/WebSocketClientSSL_RP2040W)
 4. [WebSocketClient_Sticky_SocketIO_RP2040W](examples/RP2040W/WebSocketClient_Sticky_SocketIO_RP2040W)
