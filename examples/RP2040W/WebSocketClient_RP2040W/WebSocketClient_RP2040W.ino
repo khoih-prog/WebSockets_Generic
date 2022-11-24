@@ -1,10 +1,10 @@
 /****************************************************************************************************************************
-  WebSocketClient_WiFi101.ino
-  For boards using WiFi101 Shield/Module
+  WebSocketClient_RP2040W.ino
+  For RP2040W boards using CYC43439 WiFi
 
   Blynk_WiFiNINA_WM is a library for the Mega, Teensy, SAM DUE, nRF52, STM32 and SAMD boards
   (https://github.com/khoih-prog/Blynk_WiFiNINA_WM) to enable easy configuration/reconfiguration and
-  autoconnect/autoreconnect of WiFi101/Blynk
+  autoconnect/autoreconnect of WiFiNINA/Blynk
 
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
@@ -16,26 +16,18 @@
   Author: Markus Sattler
  *****************************************************************************************************************************/
 
-#if !( defined(ARDUINO_SAMD_MKR1000) || defined(ARDUINO_SAMD_MKRWIFI1010) )
-  #error This code is intended to run on the SAMD_MKR1000 or SAMD_MKRWIFI1010 using WiFi101! Please check your Tools->Board setting.
-#endif
-
-#ifndef BOARD_NAME
-  #if defined(ARDUINO_SAMD_MKR1000)
-    #define BOARD_NAME    "ARDUINO_SAMD_MKR1000"
-  #elif defined(ARDUINO_SAMD_MKRWIFI1010)
-    #define BOARD_NAME    "ARDUINO_SAMD_MKRWIFI1010"
-  #else
-    #define BOARD_NAME    BOARD_TYPE
+#if ( defined(ARDUINO_RASPBERRY_PI_PICO_W) )
+  #if defined(WEBSOCKETS_NETWORK_TYPE)
+    #undef WEBSOCKETS_NETWORK_TYPE
   #endif
+  #define WEBSOCKETS_NETWORK_TYPE            NETWORK_RP2040W_WIFI
+#else
+  #error This code is intended to run only on the RP2040W boards ! Please check your Tools->Board setting.
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     2
 
-#define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFI101
-
-#include <WiFi101_Generic.h>
-#include <driver/source/nmasic.h>
+#include <WiFi.h>
 
 #include <WebSocketsClient_Generic.h>
 
@@ -151,66 +143,42 @@ void setup()
 
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClient_WiFi101 on ");
+  Serial.print("\nStart WebSocketClient_RP2040W on ");
   Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
-  Serial.println("Used/default SPI pinout:");
-  Serial.print("MOSI:");
-  Serial.println(MOSI);
-  Serial.print("MISO:");
-  Serial.println(MISO);
-  Serial.print("SCK:");
-  Serial.println(SCK);
-  Serial.print("SS:");
-  Serial.println(SS);
+  ///////////////////////////////////
 
   // check for the WiFi module:
-  if (WiFi.status() == WL_NO_SHIELD)
+  if (WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication with WiFi module failed!");
+
     // don't continue
-    return;
+    while (true);
   }
 
-  String fv = WiFi.firmwareVersion();
-  Serial.print("Firmware version installed: ");
-  Serial.println(fv);
+  Serial.print(F("Connecting to SSID: "));
+  Serial.println(ssid);
 
-  String latestFv;
+  status = WiFi.begin(ssid, pass);
 
-  if (REV(GET_CHIPID()) >= REV_3A0)
+  status = WiFi.begin(ssid, pass);
+
+  delay(1000);
+
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED)
   {
-    // model B
-    latestFv = WIFI_FIRMWARE_LATEST_MODEL_B;
-  }
-  else
-  {
-    // model A
-    latestFv = WIFI_FIRMWARE_LATEST_MODEL_A;
-  }
+    delay(500);
 
-  if (fv < latestFv)
-  {
-    Serial.println("Please upgrade the firmware");
-    // Print required firmware version
-    Serial.print("Latest firmware version available : ");
-    Serial.println(latestFv);
-  }
-
-  // attempt to connect to Wifi network:
-  while (status != WL_CONNECTED)
-  {
-    Serial.print("Attempting to connect to SSID: ");
-    Serial.println(ssid);
-    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    status = WiFi.begin(ssid, pass);
-
-    // wait 10 seconds for connection:
-    //delay(10000);
+    // Connect to WPA/WPA2 network
+    status = WiFi.status();
   }
 
   printWifiStatus();
+
+  ///////////////////////////////////
 
   // server address, port and URL
   Serial.print("WebSockets Server : ");

@@ -30,14 +30,14 @@
     #define BOARD_NAME    "ARDUINO_SAMD_MKRWIFI1010"
   #else
     #define BOARD_NAME    BOARD_TYPE
-  #endif  
+  #endif
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     2
 
 #define WEBSOCKETS_NETWORK_TYPE   NETWORK_WIFI101
 
-#include <WiFi101.h>
+#include <WiFi101_Generic.h>
 #include <driver/source/nmasic.h>
 
 #include <WebSocketsClient_Generic.h>
@@ -73,58 +73,58 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
+
       break;
-      
+
     case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
-      }
-      
-      break;
-      
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+    }
+
+    break;
+
     case WStype_TEXT:
+    {
+      // #####################
+      // handle SockJs+STOMP protocol
+      // #####################
+
+      String text = (char*) payload;
+
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
+
+      if (payload[0] == 'h')
       {
-        // #####################
-        // handle SockJs+STOMP protocol
-        // #####################
-
-        String text = (char*) payload;
-
-        Serial.print("[WSc] get text: ");
-        Serial.println((char *) payload);
-
-        if (payload[0] == 'h')
-        {
-          Serial.println("Heartbeat!");
-        }
-        else if (payload[0] == 'o')
-        {
-          // on open connection
-          String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
-
-          webSocket.sendTXT(msg);
-        }
-        else if (text.startsWith("a[\"CONNECTED"))
-        {
-          // subscribe to some channels
-          String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
-
-          webSocket.sendTXT(msg);
-          delay(1000);
-
-          // and send a message
-          msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
-          webSocket.sendTXT(msg);
-          delay(1000);
-        }
-        
-        break;
+        Serial.println("Heartbeat!");
       }
-      
+      else if (payload[0] == 'o')
+      {
+        // on open connection
+        String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
+
+        webSocket.sendTXT(msg);
+      }
+      else if (text.startsWith("a[\"CONNECTED"))
+      {
+        // subscribe to some channels
+        String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
+
+        webSocket.sendTXT(msg);
+        delay(1000);
+
+        // and send a message
+        msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
+        webSocket.sendTXT(msg);
+        delay(1000);
+      }
+
+      break;
+    }
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -132,7 +132,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
 
       // send data to server
       webSocket.sendBIN(payload, length);
-      
+
       break;
 
     default:
@@ -163,9 +163,11 @@ void setup()
 {
   //Initialize serial and wait for port to open:
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClientStompOverSockJs_WiFi101 on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart WebSocketClientStompOverSockJs_WiFi101 on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");
@@ -179,7 +181,7 @@ void setup()
   Serial.println(SS);
 
   // check for the WiFi module:
-  if (WiFi.status() == WL_NO_SHIELD) 
+  if (WiFi.status() == WL_NO_SHIELD)
   {
     Serial.println("Communication with WiFi module failed!");
     // don't continue
@@ -191,19 +193,19 @@ void setup()
   Serial.println(fv);
 
   String latestFv;
-    
-  if (REV(GET_CHIPID()) >= REV_3A0) 
+
+  if (REV(GET_CHIPID()) >= REV_3A0)
   {
     // model B
     latestFv = WIFI_FIRMWARE_LATEST_MODEL_B;
-  } 
-  else 
+  }
+  else
   {
     // model A
     latestFv = WIFI_FIRMWARE_LATEST_MODEL_A;
   }
-  
-  if (fv < latestFv) 
+
+  if (fv < latestFv)
   {
     Serial.println("Please upgrade the firmware");
     // Print required firmware version
