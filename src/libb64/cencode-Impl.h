@@ -1,8 +1,8 @@
 /*
-cencoder.c - c source to a base64 encoding algorithm implementation
+  cencoder.c - c source to a base64 encoding algorithm implementation
 
-This is part of the libb64 project, and has been placed in the public domain.
-For details, see http://sourceforge.net/projects/libb64
+  This is part of the libb64 project, and has been placed in the public domain.
+  For details, see http://sourceforge.net/projects/libb64
 */
 
 #pragma once
@@ -11,7 +11,7 @@ For details, see http://sourceforge.net/projects/libb64
 #define BASE64_CENCODE_IMPL_H
 
 #ifdef ESP8266
-#include <core_esp8266_features.h>
+  #include <core_esp8266_features.h>
 #endif
 
 #if defined(ESP32) || defined(WIO_TERMINAL)
@@ -22,7 +22,7 @@ For details, see http://sourceforge.net/projects/libb64
 
 #ifndef CORE_HAS_LIBB64
 
-extern "C" 
+extern "C"
 {
 
   void base64_init_encodestate(base64_encodestate* state_in)
@@ -54,6 +54,7 @@ extern "C"
       r = '+';
     else
       r = '/';
+
     return r;
   }
 
@@ -83,6 +84,7 @@ extern "C"
           result = (fragment & 0x0fc) >> 2;
           *codechar++ = base64_encode_value(result);
           result = (fragment & 0x003) << 4;
+
         // falls through
         case step_B:
           if (plainchar == plaintextend)
@@ -96,6 +98,7 @@ extern "C"
           result |= (fragment & 0x0f0) >> 4;
           *codechar++ = base64_encode_value(result);
           result = (fragment & 0x00f) << 2;
+
         // falls through
         case step_C:
           if (plainchar == plaintextend)
@@ -136,10 +139,12 @@ extern "C"
         *codechar++ = '=';
         *codechar++ = '=';
         break;
+
       case step_C:
         *codechar++ = base64_encode_value(state_in->result);
         *codechar++ = '=';
         break;
+
       case step_A:
         break;
     }

@@ -1,12 +1,12 @@
 /****************************************************************************************************************************
   SocketIOclient_Generic-Impl.h - WebSockets Library for boards
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-   
+
   @original file SocketIOclient.cpp
   @Created on: May 12, 2018
   @Author: links
@@ -27,7 +27,7 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
   Version: 2.16.0
 
   Version Modified By   Date      Comments
@@ -342,97 +342,102 @@ void SocketIOclient::handleCbEvent(WStype_t type, uint8_t * payload, size_t leng
       WSK_LOGINFO("[wsIOc] Disconnected!");
 
       break;
+
     case WStype_CONNECTED:
-      {
-        WSK_LOGWARN1("[wsIOc] Connected to url:", (char *) payload);
+    {
+      WSK_LOGWARN1("[wsIOc] Connected to url:", (char *) payload);
 
-        // send message to server when Connected
-        // Engine.io upgrade confirmation message (required)
-        WebSocketsClient::sendTXT("2probe");
-        WebSocketsClient::sendTXT(eIOtype_UPGRADE);
-        runIOCbEvent(sIOtype_CONNECT, payload, length);
-      }
+      // send message to server when Connected
+      // Engine.io upgrade confirmation message (required)
+      WebSocketsClient::sendTXT("2probe");
+      WebSocketsClient::sendTXT(eIOtype_UPGRADE);
+      runIOCbEvent(sIOtype_CONNECT, payload, length);
+    }
 
-      break;
+    break;
+
     case WStype_TEXT:
+    {
+      if (length < 1)
       {
-        if (length < 1)
-        {
-          break;
-        }
-
-        engineIOmessageType_t eType = (engineIOmessageType_t)payload[0];
-
-        switch (eType)
-        {
-          case eIOtype_PING:
-            payload[0] = eIOtype_PONG;
-
-            WSK_LOGWARN1("[wsIOc] get ping send pong:", (char *) payload);
-
-            WebSocketsClient::sendTXT(payload, length, false);
-            runIOCbEvent(sIOtype_PING, payload, length);
-
-            break;
-          case eIOtype_PONG:
-            WSK_LOGWARN("[wsIOc] get pong");
-            runIOCbEvent(sIOtype_PONG, payload, length);
-
-            break;
-          case eIOtype_MESSAGE:
-            {
-              if (length < 2)
-              {
-                break;
-              }
-
-              socketIOmessageType_t ioType = (socketIOmessageType_t)payload[1];
-              uint8_t * data               = &payload[2];
-              size_t lData                 = length - 2;
-
-              switch (ioType)
-              {
-                case sIOtype_EVENT:
-                  WSK_LOGWARN1("[wsIOc] get event: len = ", lData);
-                  WSK_LOGWARN1("[wsIOc] get data: ", (char *) data);
-
-                  break;
-                case sIOtype_CONNECT:
-                  WSK_LOGWARN1("[wsIOc] connected: len = ", lData);
-                  WSK_LOGWARN1("[wsIOc] data: ", (char *) data);
-
-                  return;
-
-                case sIOtype_DISCONNECT:
-                case sIOtype_ACK:
-                case sIOtype_ERROR:
-                case sIOtype_BINARY_EVENT:
-                case sIOtype_BINARY_ACK:
-                default:
-                  WSK_LOGINFO1("[wsIOc] Socket.IO Message Type is not implemented:", ioType);
-                  WSK_LOGWARN1("[wsIOc] get text:", (char *) payload);
-
-                  break;
-              }
-
-              runIOCbEvent(ioType, data, lData);
-            }
-
-            break;
-
-          case eIOtype_OPEN:
-          case eIOtype_CLOSE:
-          case eIOtype_UPGRADE:
-          case eIOtype_NOOP:
-          default:
-            WSK_LOGINFO1("[wsIOc] Socket.IO Message Type is not implemented:", eType);
-            WSK_LOGWARN1("[wsIOc] get text:", (char *) payload);
-
-            break;
-        }
+        break;
       }
 
-      break;
+      engineIOmessageType_t eType = (engineIOmessageType_t)payload[0];
+
+      switch (eType)
+      {
+        case eIOtype_PING:
+          payload[0] = eIOtype_PONG;
+
+          WSK_LOGWARN1("[wsIOc] get ping send pong:", (char *) payload);
+
+          WebSocketsClient::sendTXT(payload, length, false);
+          runIOCbEvent(sIOtype_PING, payload, length);
+
+          break;
+
+        case eIOtype_PONG:
+          WSK_LOGWARN("[wsIOc] get pong");
+          runIOCbEvent(sIOtype_PONG, payload, length);
+
+          break;
+
+        case eIOtype_MESSAGE:
+        {
+          if (length < 2)
+          {
+            break;
+          }
+
+          socketIOmessageType_t ioType = (socketIOmessageType_t)payload[1];
+          uint8_t * data               = &payload[2];
+          size_t lData                 = length - 2;
+
+          switch (ioType)
+          {
+            case sIOtype_EVENT:
+              WSK_LOGWARN1("[wsIOc] get event: len = ", lData);
+              WSK_LOGWARN1("[wsIOc] get data: ", (char *) data);
+
+              break;
+
+            case sIOtype_CONNECT:
+              WSK_LOGWARN1("[wsIOc] connected: len = ", lData);
+              WSK_LOGWARN1("[wsIOc] data: ", (char *) data);
+
+              return;
+
+            case sIOtype_DISCONNECT:
+            case sIOtype_ACK:
+            case sIOtype_ERROR:
+            case sIOtype_BINARY_EVENT:
+            case sIOtype_BINARY_ACK:
+            default:
+              WSK_LOGINFO1("[wsIOc] Socket.IO Message Type is not implemented:", ioType);
+              WSK_LOGWARN1("[wsIOc] get text:", (char *) payload);
+
+              break;
+          }
+
+          runIOCbEvent(ioType, data, lData);
+        }
+
+        break;
+
+        case eIOtype_OPEN:
+        case eIOtype_CLOSE:
+        case eIOtype_UPGRADE:
+        case eIOtype_NOOP:
+        default:
+          WSK_LOGINFO1("[wsIOc] Socket.IO Message Type is not implemented:", eType);
+          WSK_LOGWARN1("[wsIOc] get text:", (char *) payload);
+
+          break;
+      }
+    }
+
+    break;
 
     case WStype_ERROR:
     case WStype_BIN:

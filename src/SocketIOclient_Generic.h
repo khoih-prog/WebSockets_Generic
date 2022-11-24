@@ -1,12 +1,12 @@
 /****************************************************************************************************************************
   SocketIOclient_Generic.h - WebSockets Library for boards
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-   
+
   @original file SocketIOclient.h
   @Created on: May 12, 2018
   @Author: links
@@ -27,7 +27,7 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
   Version: 2.16.0
 
   Version Modified By   Date      Comments
@@ -129,30 +129,30 @@ class SocketIOclient : protected WebSocketsClient
     virtual ~SocketIOclient();
 
     // KH, change to default EIO=4. v2.5.1
-    void begin(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+    void begin(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4",
                const char * protocol = "arduino");
-               
-    void begin(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+
+    void begin(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4",
                const String& protocol = "arduino");
     // KH
-    void begin(const IPAddress& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+    void begin(const IPAddress& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4",
                const String& protocol = "arduino");
 
 #ifdef HAS_SSL
-    void beginSSL(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+    void beginSSL(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4",
                   const char * protocol = "arduino");
-                  
-    void beginSSL(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4", 
+
+    void beginSSL(const String& host, const uint16_t& port, const String& url = "/socket.io/?EIO=4",
                   const String& protocol = "arduino");
 #ifndef SSL_AXTLS
-    void beginSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+    void beginSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4",
                         const char * CA_cert = NULL, const char * protocol = "arduino");
-                        
-    void beginSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4", 
+
+    void beginSSLWithCA(const char * host, const uint16_t& port, const char * url = "/socket.io/?EIO=4",
                         BearSSL::X509List * CA_cert = NULL, const char * protocol = "arduino");
-                        
+
     void setSSLClientCertKey(const char * clientCert = NULL, const char * clientPrivateKey = NULL);
-    
+
     void setSSLClientCertKey(BearSSL::X509List * clientCert = NULL, BearSSL::PrivateKey * clientPrivateKey = NULL);
 #endif
 #endif
@@ -172,13 +172,13 @@ class SocketIOclient : protected WebSocketsClient
     bool send(socketIOmessageType_t type, char * payload, size_t length = 0, bool headerToPayload = false);
     bool send(socketIOmessageType_t type, const char * payload, size_t length = 0);
     bool send(socketIOmessageType_t type, const String& payload);
-    
+
     void loop();
-    
+
     void configureEIOping(bool disableHeartbeat = false);
 
     ////////////////////////////////////////
-    
+
     // KH, add v2.5.1
     inline void setReconnectInterval(const unsigned long& time)
     {
@@ -198,7 +198,7 @@ class SocketIOclient : protected WebSocketsClient
     SocketIOclientEvent _cbEvent;
 
     ////////////////////////////////////////
-    
+
     virtual void runIOCbEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
     {
       if (_cbEvent)
@@ -208,7 +208,7 @@ class SocketIOclient : protected WebSocketsClient
     }
 
     ////////////////////////////////////////
-    
+
     void initClient();
 
     ////////////////////////////////////////

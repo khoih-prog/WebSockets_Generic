@@ -1,8 +1,8 @@
 /* ================ sha1.h ================ */
 /*
-SHA-1 in C
-By Steve Reid <steve@edmweb.com>
-100% Public Domain
+  SHA-1 in C
+  By Steve Reid <steve@edmweb.com>
+  100% Public Domain
 */
 
 #pragma once
@@ -12,11 +12,11 @@ By Steve Reid <steve@edmweb.com>
 
 #if !defined(ESP8266) && !defined(ESP32)
 
-typedef struct 
+typedef struct
 {
-    uint32_t state[5];
-    uint32_t count[2];
-    unsigned char buffer[64];
+  uint32_t state[5];
+  uint32_t count[2];
+  unsigned char buffer[64];
 } SHA1_CTX;
 
 void SHA1Transform(uint32_t state[5], const unsigned char buffer[64]);

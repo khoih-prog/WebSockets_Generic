@@ -1,12 +1,12 @@
 /****************************************************************************************************************************
   WebSocketsClient_Generic-Impl.h - WebSockets Library for boards
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-   
+
   @original file WebSocketsClient.cpp
   @date 20.05.2015
   @author Markus Sattler
@@ -27,7 +27,7 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
   Version: 2.16.0
 
   Version Modified By   Date      Comments
@@ -131,7 +131,7 @@ void WebSocketsClient::begin(const char * host, const uint16_t& port, const char
 
   _lastConnectionFail = 0;
   _lastHeaderSent     = 0;
-  
+
   WSK_LOGINFO(WEBSOCKETS_GENERIC_VERSION);
 }
 
@@ -149,9 +149,9 @@ void WebSocketsClient::begin(const IPAddress& host, const uint16_t& port, const 
 #if defined(ESP8266) || defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN) || \
                                           (WEBSOCKETS_NETWORK_TYPE == NETWORK_RP2040W_WIFI)
   return begin(host.toString().c_str(), port, url, protocol);
-#else  
+#else
   return begin(WS_IPAddressToString(host).c_str(), port, url, protocol);
-#endif  
+#endif
 }
 
 ////////////////////////////////////////
@@ -168,7 +168,7 @@ void WebSocketsClient::begin(const IPAddress& host, const uint16_t& port, const 
 
 #if defined(SSL_AXTLS)
 
-void WebSocketsClient::beginSSL(const char * host, const uint16_t& port, const char * url, const char * fingerprint, 
+void WebSocketsClient::beginSSL(const char * host, const uint16_t& port, const char * url, const char * fingerprint,
                                 const char * protocol)
 {
   begin(host, port, url, protocol);
@@ -179,7 +179,7 @@ void WebSocketsClient::beginSSL(const char * host, const uint16_t& port, const c
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSSL(const String& host, const uint16_t& port, const String& url, const String& fingerprint, 
+void WebSocketsClient::beginSSL(const String& host, const uint16_t& port, const String& url, const String& fingerprint,
                                 const String& protocol)
 {
   beginSSL(host.c_str(), port, url.c_str(), fingerprint.c_str(), protocol.c_str());
@@ -188,7 +188,8 @@ void WebSocketsClient::beginSSL(const String& host, const uint16_t& port, const 
 ////////////////////////////////////////
 
 // KH
-void WebSocketsClient::beginSSL(const IPAddress& host, const uint16_t& port, const String& url, const String& fingerprint, 
+void WebSocketsClient::beginSSL(const IPAddress& host, const uint16_t& port, const String& url,
+                                const String& fingerprint,
                                 const String& protocol)
 {
   beginSSL(WS_IPAddressToString(host).c_str(), port, url.c_str(), fingerprint.c_str(), protocol.c_str());
@@ -196,7 +197,7 @@ void WebSocketsClient::beginSSL(const IPAddress& host, const uint16_t& port, con
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, const char * url, const char * CA_cert, 
+void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, const char * url, const char * CA_cert,
                                       const char * protocol)
 {
   begin(host, port, url, protocol);
@@ -214,7 +215,7 @@ void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, c
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSSL(const char * host, const uint16_t& port, const char * url, const uint8_t * fingerprint, 
+void WebSocketsClient::beginSSL(const char * host, const uint16_t& port, const char * url, const uint8_t * fingerprint,
                                 const char * protocol)
 {
   begin(host, port, url, protocol);
@@ -226,7 +227,8 @@ void WebSocketsClient::beginSSL(const char * host, const uint16_t& port, const c
 ////////////////////////////////////////
 
 // KH
-void WebSocketsClient::beginSSL(const IPAddress& host, const uint16_t& port, const String& url, const String& fingerprint, 
+void WebSocketsClient::beginSSL(const IPAddress& host, const uint16_t& port, const String& url,
+                                const String& fingerprint,
                                 const String& protocol)
 {
   beginSSL(WS_IPAddressToString(host).c_str(), port, url.c_str(), (uint8_t *) fingerprint.c_str(), protocol.c_str());
@@ -234,7 +236,8 @@ void WebSocketsClient::beginSSL(const IPAddress& host, const uint16_t& port, con
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, const char * url, BearSSL::X509List * CA_cert, 
+void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, const char * url,
+                                      BearSSL::X509List * CA_cert,
                                       const char * protocol)
 {
   begin(host, port, url, protocol);
@@ -245,7 +248,7 @@ void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, c
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, const char * url, const char * CA_cert, 
+void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, const char * url, const char * CA_cert,
                                       const char * protocol)
 {
   begin(host, port, url, protocol);
@@ -256,15 +259,15 @@ void WebSocketsClient::beginSslWithCA(const char * host, const uint16_t& port, c
 
 ////////////////////////////////////////
 
-void WebSocketsClient::setSSLClientCertKey(BearSSL::X509List * clientCert, BearSSL::PrivateKey * clientPrivateKey) 
+void WebSocketsClient::setSSLClientCertKey(BearSSL::X509List * clientCert, BearSSL::PrivateKey * clientPrivateKey)
 {
-    _client_cert = clientCert;
-    _client_key  = clientPrivateKey;
+  _client_cert = clientCert;
+  _client_key  = clientPrivateKey;
 }
 
-void WebSocketsClient::setSSLClientCertKey(const char * clientCert, const char * clientPrivateKey) 
+void WebSocketsClient::setSSLClientCertKey(const char * clientCert, const char * clientPrivateKey)
 {
-    setSSLClientCertKey(new BearSSL::X509List(clientCert), new BearSSL::PrivateKey(clientPrivateKey));
+  setSSLClientCertKey(new BearSSL::X509List(clientCert), new BearSSL::PrivateKey(clientPrivateKey));
 }
 
 ////////////////////////////////////////
@@ -279,24 +282,26 @@ void WebSocketsClient::setSSLClientCertKey(const char * clientCert, const char *
 void WebSocketsClient::beginSocketIO(const char * host, const uint16_t& port, const char * url, const char * protocol)
 {
   WSK_LOGDEBUG("[WS-Client] beginSocketIO with const char");
-  
+
   begin(host, port, url, protocol);
   _client.isSocketIO = true;
 }
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSocketIO(const String& host, const uint16_t& port, const String& url, const String& protocol)
+void WebSocketsClient::beginSocketIO(const String& host, const uint16_t& port, const String& url,
+                                     const String& protocol)
 {
   WSK_LOGDEBUG("[WS-Client] beginSocketIO with String");
-  
+
   beginSocketIO(host.c_str(), port, url.c_str(), protocol.c_str());
 }
 
 ////////////////////////////////////////
 
 // KH
-void WebSocketsClient::beginSocketIO(const IPAddress& host, const uint16_t& port, const String& url, const String& protocol)
+void WebSocketsClient::beginSocketIO(const IPAddress& host, const uint16_t& port, const String& url,
+                                     const String& protocol)
 {
   WSK_LOGDEBUG("[WS-Client] beginSocketIO with IPAddress");
 
@@ -306,7 +311,8 @@ void WebSocketsClient::beginSocketIO(const IPAddress& host, const uint16_t& port
 ////////////////////////////////////////
 
 #if defined(HAS_SSL)
-void WebSocketsClient::beginSocketIOSSL(const char * host, const uint16_t& port, const char * url, const char * protocol)
+void WebSocketsClient::beginSocketIOSSL(const char * host, const uint16_t& port, const char * url,
+                                        const char * protocol)
 {
   begin(host, port, url, protocol);
   _client.isSocketIO = true;
@@ -317,7 +323,8 @@ void WebSocketsClient::beginSocketIOSSL(const char * host, const uint16_t& port,
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSocketIOSSL(const String& host, const uint16_t& port, const String& url, const String& protocol)
+void WebSocketsClient::beginSocketIOSSL(const String& host, const uint16_t& port, const String& url,
+                                        const String& protocol)
 {
   beginSocketIOSSL(host.c_str(), port, url.c_str(), protocol.c_str());
 }
@@ -325,7 +332,8 @@ void WebSocketsClient::beginSocketIOSSL(const String& host, const uint16_t& port
 ////////////////////////////////////////
 
 // KH
-void WebSocketsClient::beginSocketIOSSL(const IPAddress& host, const uint16_t& port, const String& url, const String& protocol)
+void WebSocketsClient::beginSocketIOSSL(const IPAddress& host, const uint16_t& port, const String& url,
+                                        const String& protocol)
 {
   beginSocketIOSSL(WS_IPAddressToString(host).c_str(), port, url.c_str(), protocol.c_str());
 }
@@ -333,30 +341,31 @@ void WebSocketsClient::beginSocketIOSSL(const IPAddress& host, const uint16_t& p
 ////////////////////////////////////////
 
 #if defined(SSL_BARESSL)
-void WebSocketsClient::beginSocketIOSSLWithCA(const char * host, const uint16_t& port, const char * url, 
-                                              BearSSL::X509List * CA_cert, const char * protocol) 
+void WebSocketsClient::beginSocketIOSSLWithCA(const char * host, const uint16_t& port, const char * url,
+                                              BearSSL::X509List * CA_cert, const char * protocol)
 {
-    begin(host, port, url, protocol);
-    _client.isSocketIO = true;
-    _client.isSSL      = true;
-    _fingerprint       = SSL_FINGERPRINT_NULL;
-    _CA_cert           = CA_cert;
+  begin(host, port, url, protocol);
+  _client.isSocketIO = true;
+  _client.isSSL      = true;
+  _fingerprint       = SSL_FINGERPRINT_NULL;
+  _CA_cert           = CA_cert;
 }
 #endif
 
 ////////////////////////////////////////
 
-void WebSocketsClient::beginSocketIOSSLWithCA(const char * host, const uint16_t& port, const char * url, const char * CA_cert, 
-                                              const char * protocol) 
+void WebSocketsClient::beginSocketIOSSLWithCA(const char * host, const uint16_t& port, const char * url,
+                                              const char * CA_cert,
+                                              const char * protocol)
 {
-    begin(host, port, url, protocol);
-    _client.isSocketIO = true;
-    _client.isSSL      = true;
-    _fingerprint       = SSL_FINGERPRINT_NULL;
+  begin(host, port, url, protocol);
+  _client.isSocketIO = true;
+  _client.isSSL      = true;
+  _fingerprint       = SSL_FINGERPRINT_NULL;
 #if defined(SSL_BARESSL)
-    _CA_cert = new BearSSL::X509List(CA_cert);
+  _CA_cert = new BearSSL::X509List(CA_cert);
 #else
-    _CA_cert = CA_cert;
+  _CA_cert = CA_cert;
 #endif
 }
 
@@ -365,9 +374,9 @@ void WebSocketsClient::beginSocketIOSSLWithCA(const char * host, const uint16_t&
 ////////////////////////////////////////
 
 #if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
-  #if(_WEBSOCKETS_LOGLEVEL_>3)
-    #warning WEBSOCKETS_NETWORK_TYPE != NETWORK ASYNC
-  #endif
+#if(_WEBSOCKETS_LOGLEVEL_>3)
+  #warning WEBSOCKETS_NETWORK_TYPE != NETWORK ASYNC
+#endif
 /**
    called in arduino loop
 */
@@ -389,10 +398,10 @@ void WebSocketsClient::loop()
     }
 
 #if defined(HAS_SSL)
-  #if(_WEBSOCKETS_LOGLEVEL_>2)
-    #warning HAS_SSL
-  #endif
-  
+#if(_WEBSOCKETS_LOGLEVEL_>2)
+#warning HAS_SSL
+#endif
+
     if (_client.isSSL)
     {
       WSK_LOGWARN("[WS-Client] Connect wss...");
@@ -403,83 +412,85 @@ void WebSocketsClient::loop()
         _client.ssl = NULL;
         _client.tcp = NULL;
       }
-     
+
       _client.ssl = new WEBSOCKETS_NETWORK_SSL_CLASS();
       _client.tcp = _client.ssl;
-     
+
       if (_CA_cert)
       {
         WSK_LOGWARN("[WS-Client] Setting CA certificate");
 
 #if defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
-  #if(_WEBSOCKETS_LOGLEVEL_>3)
-    #warning ESP32 or NETWORK_RTL8720DN
-  #endif
-  
+#if(_WEBSOCKETS_LOGLEVEL_>3)
+#warning ESP32 or NETWORK_RTL8720DN
+#endif
+
         _client.ssl->setCACert(_CA_cert);
-        
+
 #elif defined(ESP8266) && defined(SSL_AXTLS)
-  #if(_WEBSOCKETS_LOGLEVEL_>3)
-    #warning ESP8266 and SSL_AXTLS
-  #endif
-  
+#if(_WEBSOCKETS_LOGLEVEL_>3)
+#warning ESP8266 and SSL_AXTLS
+#endif
+
         _client.ssl->setCACert((const uint8_t *)_CA_cert, strlen(_CA_cert) + 1);
-        
+
 #elif defined(ESP8266) && ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
-  #if(_WEBSOCKETS_LOGLEVEL_>3)
-    #warning ESP8266 and SSL_BEARSSL
-  #endif
-  
+#if(_WEBSOCKETS_LOGLEVEL_>3)
+#warning ESP8266 and SSL_BEARSSL
+#endif
+
         _client.ssl->setTrustAnchors(_CA_cert);
-        
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)    //defined(SEEED_WIO_TERMINAL)
-  #if(_WEBSOCKETS_LOGLEVEL_>3)
-    #warning NETWORK_RTL8720DN  
-  #endif
-    
-        _client.ssl->setCACert(_CA_cert); 
-   
+#if(_WEBSOCKETS_LOGLEVEL_>3)
+#warning NETWORK_RTL8720DN
+#endif
+
+        _client.ssl->setCACert(_CA_cert);
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA)
-  // Do something here for WiFiNINA
+        // Do something here for WiFiNINA
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101)
-  // Do something here for WiFi101
+        // Do something here for WiFi101
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_PORTENTA_H7_WIFI)
-  // Do something here for Portenta_H7 WiFi if SSL is supported
+        // Do something here for Portenta_H7 WiFi if SSL is supported
 
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_PORTENTA_H7_ETHERNET)
-  // Do something here for Portenta_H7 Ethernet if SSL is supported
-  
+        // Do something here for Portenta_H7 Ethernet if SSL is supported
+
 #elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_RP2040W_WIFI) && ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
-  // Do something here for RP2040W WiFi SSL  
-  #if(_WEBSOCKETS_LOGLEVEL_>3)
-    #warning RP2040W and SSL_BEARSSL
-  #endif
-  
-        _client.ssl->setTrustAnchors(_CA_cert);   
-    
+        // Do something here for RP2040W WiFi SSL
+#if(_WEBSOCKETS_LOGLEVEL_>3)
+#warning RP2040W and SSL_BEARSSL
+#endif
+
+        _client.ssl->setTrustAnchors(_CA_cert);
+
 #else
 
-  #error setCACert not implemented
+#error setCACert not implemented
 #endif
 
       }
 
-////////////////////
+      ////////////////////
 #if defined(ESP32) /*|| (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)*/
-      else if (!SSL_FINGERPRINT_IS_SET) 
+      else if (!SSL_FINGERPRINT_IS_SET)
       {
         // ESP32 has setInsecure() now from v1.0.6
-        _client.ssl->setInsecure();    
+        _client.ssl->setInsecure();
       }
+
 #elif defined(ESP8266)
-      else if (!SSL_FINGERPRINT_IS_SET) 
+      else if (!SSL_FINGERPRINT_IS_SET)
       {
-        _client.ssl->setInsecure();    
+        _client.ssl->setInsecure();
       }
-////////////////////
-       
+
+      ////////////////////
+
 #elif ( defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
 
       else if (SSL_FINGERPRINT_IS_SET)
@@ -488,17 +499,18 @@ void WebSocketsClient::loop()
       }
       else
       {
-        #if defined(ESP8266)      
+#if defined(ESP8266)
         // ESP32 has setInsecure() now from v1.0.6
         _client.ssl->setInsecure();
-        #endif        
+#endif
       }
-      
-      if(_client_cert && _client_key) 
+
+      if (_client_cert && _client_key)
       {
         _client.ssl->setClientRSACert(_client_cert, _client_key);
         WSK_LOGWARN("[WS-Client] setting client certificate and key");
-      }  
+      }
+
 #endif    // defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
     }
     else
@@ -515,10 +527,10 @@ void WebSocketsClient::loop()
     }
 
 #else   // HAS_SSL
-    #if(_WEBSOCKETS_LOGLEVEL_>2)
-      #warning Not HAS_SSL
-    #endif
-    
+#if(_WEBSOCKETS_LOGLEVEL_>2)
+#warning Not HAS_SSL
+#endif
+
     _client.tcp = new WEBSOCKETS_NETWORK_CLASS();
 #endif  // HAS_SSL
 
@@ -529,15 +541,15 @@ void WebSocketsClient::loop()
     }
 
     WEBSOCKETS_YIELD();
-       
+
 #if defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)
     // KH test SSL
-    WSK_LOGINFO3("[WS-Client] Calling _client.tcp->connect, _host =", _host, ", port =", _port); 
-    
+    WSK_LOGINFO3("[WS-Client] Calling _client.tcp->connect, _host =", _host, ", port =", _port);
+
     int _connectResult = _client.tcp->connect(_host.c_str(), _port, WEBSOCKETS_TCP_TIMEOUT);
-    
+
     WSK_LOGINFO1("[WS-Client] Calling _client.tcp->connect, _connectResult =", _connectResult);
-    
+
     if (_connectResult)
 
 #else
@@ -800,18 +812,23 @@ void WebSocketsClient::messageReceived(WSclient_t * client, WSopcode_t opcode,
     case WSop_text:
       type = fin ? WStype_TEXT : WStype_FRAGMENT_TEXT_START;
       break;
+
     case WSop_binary:
       type = fin ? WStype_BIN : WStype_FRAGMENT_BIN_START;
       break;
+
     case WSop_continuation:
       type = fin ? WStype_FRAGMENT_FIN : WStype_FRAGMENT;
       break;
+
     case WSop_ping:
       type = WStype_PING;
       break;
+
     case WSop_pong:
       type = WStype_PONG;
       break;
+
     case WSop_close:
     default:
       break;
@@ -833,6 +850,7 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266)   || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)    || \
     (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFININA) || \
     (WEBSOCKETS_NETWORK_TYPE == NETWORK_WIFI101)   || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RP2040W_WIFI)
+
   if (client->isSSL && client->ssl)
   {
     if (client->ssl->connected())
@@ -846,6 +864,7 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
     client->ssl = NULL;
     client->tcp = NULL;
   }
+
 #endif
 
   if (client->tcp)
@@ -859,7 +878,7 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
     }
 
     event = true;
-    
+
 #if ( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
     client->status = WSC_NOT_CONNECTED;
 #else
@@ -878,7 +897,7 @@ void WebSocketsClient::clientDisconnect(WSclient_t * client)
   client->cSessionId   = "";
 
   client->status = WSC_NOT_CONNECTED;
-  
+
   // KH, update 2.14.2
   _lastConnectionFail = millis();
 
@@ -906,7 +925,8 @@ bool WebSocketsClient::clientIsConnected(WSclient_t * client)
 
   if (client->tcp->connected())
   {
-    if (client->status != WSC_NOT_CONNECTED) {
+    if (client->status != WSC_NOT_CONNECTED)
+    {
       return true;
     }
   }
@@ -954,28 +974,31 @@ void WebSocketsClient::handleClientData()
     switch (_client.status)
     {
       case WSC_HEADER:
-        {
-          String headerLine = _client.tcp->readStringUntil('\n');         
-          handleHeader(&_client, &headerLine);
-        }
-        
-        break;
-      case WSC_BODY: 
-        {
-          char buf[256] = { 0 };
-          _client.tcp->readBytes(&buf[0], std::min((size_t)len, sizeof(buf)));
-          String bodyLine = buf;         
-          handleHeader(&_client, &bodyLine);
-        } 
-        
-        break;  
+      {
+        String headerLine = _client.tcp->readStringUntil('\n');
+        handleHeader(&_client, &headerLine);
+      }
+
+      break;
+
+      case WSC_BODY:
+      {
+        char buf[256] = { 0 };
+        _client.tcp->readBytes(&buf[0], std::min((size_t)len, sizeof(buf)));
+        String bodyLine = buf;
+        handleHeader(&_client, &bodyLine);
+      }
+
+      break;
+
       case WSC_CONNECTED:
         WebSockets::handleWebsocket(&_client);
-        
+
         break;
+
       default:
         WebSockets::clientDisconnect(&_client, 1002);
-        
+
         break;
     }
   }
@@ -1004,7 +1027,7 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
   }
 
   client->cKey = base64_encode(&randomKey[0], 16);
-   
+
   WSK_LOGINFO1("sendHeader: client->cKey = ", client->cKey);
 
   unsigned long start = micros();
@@ -1018,14 +1041,14 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
     if (client->cSessionId.length() == 0)
     {
 #if USING_STICKY_SESSION_SIO
-      #if(_WEBSOCKETS_LOGLEVEL_>2)
-        #warning Using USING_STICKY_SESSION_SIO with transport=websocket
-      #endif
-      
+#if(_WEBSOCKETS_LOGLEVEL_>2)
+#warning Using USING_STICKY_SESSION_SIO with transport=websocket
+#endif
+
       url += WEBSOCKETS_STRING("&transport=websocket");
-#else      
+#else
       url += WEBSOCKETS_STRING("&transport=polling");
-#endif      
+#endif
       ws_header = false;
     }
     else
@@ -1068,7 +1091,7 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
   }
 
   // add extra headers; by default this includes "Origin: file://"
-  if(client->extraHeaders.length() > 0)
+  if (client->extraHeaders.length() > 0)
   {
     handshake += client->extraHeaders + NEW_LINE;
   }
@@ -1092,11 +1115,11 @@ void WebSocketsClient::sendHeader(WSclient_t * client)
   WSK_LOGINFO1("[WS-Client] [sendHeader] Handshake:", handshake);
 
   write(client, (uint8_t *)handshake.c_str(), handshake.length());
-  
+
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
-	client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader, 
-                                 this, client, &(client->cHttpLine)));
+  client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader,
+                                                                     this, client, &(client->cHttpLine)));
   //////
 #endif
 
@@ -1121,24 +1144,24 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
        (client->cSessionId.length() == 0) )
   {
     WSK_LOGINFO1("[WS-Client][handleHeader] socket.io json: ", headerLine->c_str());
-    
+
     String sid_begin = WEBSOCKETS_STRING("\"sid\":\"");
-    
-    if (headerLine->indexOf(sid_begin) > -1) 
+
+    if (headerLine->indexOf(sid_begin) > -1)
     {
       int start          = headerLine->indexOf(sid_begin) + sid_begin.length();
       int end            = headerLine->indexOf('"', start);
       client->cSessionId = headerLine->substring(start, end);
-      
+
       WSK_LOGINFO1("[WS-Client][handleHeader] - cSessionId: ", client->cSessionId.c_str());
-      
+
       // Trigger websocket connection code path
       *headerLine = "";
     }
-  }     
-       
+  }
+
   // handle HTTP header
-  if (headerLine->length() > 0)   
+  if (headerLine->length() > 0)
   {
     WSK_LOGINFO1("[WS-Client][handleHeader] RX:", headerLine->c_str());
 
@@ -1206,13 +1229,13 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
       WSK_LOGINFO1("[WS-Client][handleHeader] Header error:", headerLine->c_str());
     }
 
-		*headerLine = "";
-		
+    *headerLine = "";
+
 #if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
 
-    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader, 
-                                 this, client, &(client->cHttpLine)));
-                            
+    client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsClient::handleHeader,
+                                                                       this, client, &(client->cHttpLine)));
+
 #endif
   }
   else
@@ -1232,18 +1255,18 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
     WSK_LOGINFO1("[WS-Client][handleHeader] - cSessionId:",    client->cSessionId.c_str());
 
 
-    if(client->isSocketIO && client->cSessionId.length() == 0 && clientIsConnected(client)) 
+    if (client->isSocketIO && client->cSessionId.length() == 0 && clientIsConnected(client))
     {
       WSK_LOGINFO("[WS-Client][handleHeader] Still missing cSessionId try Socket.IO");
       client->status = WSC_BODY;
-      
-      return; 
-    } 
-    else 
+
+      return;
+    }
+    else
     {
       client->status = WSC_HEADER;
     }
-        
+
     bool ok = (client->cIsUpgrade && client->cIsWebsocket);
 
     if (ok)
@@ -1255,14 +1278,14 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
       else
       {
         // including 403 (forbidden)
-        
+
         ok = false;
 
         WSK_LOGINFO1("[WS-Client][handleHeader] serverCode is not 101 :", client->cCode);
 
         clientDisconnect(client);
         _lastConnectionFail = millis();
-      }  
+      }
     }
 
     if (ok)
@@ -1293,21 +1316,21 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
 
       runCbEvent(WStype_CONNECTED, (uint8_t *)client->cUrl.c_str(), client->cUrl.length());
     }
-    
+
 #if !( (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC) )
 
-    else if (client->isSocketIO) 
+    else if (client->isSocketIO)
     {
-      if (client->cSessionId.length() > 0) 
+      if (client->cSessionId.length() > 0)
       {
         WSK_LOGINFO("[WS-Client][handleHeader] found cSessionId");
 
-        if(clientIsConnected(client) && _client.tcp->available()) 
+        if (clientIsConnected(client) && _client.tcp->available())
         {
           // read not needed data
           DEBUG_WEBSOCKETS("[WS-Client][handleHeader] still data in buffer (%d), clean up.\n", _client.tcp->available());
-          
-          while(_client.tcp->available() > 0) 
+
+          while (_client.tcp->available() > 0)
           {
             _client.tcp->read();
           }
@@ -1316,7 +1339,7 @@ void WebSocketsClient::handleHeader(WSclient_t * client, String * headerLine)
         sendHeader(client);
       }
     }
-    
+
 #endif
 
     else
@@ -1345,8 +1368,8 @@ void WebSocketsClient::connectedCb()
 
   _client.tcp->onDisconnect(std::bind([](WebSocketsClient * c, AsyncTCPbuffer * obj, WSclient_t * client) -> bool
   {
-  	UNUSED (obj);
-  	
+    UNUSED (obj);
+
     WSK_LOGWARN1("[WS-Client][connectedCb] Disconnect client :", client->num);
 
     client->status = WSC_NOT_CONNECTED;
@@ -1376,7 +1399,7 @@ void WebSocketsClient::connectedCb()
 #if (defined(SSL_AXTLS) || defined(ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_RTL8720DN)) && \
      ( (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFININA) && (WEBSOCKETS_NETWORK_TYPE != NETWORK_WIFI101) )
 
-  if(_client.isSSL && SSL_FINGERPRINT_IS_SET)
+  if (_client.isSSL && SSL_FINGERPRINT_IS_SET)
   {
     if (!_client.ssl->verify(_fingerprint.c_str(), _host.c_str()))
     {
@@ -1386,16 +1409,19 @@ void WebSocketsClient::connectedCb()
       return;
     }
   }
+
 #else
-  if(_client.isSSL && SSL_FINGERPRINT_IS_SET)
+
+  if (_client.isSSL && SSL_FINGERPRINT_IS_SET)
   {
   }
+
 #endif
   else if (_client.isSSL && !_CA_cert)
   {
 #if (defined(SSL_BARESSL) || defined(SSL_BEARSSL) )
     // ESP32 has setInsecure() now
-    _client.ssl->setInsecure(); 
+    _client.ssl->setInsecure();
 #endif
   }
 
@@ -1429,8 +1455,8 @@ void WebSocketsClient::asyncConnect()
 
   tcpclient->onDisconnect([](void * obj, AsyncClient * c)
   {
-  	UNUSED (obj);
-  	
+    UNUSED (obj);
+
     c->free();
     delete c;
   });
@@ -1452,8 +1478,8 @@ void WebSocketsClient::asyncConnect()
 
   tcpclient->onError(std::bind([](WebSocketsClient * ws, AsyncClient * tcp)
   {
-  	UNUSED (tcp);
-  	
+    UNUSED (tcp);
+
     ws->connectFailedCb();
 
     // reconnect
@@ -1506,7 +1532,7 @@ void WebSocketsClient::handleHBPing()
    @param pongTimeout uint32_t millis after which pong should timout if not received
    @param disconnectTimeoutCount uint8_t how many timeouts before disconnect, 0=> do not disconnect
 */
-void WebSocketsClient::enableHeartbeat(const uint32_t& pingInterval, const uint32_t& pongTimeout, 
+void WebSocketsClient::enableHeartbeat(const uint32_t& pingInterval, const uint32_t& pongTimeout,
                                        const uint8_t& disconnectTimeoutCount)
 {
   WebSockets::enableHeartbeat(&_client, pingInterval, pongTimeout, disconnectTimeoutCount);

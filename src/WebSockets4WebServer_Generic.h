@@ -1,12 +1,12 @@
 /****************************************************************************************************************************
   WebSockets4WebServer_Generic.h - WebSockets Library for boards
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-   
+
   @original file WebSocketsServer.cpp
   @date 20.05.2015
   @author Markus Sattler
@@ -27,7 +27,7 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
   Version: 2.16.0
 
   Version Modified By   Date      Comments
@@ -64,7 +64,7 @@ class WebSockets4WebServer : public WebSocketsServerCore
   public:
 
     ////////////////////////////////////////
-  
+
     WebSockets4WebServer(const String & origin = "", const String & protocol = "arduino")
       : WebSocketsServerCore(origin, protocol)
     {
@@ -77,12 +77,12 @@ class WebSockets4WebServer : public WebSocketsServerCore
     {
       onEvent(event);
 
-      return [&, wsRootDir](const String & method, const String & url, WiFiClient * tcpClient, 
-                            ESP8266WebServer::ContentTypeFunction contentType) 
+      return [&, wsRootDir](const String & method, const String & url, WiFiClient * tcpClient,
+                            ESP8266WebServer::ContentTypeFunction contentType)
       {
         UNUSED (contentType);
 
-        if (!(method == "GET" && url.indexOf(wsRootDir) == 0)) 
+        if (!(method == "GET" && url.indexOf(wsRootDir) == 0))
         {
           return ESP8266WebServer::CLIENT_REQUEST_CAN_CONTINUE;
         }
@@ -93,7 +93,7 @@ class WebSockets4WebServer : public WebSocketsServerCore
         // Then initialize a new WSclient_t (like in WebSocketsServer::handleNewClient())
         WSclient_t * client = handleNewClient(newTcpClient);
 
-        if (client) 
+        if (client)
         {
           // give "GET <url>"
           String headerLine;
@@ -114,11 +114,11 @@ class WebSockets4WebServer : public WebSocketsServerCore
 
 #else    // WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266 && WEBSERVER_HAS_HOOK
 
-  #ifndef WEBSERVER_HAS_HOOK
-    #error Your current Framework / Arduino core version does not support Webserver Hook Functions
-  #else
-    #error Your Hardware Platform does not support Webserver Hook Functions
-  #endif
+#ifndef WEBSERVER_HAS_HOOK
+  #error Your current Framework / Arduino core version does not support Webserver Hook Functions
+#else
+  #error Your Hardware Platform does not support Webserver Hook Functions
+#endif
 
 #endif    // WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266 && WEBSERVER_HAS_HOOK
 

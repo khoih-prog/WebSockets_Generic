@@ -23,7 +23,7 @@
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
   Version: 2.16.0
 
   Version Modified By   Date      Comments
@@ -81,7 +81,7 @@
   #define LOGERROR3       WSK_LOGERROR3
 #endif
 
-#ifndef LOGWARN  
+#ifndef LOGWARN
   #define LOGWARN         WSK_LOGWARN
   #define LOGWARN0        WSK_LOGWARN0
   #define LOGWARN1        WSK_LOGWARN1
@@ -89,7 +89,7 @@
   #define LOGWARN3        WSK_LOGWARN3
 #endif
 
-#ifndef LOGINFO   
+#ifndef LOGINFO
   #define LOGINFO         WSK_LOGINFO
   #define LOGINFO0        WSK_LOGINFO0
   #define LOGINFO1        WSK_LOGINFO1
@@ -97,7 +97,7 @@
   #define LOGINFO3        WSK_LOGINFO3
 #endif
 
-#ifndef LOGDEBUG   
+#ifndef LOGDEBUG
   #define LOGDEBUG        WSK_LOGDEBUG
   #define LOGDEBUG0       WSK_LOGDEBUG0
   #define LOGDEBUG1       WSK_LOGDEBUG1
@@ -121,7 +121,7 @@
   #define WS_LOGWARN1        WSK_LOGWARN1
   #define WS_LOGWARN2        WSK_LOGWARN2
   #define WS_LOGWARN3        WSK_LOGWARN3
- 
+
   #define WS_LOGINFO         WSK_LOGINFO
   #define WS_LOGINFO0        WSK_LOGINFO0
   #define WS_LOGINFO1        WSK_LOGINFO1

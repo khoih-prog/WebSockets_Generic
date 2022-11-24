@@ -1,8 +1,8 @@
 /*
-cdecoder.c - c source to a base64 decoding algorithm implementation
+  cdecoder.c - c source to a base64 decoding algorithm implementation
 
-This is part of the libb64 project, and has been placed in the public domain.
-For details, see http://sourceforge.net/projects/libb64
+  This is part of the libb64 project, and has been placed in the public domain.
+  For details, see http://sourceforge.net/projects/libb64
 */
 
 #pragma once
@@ -30,7 +30,8 @@ extern "C" {
   static int base64_decode_value_signed(int8_t value_in)
   {
     static const char decoding[] =
-    { 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
+    {
+      62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
       -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
       10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
       -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
@@ -52,7 +53,8 @@ extern "C" {
     state_in->plainchar = 0;
   }
 
-  static int base64_decode_block_signed(const int8_t* code_in, const int length_in, int8_t* plaintext_out, base64_decodestate* state_in)
+  static int base64_decode_block_signed(const int8_t* code_in, const int length_in, int8_t* plaintext_out,
+                                        base64_decodestate* state_in)
   {
     const int8_t* codechar = code_in;
     int8_t* plainchar = plaintext_out;
@@ -78,6 +80,7 @@ extern "C" {
           } while (fragment < 0);
 
           *plainchar    = (fragment & 0x03f) << 2;
+
         // falls through
         case step_b:
           do
@@ -94,6 +97,7 @@ extern "C" {
 
           *plainchar++ |= (fragment & 0x030) >> 4;
           *plainchar    = (fragment & 0x00f) << 4;
+
         // falls through
         case step_c:
           do
@@ -110,6 +114,7 @@ extern "C" {
 
           *plainchar++ |= (fragment & 0x03c) >> 2;
           *plainchar    = (fragment & 0x003) << 6;
+
         // falls through
         case step_d:
           do
@@ -120,6 +125,7 @@ extern "C" {
               state_in->plainchar = *plainchar;
               return plainchar - plaintext_out;
             }
+
             fragment = (int8_t)base6
                        4_decode_value_signed(*codechar++);
           } while (fragment < 0);
@@ -127,6 +133,7 @@ extern "C" {
           *plainchar++   |= (fragment & 0x03f);
         }
     }
+
     /* control should not reach here */
     return plainchar - plaintext_out;
   }

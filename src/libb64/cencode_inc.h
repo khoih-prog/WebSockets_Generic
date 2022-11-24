@@ -1,8 +1,8 @@
 /*
-cencode.h - c header for a base64 encoding algorithm
+  cencode.h - c header for a base64 encoding algorithm
 
-This is part of the libb64 project, and has been placed in the public domain.
-For details, see http://sourceforge.net/projects/libb64
+  This is part of the libb64 project, and has been placed in the public domain.
+  For details, see http://sourceforge.net/projects/libb64
 */
 
 #pragma once
@@ -18,17 +18,17 @@ For details, see http://sourceforge.net/projects/libb64
 
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
-typedef enum 
+typedef enum
 {
-  step_A, 
-  step_B, 
+  step_A,
+  step_B,
   step_C
 } base64_encodestep;
 
-typedef struct 
+typedef struct
 {
   base64_encodestep step;
   char result;
@@ -48,7 +48,7 @@ int base64_encode_blockend(char* code_out, base64_encodestate* state_in);
 int base64_encode_chars(const char* plaintext_in, int length_in, char* code_out);
 
 #ifdef __cplusplus
-  } // extern "C"
+} // extern "C"
 #endif
 
 #include "cencode-Impl.h"
