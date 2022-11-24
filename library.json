@@ -1,6 +1,6 @@
 {
   "name": "WebSockets_Generic",
-  "version": "2.16.0",
+  "version": "2.16.1",
   "description": "RFC6455-based WebSockets Server and Client for Arduino boards, such as nRF52, Portenta_H7, SAMD21, SAMD51, STM32F/L/H/G/WB/MP1, Teensy, SAM DUE, RP2040-based boards, besides ESP8266/ESP32 ESP32 (ESP32, ESP32_S2, ESP32_S3 and ESP32_C3) and WT32_ETH01. Ethernet shields W5100, W5200, W5500, ENC28J60, Teensy 4.1 NativeEthernet/QNEthernet or Portenta_H7 WiFi/Ethernet. Supporting websocket only mode for Socket.IO. Ethernet_Generic library is used as default for W5x00. Now supporting RP2040W",
   "keywords": "wifi, WiFiNINA, websocket, websockets-server, websockets-client, Teensy, SAM DUE, SAMD, STM32, nRF52, QNEthernet, rp2040, Portenta-H7, ESP32, ESP8266, W5x00, Ethernet, Ethernet2, Ethernet3, EthernetLarge, EthernetENC, UIPEthernet, NativeEthernet, ENC28J60, rpi-pico, http, web, server, client, Mega, rp2040w, pico-w",
   "authors": [

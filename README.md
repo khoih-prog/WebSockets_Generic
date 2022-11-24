@@ -1240,7 +1240,7 @@ https://github.com/khoih-prog/WebSockets_Generic/blob/2c37735a9bc079161dbb02d4e9
 
 ```cpp
 Start Generic_WebSocketClient_EthernetENC on NRF52840_FEATHER
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1523,7 +1523,7 @@ Device 123456789012345678901234 set position to 0
 
 ```cpp
 Start WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1606,7 +1606,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 
 ```cpp
 Start Generic_WebSocketClientSocketIO_EthernetENC on NRF52840_FEATHER with ENC28J60 using EthernetENC Library
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 [WS] Board : NRF52840_FEATHER , setCsPin: 10
 [WS] Default SPI pinout:
 [WS] MOSI: 25
@@ -1689,7 +1689,7 @@ Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 
 ```cpp
 Start WIOTerminal_WebSocketClientSSL on WIO_TERMINAL
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 WebSockets Client started @ IP address: 192.168.2.150
 WebSockets Server : wss://account.duckdns.org
 Connected to WebSockets Server @ wss://account.duckdns.org
@@ -1716,7 +1716,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```cpp
 Start Generic_WebSocketClientSSL_WiFiNINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1751,7 +1751,7 @@ User-Agent: arduino-WebSocket-Client
 
 ```cpp
 Start WebSocketClientSocketIO_NINA on SAMD_NANO_33_IOT
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 Used/default SPI pinout:
 MOSI:11
 MISO:12
@@ -1762,7 +1762,7 @@ SSID: HueNet1
 WebSockets Client IP Address: 192.168.2.114
 signal strength (RSSI):-18 dBm
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.16.0
+[WS] WebSockets_Generic v2.16.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client] Connect ws...
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
@@ -1878,7 +1878,7 @@ Message from Client :  { now: 30001 }
 
 ```cpp
 Start Generic_WebSocketClientSocketIO_W5500 on NRF52840_FEATHER with W5x00 using Ethernet_Generic Library
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 [WS] Board :NRF52840_FEATHER, setCsPin:10
 [WS] Default SPI pinout:
 [WS] MOSI:25
@@ -1891,7 +1891,7 @@ W5100 init, using SS_PIN_DEFAULT = 10, new ss_pin = 10, W5100Class::ss_pin = 10
 W5100::init: W5500, SSIZE =8192
 WebSockets Client @ IP address: 192.168.2.94
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.16.0
+[WS] WebSockets_Generic v2.16.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2006,7 +2006,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```cpp
 Start WebSocketClientSocketIO_W5500 on RASPBERRY_PI_PICO with W5x00 using Ethernet_Generic Library
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 [WS] Board :RASPBERRY_PI_PICO, setCsPin:17
 [WS] Default SPI pinout:
 [WS] MOSI:19
@@ -2016,7 +2016,7 @@ WebSockets_Generic v2.16.0
 [WS] =========================
 WebSockets Client @ IP address: 192.168.2.119
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.16.0
+[WS] WebSockets_Generic v2.16.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2149,7 +2149,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```cpp
 Start WebSocketClientSocketIO_W5500 on RaspberryPi Pico with W5x00 using Ethernet_Generic Library
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 [WS] Board :RaspberryPi Pico, setCsPin:17
 [WS] Default SPI pinout:
 [WS] MOSI:19
@@ -2159,7 +2159,7 @@ WebSockets_Generic v2.16.0
 [WS] =========================
 WebSockets Client @ IP address: 192.168.2.98
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.16.0
+[WS] WebSockets_Generic v2.16.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2288,7 +2288,7 @@ The following are debug terminal output when running example [WT32_ETH01_WebSock
 ```cpp
 Starting WT32_ETH01_WebSocketClient on ESP32_DEV with ETH_PHY_LAN8720
 WebServer_WT32_ETH01 v1.4.1
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 ETH MAC: A8:03:2A:A1:61:73, IPv4: 192.168.2.232, FULL_DUPLEX, 100Mbps
 WebSockets Client started @ IP address: 192.168.2.232
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2372,7 +2372,7 @@ The following are debug terminal output when running example [Teensy_WebSocketCl
 
 ```cpp
 Starting Teensy_WebSocketClient_QNEthernet on TEENSY 4.1 using QNEthernet
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 =========== USE_QN_ETHERNET ===========
 Initialize Ethernet using static IP => Connected! IP address:192.168.2.222
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2419,7 +2419,7 @@ The following are debug terminal output when running example [Portenta_H7_WebSoc
 
 ```cpp
 Start Portenta_H7_WebSocketClientSocketIO on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 WebSockets Client @ IP address: 192.168.2.132
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
@@ -2479,7 +2479,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```cpp
 Start WebSocketClientSocketIO_WiFi on PORTENTA_H7_M7
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 Connecting to SSID: HueNet1
 SSID: HueNet1
 WebSockets Client IP Address: 192.168.2.130
@@ -2535,10 +2535,10 @@ The following are debug terminal output when running example [Portenta_H7_WebSoc
 
 ```cpp
 Start Portenta_H7_WebSocketClient_Sticky_SocketIO on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 WebSockets Client @ IP address: 192.168.2.133
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
-[WS] WebSockets_Generic v2.16.0
+[WS] WebSockets_Generic v2.16.1
 [WS] [wsIOc] found EIO=4 disable EIO ping on client
 [WS] [WS-Client][connectedCb] Connected to Host:192.168.2.30, Port:8080
 [WS] [WS-Client] [sendHeader] Sending header...
@@ -2601,7 +2601,7 @@ The following are debug terminal output when running example [ESP32_WebSocketCli
 
 ```cpp
 Start ESP32_WebSocketClientSocketIO on ESP32S3_DEV
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 Connecting to HueNet1
 WebSockets Client started @ IP address: 192.168.2.83
 Connecting to WebSockets Server @ IP address: 192.168.2.30, port: 8080
@@ -2772,8 +2772,7 @@ The following are debug terminal output when running example [ESP8266_AsyncWSCli
 
 ```cpp
 Start ESP8266_AsyncWSClient on ESP8266_NODEMCU_ESP12E
-WebSockets_Generic v2.16.0
-
+WebSockets_Generic v2.16.1
 WebSockets Client started @ IP address: 192.168.2.145
 Connecting to WebSockets Server @ 192.168.2.30
 Connected to WebSockets Server @ IP address: 192.168.2.30
@@ -2818,7 +2817,7 @@ The following are debug terminal output when running example [WebSocketClientSoc
 
 ```cpp
 Start WebSocketClientSocketIO_RP2040W on RASPBERRY_PI_PICO_W
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 Connecting to SSID: HueNet1
 SSID: HueNet1
 WebSockets Client IP Address: 192.168.2.77
@@ -2883,7 +2882,7 @@ The following are debug terminal output when running example [Generic_WebSocketC
 
 ```cpp
 Start Generic_WebSocketClientSocketIO_WiFiNINA on Nano RP2040 Connect
-WebSockets_Generic v2.16.0
+WebSockets_Generic v2.16.1
 Please upgrade the firmware
 Attempting to connect to SSID: HueNet1
 SSID: HueNet1

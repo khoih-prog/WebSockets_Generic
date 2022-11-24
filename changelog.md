@@ -19,6 +19,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v2.16.1](#release-v2161)
   * [Release v2.16.0](#release-v2160)
   * [Release v2.15.0](#release-v2150)
   * [Release v2.14.2](#release-v2142)
@@ -64,6 +65,12 @@
 ---
 
 ## Changelog
+
+### Release v2.16.1
+
+1. Using new [`WiFi101_Generic library`](https://github.com/khoih-prog/WiFi101_Generic) for sending larger data
+2. Add astyle using `allman` style. Restyle the library
+3. Update `Packages' Patches`
 
 ### Release v2.16.0
 
