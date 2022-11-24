@@ -49,8 +49,10 @@ int status = WL_IDLE_STATUS;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
-char ssid[] = "your_ssid";        // your network SSID (name)
-char pass[] = "12345678";         // your network password (use for WPA, or use as key for WEP), length must be 8+
+char ssid[] = "HueNet1";        // your network SSID (name)
+char pass[] = "jenniqqs";         // your network password (use for WPA, or use as key for WEP), length must be 8+
+//char ssid[] = "your_ssid";        // your network SSID (name)
+//char pass[] = "12345678";         // your network password (use for WPA, or use as key for WEP), length must be 8+
 
 bool alreadyConnected = false;
 
@@ -64,53 +66,53 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
-      
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+
+    break;
+
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
 
       // send message to server
-       webSocket.sendTXT("message here");
-       
+      webSocket.sendTXT("message here");
+
       break;
-      
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
-      
+
       // KH, To check
       // hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
-      
+
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.println("[WSc] get ping");
-      
+
       break;
-      
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.println("[WSc] get pong");
-      
+
       break;
 
     default:
@@ -140,9 +142,11 @@ void setup()
 {
   //Initialize serial and wait for port to open:
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClient_RP2040W on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart WebSocketClient_RP2040W on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   ///////////////////////////////////
@@ -151,22 +155,25 @@ void setup()
   if (WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication with WiFi module failed!");
+
     // don't continue
     while (true);
   }
 
   Serial.print(F("Connecting to SSID: "));
   Serial.println(ssid);
- 
+
+  status = WiFi.begin(ssid, pass);
+
   status = WiFi.begin(ssid, pass);
 
   delay(1000);
-   
+
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED)
   {
     delay(500);
-        
+
     // Connect to WPA/WPA2 network
     status = WiFi.status();
   }
@@ -182,7 +189,7 @@ void setup()
   // server address, port and URL
 #if USE_SSL
   webSocket.beginSSL(WS_SERVER, WS_PORT);
-#else  
+#else
   webSocket.begin(WS_SERVER, WS_PORT, "/");
 #endif
 

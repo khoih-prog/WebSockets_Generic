@@ -1,13 +1,13 @@
 /****************************************************************************************************************************
   Teensy_WebSocketServerFragmentation_W5500.ino
   For Teensy boards using W5x00 Ethernet Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   Originally created on: 22.05.2015
   Original Author: Markus Sattler
  *****************************************************************************************************************************/
@@ -15,7 +15,7 @@
 #if ( defined(CORE_TEENSY) )
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
-  
+
   #if defined(__IMXRT1062__)
     // For Teensy 4.1/4.0
     #if defined(ARDUINO_TEENSY41)
@@ -26,7 +26,7 @@
       #define BOARD_TYPE      "TEENSY 4.0"
     #else
       #define BOARD_TYPE      "TEENSY 4.x"
-    #endif      
+    #endif
   #elif defined(__MK66FX1M0__)
     #define BOARD_TYPE "Teensy 3.6"
   #elif defined(__MK64FX512__)
@@ -75,12 +75,12 @@
   #define ETHERNET_LARGE_BUFFERS
 
   #define _ETG_LOGLEVEL_        1
-      
+
   #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
-  #warning Using Ethernet_ESP8266 lib 
-  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library" 
+  #warning Using Ethernet_ESP8266 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library"
 #elif USE_ETHERNET_ENC
   #include "EthernetENC.h"
   #warning Using EthernetENC lib
@@ -142,32 +142,32 @@ void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload,
   {
     case WStype_DISCONNECTED:
       //Serial.println( "[" + String(num) + "] Disconnected!");
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        //IPAddress ip = webSocket.remoteIP(num);
-        //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
 
-        // send message to client
-        webSocket.sendTXT(num, "Connected");
-      }
-      
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      //IPAddress ip = webSocket.remoteIP(num);
+      //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+
+      // send message to client
+      webSocket.sendTXT(num, "Connected");
+    }
+
+    break;
+
     case WStype_TEXT:
       Serial.println( "[" + String(num) + "] get Text: " + String((char *) payload));
-      
+
       break;
-      
+
     case WStype_BIN:
       Serial.println( "[" + String(num) + "] get binary length: " + String(length));
       //hexdump(payload, length);
 
       // send message to client
       webSocket.sendBIN(num, payload, length);
-      
+
       break;
 
     // Fragmentation / continuation opcode handling
@@ -175,24 +175,24 @@ void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload,
     case WStype_FRAGMENT_TEXT_START:
       fragmentBuffer = (char*)payload;
       Serial.println( "[" + String(num) + "] get start start of Textfragment: " + String((char *) payload));
-      
+
       break;
-      
+
     case WStype_FRAGMENT:
       fragmentBuffer += (char*)payload;
       Serial.println( "[" + String(num) + "] get Textfragment: " + String((char *) payload));
-      
+
       break;
-      
+
     case WStype_FRAGMENT_FIN:
       fragmentBuffer += (char*)payload;
       Serial.println( "[" + String(num) + "] get end of Textfragment: " + String((char *) payload));
       Serial.println( "[" + String(num) + "] full frame: " + fragmentBuffer);
-      
+
       break;
 
     default:
-      break;      
+      break;
   }
 }
 
@@ -200,13 +200,16 @@ void setup()
 {
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH); // Deselect the SD card
-  
+
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart Teensy_WebSocketServerFragmentation_W5500 on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart Teensy_WebSocketServerFragmentation_W5500 on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
@@ -218,14 +221,14 @@ void setup()
   WSK_LOGWARN1(F("SS:"),   SS);
   WSK_LOGWARN(F("========================="));
 
-  #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
-    // For other boards, to change if necessary
-    #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
-      // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-      Ethernet.init (USE_THIS_SS_PIN);
-           
-    #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
-  #endif
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // For other boards, to change if necessary
+#if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
+  // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
+#endif
 
   // start the ethernet connection and the server:
   // Use DHCP dynamic IP and random mac
@@ -237,7 +240,7 @@ void setup()
   // server address, port and URL
   Serial.print("WebSockets Server @ IP address: ");
   Serial.println(Ethernet.localIP());
-  
+
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
 }

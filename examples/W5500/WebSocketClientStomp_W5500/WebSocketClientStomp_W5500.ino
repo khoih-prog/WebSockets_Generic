@@ -1,16 +1,16 @@
 /****************************************************************************************************************************
   WebSocketClientStomp_W5500.ino
   For boards using W5x00 Ethernet Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   Example for connecting and maintining a connection with a STOMP websocket connection.
   In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
-  
+
   Created on: 25.09.2017
   Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
  *****************************************************************************************************************************/
@@ -19,7 +19,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -49,12 +49,12 @@
   #define ETHERNET_LARGE_BUFFERS
 
   #define _ETG_LOGLEVEL_        1
-      
+
   #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
-  #warning Using Ethernet_ESP8266 lib 
-  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library" 
+  #warning Using Ethernet_ESP8266 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library"
 #elif USE_ETHERNET_ENC
   #include "EthernetENC.h"
   #warning Using EthernetENC lib
@@ -155,55 +155,55 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
+
       break;
-      
+
     case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
+    {
+      alreadyConnected = true;
 
-        String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
-        sendMessage(msg);
-      }
-      
-      break;
-      
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
+      sendMessage(msg);
+    }
+
+    break;
+
     case WStype_TEXT:
+    {
+      // #####################
+      // handle STOMP protocol
+      // #####################
+
+      String text = (char*) payload;
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
+
+      if (text.startsWith("CONNECTED"))
       {
-        // #####################
-        // handle STOMP protocol
-        // #####################
 
-        String text = (char*) payload;
-        Serial.print("[WSc] get text: ");
-        Serial.println((char *) payload);
+        // subscribe to some channels
 
-        if (text.startsWith("CONNECTED"))
-        {
+        String msg = "SUBSCRIBE\nid:sub-0\ndestination:/user/queue/messages\n\n";
+        sendMessage(msg);
+        delay(1000);
 
-          // subscribe to some channels
+        // and send a message
 
-          String msg = "SUBSCRIBE\nid:sub-0\ndestination:/user/queue/messages\n\n";
-          sendMessage(msg);
-          delay(1000);
-
-          // and send a message
-
-          msg = "SEND\ndestination:/app/message\n\n{\"user\":\"esp\",\"message\":\"Hello!\"}";
-          sendMessage(msg);
-          delay(1000);
-        }
-        else
-        {
-          // do something with messages
-        }
-
-        break;
+        msg = "SEND\ndestination:/app/message\n\n{\"user\":\"esp\",\"message\":\"Hello!\"}";
+        sendMessage(msg);
+        delay(1000);
       }
-      
+      else
+      {
+        // do something with messages
+      }
+
+      break;
+    }
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -212,7 +212,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
 
       // send data to server
       webSocket.sendBIN(payload, length);
-      
+
       break;
 
     case WStype_ERROR:
@@ -223,21 +223,24 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       break;
 
     default:
-      break;      
+      break;
   }
 }
 
-void setup() 
+void setup()
 {
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH); // Deselect the SD card
-  
+
   // Debug console
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClientStomp_W5500 on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart WebSocketClientStomp_W5500 on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
@@ -249,14 +252,14 @@ void setup()
   WSK_LOGWARN1(F("SS:"),   SS);
   WSK_LOGWARN(F("========================="));
 
-  #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
-    // For other boards, to change if necessary
-    #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
-      // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-      Ethernet.init (USE_THIS_SS_PIN);
-           
-    #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
-  #endif
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // For other boards, to change if necessary
+#if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
+  // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
+#endif
 
   // start the ethernet connection and the server:
   // Use DHCP dynamic IP and random mac
@@ -264,7 +267,7 @@ void setup()
   // Use Static IP
   //Ethernet.begin(mac[index], clientIP);
   Ethernet.begin(mac[index]);
-  
+
   Serial.print("WebSockets Client @ IP address: ");
   Serial.println(Ethernet.localIP());
 

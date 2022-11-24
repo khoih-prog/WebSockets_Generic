@@ -20,7 +20,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -68,53 +68,53 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
-      
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+
+    break;
+
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
 
       // send message to server
-       webSocket.sendTXT("message here");
-       
+      webSocket.sendTXT("message here");
+
       break;
-      
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
-      
+
       // KH, To check
       // hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
-      
+
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.println("[WSc] get ping");
-      
+
       break;
-      
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.println("[WSc] get pong");
-      
+
       break;
 
     default:
@@ -144,9 +144,11 @@ void setup()
 {
   //Initialize serial and wait for port to open:
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClient_NINA on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart WebSocketClient_NINA on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");
@@ -163,11 +165,13 @@ void setup()
   if (WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication with WiFi module failed!");
+
     // don't continue
     while (true);
   }
 
   String fv = WiFi.firmwareVersion();
+
   if (fv < WIFI_FIRMWARE_LATEST_VERSION)
   {
     Serial.println("Please upgrade the firmware");
@@ -194,7 +198,7 @@ void setup()
   // server address, port and URL
 #if USE_SSL
   webSocket.beginSSL(WS_SERVER, WS_PORT);
-#else  
+#else
   webSocket.begin(WS_SERVER, WS_PORT, "/");
 #endif
 

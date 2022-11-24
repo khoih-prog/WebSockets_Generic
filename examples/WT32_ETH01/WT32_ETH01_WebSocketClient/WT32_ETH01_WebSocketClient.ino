@@ -60,6 +60,7 @@ void hexdump(const void *mem, const uint32_t& len, const uint8_t& cols = 16)
     Serial.printf("%02X ", *src);
     src++;
   }
+
   Serial.printf("\n");
 }
 
@@ -75,63 +76,63 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
-      
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+
+    break;
+
     case WStype_TEXT:
       if (alreadyConnected)
       {
         Serial.printf("[WSc] get text: %s\n", payload);
-  
+
         // send message to server
         //webSocket.sendTXT("message here");
       }
-      
+
       break;
-      
+
     case WStype_BIN:
       if (alreadyConnected)
       {
         Serial.printf("[WSc] get binary length: %u\n", length);
         hexdump(payload, length);
-  
+
         // send data to server
         webSocket.sendBIN(payload, length);
       }
-      
+
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.printf("[WSc] get ping\n");
-      
+
       break;
-      
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");
-      
+
       break;
-      
+
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
     case WStype_FRAGMENT:
     case WStype_FRAGMENT_FIN:
-    
+
       break;
 
     default:
@@ -143,10 +144,13 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WT32_ETH01_WebSocketClient on "); Serial.print(ARDUINO_BOARD);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart WT32_ETH01_WebSocketClient on ");
+  Serial.print(ARDUINO_BOARD);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSERVER_WT32_ETH01_VERSION);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
@@ -155,7 +159,7 @@ void setup()
   // To be called before ETH.begin()
   WT32_ETH01_onEvent();
 
-  //bool begin(uint8_t phy_addr=ETH_PHY_ADDR, int power=ETH_PHY_POWER, int mdc=ETH_PHY_MDC, int mdio=ETH_PHY_MDIO, 
+  //bool begin(uint8_t phy_addr=ETH_PHY_ADDR, int power=ETH_PHY_POWER, int mdc=ETH_PHY_MDC, int mdio=ETH_PHY_MDIO,
   //           eth_phy_type_t type=ETH_PHY_TYPE, eth_clock_mode_t clk_mode=ETH_CLK_MODE);
   //ETH.begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
   ETH.begin(ETH_PHY_ADDR, ETH_PHY_POWER);
@@ -173,11 +177,11 @@ void setup()
   // server address, port and URL
   Serial.print("Connecting to WebSockets Server @ ");
   Serial.println(WS_SERVER);
-  
+
   // server address, port and URL
 #if USE_SSL
   webSocket.beginSSL(WS_SERVER, WS_PORT);
-#else  
+#else
   webSocket.begin(WS_SERVER, WS_PORT, "/");
 #endif
 

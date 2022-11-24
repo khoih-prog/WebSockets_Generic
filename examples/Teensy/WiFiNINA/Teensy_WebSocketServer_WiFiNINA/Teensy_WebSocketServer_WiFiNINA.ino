@@ -1,21 +1,21 @@
 /****************************************************************************************************************************
   Teensy_WebSocketServer_WiFiNINA.ino
   For Teensy boards using WiFiNINA Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   Created on: 22.05.2015
-  Original Author: Markus Sattler                  
+  Original Author: Markus Sattler
  *****************************************************************************************************************************/
 
 #if ( defined(CORE_TEENSY) )
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
-  
+
   #if defined(__IMXRT1062__)
     // For Teensy 4.1/4.0
     #if defined(ARDUINO_TEENSY41)
@@ -26,7 +26,7 @@
       #define BOARD_TYPE      "TEENSY 4.0"
     #else
       #define BOARD_TYPE      "TEENSY 4.x"
-    #endif      
+    #endif
   #elif defined(__MK66FX1M0__)
     #define BOARD_TYPE "Teensy 3.6"
   #elif defined(__MK64FX512__)
@@ -74,20 +74,20 @@ void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload,
   {
     case WStype_DISCONNECTED:
       //Serial.println( "[" + String(num) + "] Disconnected!");
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        //IPAddress ip = webSocket.remoteIP(num);
-        //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
 
-        // send message to client
-        webSocket.sendTXT(num, "Connected");
-      }
-      
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      //IPAddress ip = webSocket.remoteIP(num);
+      //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+
+      // send message to client
+      webSocket.sendTXT(num, "Connected");
+    }
+
+    break;
+
     case WStype_TEXT:
       Serial.println( "[" + String(num) + "] get Text: " + String((char *) payload));
 
@@ -95,26 +95,26 @@ void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload,
       webSocket.sendTXT(num, "message here");
 
       // send data to all connected clients
-       webSocket.broadcastTXT("message here");
-       
+      webSocket.broadcastTXT("message here");
+
       break;
-      
+
     case WStype_BIN:
       Serial.println( "[" + String(num) + "] get binary length: " + String(length));
-      
+
       //hexdump(payload, length);
 
       // send message to client
       // webSocket.sendBIN(num, payload, length);
-      
+
       break;
 
-      default:
-        break;
+    default:
+      break;
   }
 }
 
-void printWifiStatus() 
+void printWifiStatus()
 {
   // print the SSID of the network you're attached to:
   Serial.print("SSID: ");
@@ -133,12 +133,14 @@ void printWifiStatus()
 }
 
 void setup()
-{ 
+{
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart Teensy_WebSocketServer_WiFiNINA on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart Teensy_WebSocketServer_WiFiNINA on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");
@@ -155,11 +157,13 @@ void setup()
   if (WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication with WiFi module failed!");
+
     // don't continue
     while (true);
   }
 
   String fv = WiFi.firmwareVersion();
+
   if (fv < WIFI_FIRMWARE_LATEST_VERSION)
   {
     Serial.println("Please upgrade the firmware");
@@ -178,7 +182,7 @@ void setup()
   }
 
   printWifiStatus();
- 
+
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
 }

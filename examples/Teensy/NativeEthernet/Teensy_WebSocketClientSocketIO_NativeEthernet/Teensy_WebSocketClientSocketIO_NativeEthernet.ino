@@ -1,13 +1,13 @@
 /****************************************************************************************************************************
   Teensy_WebSocketClientSocketIO_NativeEthernet.ino
   For Teensy 4,1 boards using NativeEthernet Ethernet Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   First created on: 06.06.2016
   Original Author: Markus Sattler
  *****************************************************************************************************************************/
@@ -15,7 +15,7 @@
 #if ( defined(CORE_TEENSY) )
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
-  
+
   #if defined(__IMXRT1062__)
     // For Teensy 4.1/4.0
     #if defined(ARDUINO_TEENSY41)
@@ -27,7 +27,7 @@
       #define BOARD_TYPE      "TEENSY 4.0"
     #else
       #define BOARD_TYPE      "TEENSY 4.x"
-    #endif      
+    #endif
   #elif defined(__MK66FX1M0__)
     #define BOARD_TYPE "Teensy 3.6"
   #elif defined(__MK64FX512__)
@@ -87,12 +87,12 @@
   #define ETHERNET_LARGE_BUFFERS
 
   #define _ETG_LOGLEVEL_        1
-      
+
   #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
-  #warning Using Ethernet_ESP8266 lib 
-  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library" 
+  #warning Using Ethernet_ESP8266 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library"
 #elif USE_ETHERNET_ENC
   #include "EthernetENC.h"
   #warning Using EthernetENC lib
@@ -158,64 +158,66 @@ uint16_t  serverPort = 8080;
 
 void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
-  switch (type) 
+  switch (type)
   {
     case sIOtype_DISCONNECT:
       Serial.println("[IOc] Disconnected");
-      
+
       break;
-      
+
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
 
       // join default namespace (no auto join in Socket.IO V3)
       socketIO.send(sIOtype_CONNECT, "/");
-      
+
       break;
-      
+
     case sIOtype_EVENT:
       Serial.print("[IOc] Get event: ");
       Serial.println((char*) payload);
-      
+
       break;
-      
+
     case sIOtype_ACK:
       Serial.print("[IOc] Get ack: ");
       Serial.println(length);
-      
+
       //hexdump(payload, length);
       break;
+
     case sIOtype_ERROR:
       Serial.print("[IOc] Get error: ");
       Serial.println(length);
-      
+
       //hexdump(payload, length);
       break;
-      
+
     case sIOtype_BINARY_EVENT:
       Serial.print("[IOc] Get binary: ");
       Serial.println(length);
-      
+
       //hexdump(payload, length);
       break;
+
     case sIOtype_BINARY_ACK:
-       Serial.print("[IOc] Get binary ack: ");
+      Serial.print("[IOc] Get binary ack: ");
       Serial.println(length);
-      
+
       //hexdump(payload, length);
       break;
-      
+
     case sIOtype_PING:
       Serial.println("[IOc] Get PING");
 
       break;
 
-   case sIOtype_PONG:
+    case sIOtype_PONG:
       Serial.println("[IOc] Get PONG");
 
-      break;   
-      
+      break;
+
     default:
       break;
   }
@@ -225,10 +227,13 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart Teensy_WebSocketClientSocketIO_NativeEthernet on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart Teensy_WebSocketClientSocketIO_NativeEthernet on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
 #if !USE_NATIVE_ETHERNET
@@ -244,11 +249,11 @@ void setup()
 
 #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
   // For other boards, to change if necessary
-  #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
-    // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-    Ethernet.init (USE_THIS_SS_PIN);
-         
-  #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
+#if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
+  // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
 #endif
 
   // start the ethernet connection and the server:
@@ -257,7 +262,7 @@ void setup()
   // Use Static IP
   //Ethernet.begin(mac[index], clientIP);
   Ethernet.begin(mac[index]);
-  
+
   Serial.print("WebSockets Client @ IP address: ");
   Serial.println(Ethernet.localIP());
 
@@ -283,13 +288,13 @@ void setup()
 
 unsigned long messageTimestamp = 0;
 
-void loop() 
+void loop()
 {
   socketIO.loop();
 
   uint64_t now = millis();
 
-  if (now - messageTimestamp > 30000) 
+  if (now - messageTimestamp > 30000)
   {
     messageTimestamp = now;
 

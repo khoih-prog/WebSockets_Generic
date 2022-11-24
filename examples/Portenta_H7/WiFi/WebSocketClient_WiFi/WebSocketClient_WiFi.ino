@@ -30,13 +30,13 @@
 
   #define USE_WIFI_NINA         false
 
-  // To use the default WiFi library here 
+  // To use the default WiFi library here
   #define USE_WIFI_CUSTOM       false
 
 #else
 
   #error For Portenta_H7 only
-  
+
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     2
@@ -78,33 +78,33 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+    break;
+
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
 
       // send message to server
-       webSocket.sendTXT("message here");
+      webSocket.sendTXT("message here");
       break;
-      
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
-      
+
       // KH, To check
       // hexdump(payload, length);
 
@@ -116,6 +116,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       // pong will be send automatically
       Serial.println("[WSc] get ping");
       break;
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.println("[WSc] get pong");
@@ -148,15 +149,18 @@ void setup()
 {
   //Initialize serial and wait for port to open:
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClient_WiFi on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart WebSocketClient_WiFi on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   // check for the WiFi module:
   if (WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication with WiFi module failed!");
+
     // don't continue
     while (true);
   }
@@ -167,12 +171,12 @@ void setup()
   status = WiFi.begin(ssid, pass);
 
   delay(1000);
-   
+
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED)
   {
     delay(500);
-        
+
     // Connect to WPA/WPA2 network
     status = WiFi.status();
   }
@@ -186,7 +190,7 @@ void setup()
   // server address, port and URL
 #if USE_SSL
   webSocket.beginSSL(WS_SERVER, WS_PORT);
-#else  
+#else
   webSocket.begin(WS_SERVER, WS_PORT, "/");
 #endif
 

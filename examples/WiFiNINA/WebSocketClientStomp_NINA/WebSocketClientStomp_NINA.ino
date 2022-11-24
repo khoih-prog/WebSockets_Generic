@@ -5,10 +5,10 @@
   Blynk_WiFiNINA_WM is a library for the Mega, Teensy, SAM DUE, nRF52, STM32 and SAMD boards
   (https://github.com/khoih-prog/Blynk_WiFiNINA_WM) to enable easy configuration/reconfiguration and
   autoconnect/autoreconnect of WiFiNINA/Blynk
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
 
@@ -23,7 +23,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -81,64 +81,64 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
+
       break;
-      
+
     case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
+    {
+      alreadyConnected = true;
 
-        String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
-        sendMessage(msg);
-      }
-      
-      break;
-      
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
+      sendMessage(msg);
+    }
+
+    break;
+
     case WStype_TEXT:
+    {
+      // #####################
+      // handle STOMP protocol
+      // #####################
+
+      String text = (char*) payload;
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
+
+      if (text.startsWith("CONNECTED"))
       {
-        // #####################
-        // handle STOMP protocol
-        // #####################
 
-        String text = (char*) payload;
-        Serial.print("[WSc] get text: ");
-        Serial.println((char *) payload);
+        // subscribe to some channels
 
-        if (text.startsWith("CONNECTED")) 
-        {
+        String msg = "SUBSCRIBE\nid:sub-0\ndestination:/user/queue/messages\n\n";
+        sendMessage(msg);
+        delay(1000);
 
-          // subscribe to some channels
+        // and send a message
 
-          String msg = "SUBSCRIBE\nid:sub-0\ndestination:/user/queue/messages\n\n";
-          sendMessage(msg);
-          delay(1000);
-
-          // and send a message
-
-          msg = "SEND\ndestination:/app/message\n\n{\"user\":\"esp\",\"message\":\"Hello!\"}";
-          sendMessage(msg);
-          delay(1000);
-        } 
-        else 
-        {
-          // do something with messages
-        }
-
-        break;
+        msg = "SEND\ndestination:/app/message\n\n{\"user\":\"esp\",\"message\":\"Hello!\"}";
+        sendMessage(msg);
+        delay(1000);
       }
-      
+      else
+      {
+        // do something with messages
+      }
+
+      break;
+    }
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
-      
+
       //hexdump(payload, length);
 
       // send data to server
-       webSocket.sendBIN(payload, length);
-       
+      webSocket.sendBIN(payload, length);
+
       break;
 
     case WStype_ERROR:
@@ -149,7 +149,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       break;
 
     default:
-      break;      
+      break;
   }
 }
 
@@ -175,9 +175,11 @@ void setup()
 {
   //Initialize serial and wait for port to open:
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClientStomp_NINA on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart WebSocketClientStomp_NINA on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");
@@ -194,11 +196,13 @@ void setup()
   if (WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication with WiFi module failed!");
+
     // don't continue
     while (true);
   }
 
   String fv = WiFi.firmwareVersion();
+
   if (fv < WIFI_FIRMWARE_LATEST_VERSION)
   {
     Serial.println("Please upgrade the firmware");
@@ -217,7 +221,7 @@ void setup()
   }
 
   printWifiStatus();
-  
+
   // connect to websocket
   webSocket.begin(ws_host, ws_port, stompUrl);
   webSocket.setExtraHeaders(); // remove "Origin: file://" header because it breaks the connection with Spring's default websocket config
@@ -225,7 +229,7 @@ void setup()
   webSocket.onEvent(webSocketEvent);
 }
 
-void loop() 
+void loop()
 {
   webSocket.loop();
 }

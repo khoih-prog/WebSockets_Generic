@@ -1,10 +1,10 @@
 /****************************************************************************************************************************
   Portenta_H7_WebSocketClient.ino
   For Portenta_H7 boards using Murata WiFi Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
 
@@ -34,7 +34,7 @@
 #else
 
   #error For Portenta_H7 only
-  
+
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     2
@@ -103,30 +103,33 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
-      break;
-    case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
       break;
+
+    case WStype_CONNECTED:
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+    break;
+
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
 
       // send message to server
-       webSocket.sendTXT("message here");
+      webSocket.sendTXT("message here");
       break;
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
-      
+
       // KH, To check
       // hexdump(payload, length);
 
@@ -138,6 +141,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       // pong will be send automatically
       Serial.println("[WSc] get ping");
       break;
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.println("[WSc] get pong");
@@ -152,10 +156,13 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart Portenta_H7_WebSocketClient on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart Portenta_H7_WebSocketClient on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   // start the ethernet connection and the server:
@@ -164,18 +171,18 @@ void setup()
   // Use Static IP
   //Ethernet.begin(mac[index], clientIP);
   Ethernet.begin(mac[index]);
-  
+
   Serial.print("WebSockets Client @ IP address: ");
   Serial.println(Ethernet.localIP());
 
   // server address, port and URL
   Serial.print("Connecting to WebSockets Server @ ");
   Serial.println(WS_SERVER);
-  
+
   // server address, port and URL
 #if USE_SSL
   webSocket.beginSSL(WS_SERVER, WS_PORT);
-#else  
+#else
   webSocket.begin(WS_SERVER, WS_PORT, "/");
 #endif
 

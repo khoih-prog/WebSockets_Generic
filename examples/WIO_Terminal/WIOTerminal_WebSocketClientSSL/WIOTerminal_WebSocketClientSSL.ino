@@ -59,7 +59,7 @@ void hexdump(const void *mem, const uint32_t& len, const uint8_t& cols = 16)
     Serial.printf("%02X ", *src);
     src++;
   }
-  
+
   Serial.printf("\n");
 }
 
@@ -69,44 +69,44 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
   {
     case WStype_DISCONNECTED:
       Serial.printf("[WSc] Disconnected!\n");
-      
+
       break;
-      
+
     case WStype_CONNECTED:
       Serial.printf("[WSc] Connected to url: %s\n", payload);
 
       // send message to server when Connected
       webSocket.sendTXT("Connected");
-      
+
       break;
-      
+
     case WStype_TEXT:
       Serial.printf("[WSc] get text: %s\n", payload);
 
       // send message to server
       webSocket.sendTXT("message here");
-      
+
       break;
-      
+
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
       hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
-      
+
       break;
-      
+
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
     case WStype_FRAGMENT:
     case WStype_FRAGMENT_FIN:
-    
+
       break;
 
     default:
-      break;  
+      break;
   }
 }
 
@@ -114,9 +114,11 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WIOTerminal_WebSocketClientSSL on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart WIOTerminal_WebSocketClientSSL on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WiFiMulti.addAP("SSID", "passpasspass");
@@ -127,7 +129,7 @@ void setup()
     Serial.print(".");
     delay(100);
   }
-  
+
   Serial.println();
 
   // Client address
@@ -142,7 +144,7 @@ void setup()
   webSocket.onEvent(webSocketEvent);
 }
 
-void loop() 
+void loop()
 {
   webSocket.loop();
 }

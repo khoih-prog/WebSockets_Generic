@@ -1,16 +1,16 @@
 /****************************************************************************************************************************
   WebSocketClient_W5500.ino
   For boards using W5x00 Ethernet Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   Example for connecting and maintining a connection with a SockJS+STOMP websocket connection.
   In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
-  
+
   Originally Created on: 24.05.2015
   Original Author: Markus Sattler
  *****************************************************************************************************************************/
@@ -19,7 +19,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -49,12 +49,12 @@
   #define ETHERNET_LARGE_BUFFERS
 
   #define _ETG_LOGLEVEL_        1
-      
+
   #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
-  #warning Using Ethernet_ESP8266 lib 
-  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library" 
+  #warning Using Ethernet_ESP8266 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library"
 #elif USE_ETHERNET_ENC
   #include "EthernetENC.h"
   #warning Using EthernetENC lib
@@ -140,71 +140,74 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
-      
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+
+    break;
+
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
 
       // send message to server
       // webSocket.sendTXT("message here");
-      
+
       break;
-      
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
-      
+
       // KH, To check
       // hexdump(payload, length);
 
       // send data to server
       webSocket.sendBIN(payload, length);
-      
+
       break;
 
     case WStype_PING:
       // pong will be send automatically
       Serial.println("[WSc] get ping");
-      
+
       break;
-      
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.println("[WSc] get pong");
-      
+
       break;
-      
+
     default:
-      break;            
+      break;
   }
 }
 
-void setup() 
+void setup()
 {
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH); // Deselect the SD card
-  
+
   // Debug console
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClient_W5500 on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart WebSocketClient_W5500 on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
@@ -216,14 +219,14 @@ void setup()
   WSK_LOGWARN1(F("SS:"),   SS);
   WSK_LOGWARN(F("========================="));
 
-  #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
-    // For other boards, to change if necessary
-    #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
-      // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-      Ethernet.init (USE_THIS_SS_PIN);
-           
-    #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
-  #endif
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // For other boards, to change if necessary
+#if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
+  // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
+#endif
 
   // start the ethernet connection and the server:
   // Use DHCP dynamic IP and random mac
@@ -231,11 +234,11 @@ void setup()
   // Use Static IP
   //Ethernet.begin(mac[index], clientIP);
   Ethernet.begin(mac[index]);
- 
+
   Serial.print("WebSockets Client @ IP address: ");
   Serial.println(Ethernet.localIP());
-  
-	// server address, port and URL
+
+  // server address, port and URL
   Serial.print("Connecting to WebSockets Server @ ");
   Serial.println(WS_SERVER);
 
@@ -246,14 +249,14 @@ void setup()
   webSocket.begin(WS_SERVER, WS_PORT, "/");
 #endif
 
-	// event handler
-	webSocket.onEvent(webSocketEvent);
+  // event handler
+  webSocket.onEvent(webSocketEvent);
 
-	// use HTTP Basic Authorization this is optional remove if not needed
-	webSocket.setAuthorization("user", "Password");
+  // use HTTP Basic Authorization this is optional remove if not needed
+  webSocket.setAuthorization("user", "Password");
 
-	// try ever 5000 again if connection has failed
-	webSocket.setReconnectInterval(5000);
+  // try ever 5000 again if connection has failed
+  webSocket.setReconnectInterval(5000);
 
   // start heartbeat (optional)
   // ping server every 15000 ms
@@ -266,7 +269,7 @@ void setup()
   Serial.println(WS_SERVER);
 }
 
-void loop() 
+void loop()
 {
-	webSocket.loop();
+  webSocket.loop();
 }

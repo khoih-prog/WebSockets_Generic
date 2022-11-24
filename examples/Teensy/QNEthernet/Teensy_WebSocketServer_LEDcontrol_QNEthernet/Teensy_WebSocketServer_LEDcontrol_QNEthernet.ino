@@ -1,18 +1,18 @@
 /****************************************************************************************************************************
   Teensy_WebSocketServer_LEDcontrol_QNEthernet.ino
   For Teensy 4.1 boards using QNEthernet Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   First created on: 26.11.2015
   Original Author: Markus Sattler
  *****************************************************************************************************************************/
 
-#if ( defined(CORE_TEENSY) && defined(__IMXRT1062__) && defined(ARDUINO_TEENSY41) ) 
+#if ( defined(CORE_TEENSY) && defined(__IMXRT1062__) && defined(ARDUINO_TEENSY41) )
   // For Teensy 4.1
   #define BOARD_TYPE      "TEENSY 4.1"
   // Use true for NativeEthernet Library, false if using other Ethernet libraries
@@ -40,59 +40,59 @@
 
 #if USE_NATIVE_ETHERNET
   #define WEBSOCKETS_NETWORK_TYPE   NETWORK_NATIVEETHERNET
-  
+
   #include "NativeEthernet.h"
   #warning Using NativeEthernet lib for Teensy 4.1. Must also use Teensy Packages Patch or error
   #define SHIELD_TYPE           "using NativeEthernet"
 #elif USE_QN_ETHERNET
   #define WEBSOCKETS_NETWORK_TYPE   NETWORK_QN_ETHERNET
-  
+
   #include "QNEthernet.h"       // https://github.com/ssilverman/QNEthernet
   using namespace qindesign::network;
   #warning Using QNEthernet lib for Teensy 4.1. Must also use Teensy Packages Patch or error
-  #define SHIELD_TYPE           "using QNEthernet"  
+  #define SHIELD_TYPE           "using QNEthernet"
 #endif
 
 #if USE_NATIVE_ETHERNET
-  // Enter a MAC address and IP address for your controller below.
-  #define NUMBER_OF_MAC      20
-  
-  byte mac[][NUMBER_OF_MAC] =
-  {
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x01 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x02 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x03 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x04 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x05 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x06 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x07 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x08 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x09 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0A },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0B },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0C },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0D },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0E },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0F },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x10 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x11 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x12 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x13 },
-    { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x14 },
-  };
+// Enter a MAC address and IP address for your controller below.
+#define NUMBER_OF_MAC      20
+
+byte mac[][NUMBER_OF_MAC] =
+{
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x01 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x02 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x03 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x04 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x05 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x06 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x07 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x08 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x09 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0A },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0B },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0C },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0D },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x0E },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0F },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x10 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x11 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x12 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x13 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0xBE, 0x14 },
+};
 
 #else
 
-  #define USING_DHCP    false   //true
-  
-  #if !USING_DHCP
-    // Set the static IP address to use if the DHCP fails to assign
-    IPAddress myIP(192, 168, 2, 222);
-    IPAddress myNetmask(255, 255, 255, 0);
-    IPAddress myGW(192, 168, 2, 1);
-    //IPAddress mydnsServer(192, 168, 2, 1);
-    IPAddress mydnsServer(8, 8, 8, 8);
-  #endif
+#define USING_DHCP    false   //true
+
+#if !USING_DHCP
+  // Set the static IP address to use if the DHCP fails to assign
+  IPAddress myIP(192, 168, 2, 222);
+  IPAddress myNetmask(255, 255, 255, 0);
+  IPAddress myGW(192, 168, 2, 1);
+  //IPAddress mydnsServer(192, 168, 2, 1);
+  IPAddress mydnsServer(8, 8, 8, 8);
+#endif
 
 #endif
 
@@ -113,25 +113,25 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload, const size_t& length)
 {
   (void) length;
- 
+
   switch (type)
   {
     case WStype_DISCONNECTED:
       //Serial.println( "[" + String(num) + "] Disconnected!");
-      
-      break;
-      
-    case WStype_CONNECTED:
-      {
-        //IPAddress ip = webSocket.remoteIP(num);
-        //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
 
-        // send message to client
-        webSocket.sendTXT(num, "Connected");
-      }
-      
       break;
-      
+
+    case WStype_CONNECTED:
+    {
+      //IPAddress ip = webSocket.remoteIP(num);
+      //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+
+      // send message to client
+      webSocket.sendTXT(num, "Connected");
+    }
+
+    break;
+
     case WStype_TEXT:
       Serial.println( "[" + String(num) + "] get Text: " + String((char *) payload));
 
@@ -146,7 +146,7 @@ void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload,
         analogWrite(GREEN_LED, ((rgb >> 8) & 0xFF));
         analogWrite(BLUE_LED, ((rgb >> 0) & 0xFF));
       }
-      
+
       break;
 
     default:
@@ -158,10 +158,13 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStarting Teensy_WebSocketServer_LEDcontrol_QNEthernet on "); Serial.print(BOARD_NAME); 
-  Serial.print(" "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStarting Teensy_WebSocketServer_LEDcontrol_QNEthernet on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   pinMode(RED_LED, OUTPUT);
@@ -189,21 +192,23 @@ void setup()
 
   Serial.println(F("========================="));
 
-  Serial.print("Using mac index ="); Serial.println(index);
-  Serial.print("Connected! IP address:"); Serial.println(Ethernet.localIP());
+  Serial.print("Using mac index =");
+  Serial.println(index);
+  Serial.print("Connected! IP address:");
+  Serial.println(Ethernet.localIP());
 
 #else
 
-  #if USING_DHCP
-    // Start the Ethernet connection, using DHCP
-    Serial.print("Initialize Ethernet using DHCP => ");
-    Ethernet.begin();
-  #else   
-    // Start the Ethernet connection, using static IP
-    Serial.print("Initialize Ethernet using static IP => ");
-    Ethernet.begin(myIP, myNetmask, myGW);
-    Ethernet.setDNSServerIP(mydnsServer);
-  #endif
+#if USING_DHCP
+  // Start the Ethernet connection, using DHCP
+  Serial.print("Initialize Ethernet using DHCP => ");
+  Ethernet.begin();
+#else
+  // Start the Ethernet connection, using static IP
+  Serial.print("Initialize Ethernet using static IP => ");
+  Ethernet.begin(myIP, myNetmask, myGW);
+  Ethernet.setDNSServerIP(mydnsServer);
+#endif
 
   if (!Ethernet.waitForLocalIP(5000))
   {
@@ -222,7 +227,8 @@ void setup()
   }
   else
   {
-    Serial.print(F("Connected! IP address:")); Serial.println(Ethernet.localIP());
+    Serial.print(F("Connected! IP address:"));
+    Serial.println(Ethernet.localIP());
   }
 
 #endif
@@ -235,7 +241,8 @@ void setup()
   server.on("/", []()
   {
     // send index.html
-    server.send(200, "text/html", "<html><head><script>var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']); connection.onopen = function () {  connection.send('Connect ' + new Date()); }; connection.onerror = function (error) {    console.log('WebSocket Error ', error);};connection.onmessage = function (e) {  console.log('Server: ', e.data);};function sendRGB() {  var r = parseInt(document.getElementById('r').value).toString(16);  var g = parseInt(document.getElementById('g').value).toString(16);  var b = parseInt(document.getElementById('b').value).toString(16);  if(r.length < 2) { r = '0' + r; }   if(g.length < 2) { g = '0' + g; }   if(b.length < 2) { b = '0' + b; }   var rgb = '#'+r+g+b;    console.log('RGB: ' + rgb); connection.send(rgb); }</script></head><body>LED Control:<br/><br/>R: <input id=\"r\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/>G: <input id=\"g\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/>B: <input id=\"b\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/></body></html>");
+    server.send(200, "text/html",
+                "<html><head><script>var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']); connection.onopen = function () {  connection.send('Connect ' + new Date()); }; connection.onerror = function (error) {    console.log('WebSocket Error ', error);};connection.onmessage = function (e) {  console.log('Server: ', e.data);};function sendRGB() {  var r = parseInt(document.getElementById('r').value).toString(16);  var g = parseInt(document.getElementById('g').value).toString(16);  var b = parseInt(document.getElementById('b').value).toString(16);  if(r.length < 2) { r = '0' + r; }   if(g.length < 2) { g = '0' + g; }   if(b.length < 2) { b = '0' + b; }   var rgb = '#'+r+g+b;    console.log('RGB: ' + rgb); connection.send(rgb); }</script></head><body>LED Control:<br/><br/>R: <input id=\"r\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/>G: <input id=\"g\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/>B: <input id=\"b\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/></body></html>");
   });
 
   server.begin();
