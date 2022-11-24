@@ -1,34 +1,34 @@
 /*
- *  Udp.cpp: Library to send/receive UDP packets with the Arduino ethernet shield.
- *  This version only offers minimal wrapping of socket.c/socket.h
- *  Drop Udp.h/.cpp into the Ethernet library directory at hardware/libraries/Ethernet/ 
- *
- * MIT License:
- * Copyright (c) 2008 Bjoern Hartmann
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * bjoern@cs.stanford.edu 12/30/2008
- *
- * - 10 Apr. 2015
- * Added support for Arduino Ethernet Shield 2
- * by Arduino.org team
- */
+    Udp.cpp: Library to send/receive UDP packets with the Arduino ethernet shield.
+    This version only offers minimal wrapping of socket.c/socket.h
+    Drop Udp.h/.cpp into the Ethernet library directory at hardware/libraries/Ethernet/
+
+   MIT License:
+   Copyright (c) 2008 Bjoern Hartmann
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   bjoern@cs.stanford.edu 12/30/2008
+
+   - 10 Apr. 2015
+   Added support for Arduino Ethernet Shield 2
+   by Arduino.org team
+*/
 
 #include "utility/w5500.h"
 #include "utility/socket.h"
@@ -42,13 +42,17 @@
 EthernetUDP::EthernetUDP() : _sock(MAX_SOCK_NUM) {}
 
 /* Start EthernetUDP socket, listening at local port PORT */
-uint8_t EthernetUDP::begin(uint16_t port) {
+uint8_t EthernetUDP::begin(uint16_t port)
+{
   if (_sock != MAX_SOCK_NUM)
     return 0;
 
-  for (int i = 0; i < MAX_SOCK_NUM; i++) {
+  for (int i = 0; i < MAX_SOCK_NUM; i++)
+  {
     uint8_t s = w5500.readSnSR(i);
-    if (s == SnSR::CLOSED || s == SnSR::FIN_WAIT) {
+
+    if (s == SnSR::CLOSED || s == SnSR::FIN_WAIT)
+    {
       _sock = i;
       break;
     }
@@ -70,40 +74,44 @@ uint8_t EthernetUDP::beginMulticast(IPAddress ip, uint16_t port)
 {
   if (_sock != MAX_SOCK_NUM)
     return 0;
-  
-  for (int i = 0; i < MAX_SOCK_NUM; i++) {
+
+  for (int i = 0; i < MAX_SOCK_NUM; i++)
+  {
     uint8_t s = w5500.readSnSR(i);
-    if (s == SnSR::CLOSED || s == SnSR::FIN_WAIT) {
+
+    if (s == SnSR::CLOSED || s == SnSR::FIN_WAIT)
+    {
       _sock = i;
       break;
     }
   }
-  
+
   if (_sock == MAX_SOCK_NUM)
     return 0;
-  
+
   // Calculate MAC address from Multicast IP Address
   byte mac[] = {  0x01, 0x00, 0x5E, 0x00, 0x00, 0x00 };
-  
+
   mac[3] = ip[1] & 0x7F;
   mac[4] = ip[2];
   mac[5] = ip[3];
-  
+
   w5500.writeSnDIPR(_sock, rawIPAddress(ip));   //239.255.0.1
   w5500.writeSnDPORT(_sock, port);
-  w5500.writeSnDHAR(_sock,mac);
-  
+  w5500.writeSnDHAR(_sock, mac);
+
   _remaining = 0;
   socket(_sock, SnMR::UDP, port, SnMR::MULTI);
   return 1;
 }
 //////
-  
-  
+
+
 
 /* return number of bytes available in the current packet,
    will return zero if parsePacket hasn't been called yet */
-int EthernetUDP::available() {
+int EthernetUDP::available()
+{
   return _remaining;
 }
 
@@ -128,9 +136,13 @@ int EthernetUDP::beginPacket(const char *host, uint16_t port)
 
   dns.begin(Ethernet.dnsServerIP());
   ret = dns.getHostByName(host, remote_addr);
-  if (ret == 1) {
+
+  if (ret == 1)
+  {
     return beginPacket(remote_addr, port);
-  } else {
+  }
+  else
+  {
     return ret;
   }
 }
@@ -138,15 +150,15 @@ int EthernetUDP::beginPacket(const char *host, uint16_t port)
 int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
 {
   _offset = 0;
-  
-// KH debug
+
+  // KH debug
 #if (ETHERNET2_DEBUG > 1)
-    Serial.print("Ethernet2UDP::beginPacket: ip=");
-    Serial.print(ip);
-    Serial.print(", port=");
-    Serial.println(port);
+  Serial.print("Ethernet2UDP::beginPacket: ip=");
+  Serial.print(ip);
+  Serial.print(", port=");
+  Serial.println(port);
 #endif
-  
+
   return startUDP(_sock, rawIPAddress(ip), port);
 }
 
@@ -170,13 +182,13 @@ size_t EthernetUDP::write(const uint8_t *buffer, size_t size)
 
   uint16_t bytes_written = bufferData(_sock, _offset, buffer, size);
   _offset += bytes_written;
-  
+
   // KH debug
 #if (ETHERNET2_DEBUG > 1)
   Serial.print("Ethernet2UDP: bytes written=");
   Serial.println(bytes_written);
 #endif
-  
+
   return bytes_written;
 }
 
@@ -189,9 +201,10 @@ int EthernetUDP::parsePacket()
   {
     //HACK - hand-parse the UDP packet using TCP recv method
     uint8_t tmpBuf[8];
-    int ret =0; 
+    int ret = 0;
     //read 8 header bytes and get IP and port from it
-    ret = recv(_sock,tmpBuf,8);
+    ret = recv(_sock, tmpBuf, 8);
+
     if (ret > 0)
     {
       _remoteIP = tmpBuf;
@@ -204,14 +217,15 @@ int EthernetUDP::parsePacket()
       ret = _remaining;
     }
 
-  // KH debug
+    // KH debug
 #if (ETHERNET2_DEBUG > 1)
-  Serial.print("Ethernet2UDP:parsePacket OK, datasize=");
-  Serial.println(ret);
-#endif    
-    
+    Serial.print("Ethernet2UDP:parsePacket OK, datasize=");
+    Serial.println(ret);
+#endif
+
     return ret;
   }
+
   // There aren't any packets available
   return 0;
 }
@@ -246,7 +260,7 @@ int EthernetUDP::read(unsigned char* buffer, size_t len)
     }
     else
     {
-      // too much data for the buffer, 
+      // too much data for the buffer,
       // grab as much as will fit
       got = recv(_sock, buffer, len);
     }
@@ -267,11 +281,13 @@ int EthernetUDP::read(unsigned char* buffer, size_t len)
 int EthernetUDP::peek()
 {
   uint8_t b;
+
   // Unlike recv, peek doesn't check to see if there's any data available, so we must.
   // If the user hasn't called parsePacket yet then return nothing otherwise they
   // may get the UDP header
   if (!_remaining)
     return -1;
+
   ::peek(_sock, &b);
   return b;
 }

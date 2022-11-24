@@ -1,12 +1,12 @@
 /*
- modified 12 Aug 2013
- by Soohwan Kim (suhwan@wiznet.co.kr)
+  modified 12 Aug 2013
+  by Soohwan Kim (suhwan@wiznet.co.kr)
 
- - 10 Apr. 2015
- Added support for Arduino Ethernet Shield 2
- by Arduino.org team
- 
- */
+  - 10 Apr. 2015
+  Added support for Arduino Ethernet Shield 2
+  by Arduino.org team
+
+*/
 #ifndef ethernet_h
 #define ethernet_h
 
@@ -19,72 +19,80 @@
 
 
 
-class EthernetClass {
-private:
-  IPAddress _dnsServerAddress;
-  char* _dnsDomainName;
-  char* _hostName;
-  DhcpClass* _dhcp;
-  
-  // KH add to work with new func void MACAddress(uint8_t *mac_address); and SinricPro v2.5.1+
-  uint8_t _mac_address[6] ={0,};
-  //////
-  
-public:
-  uint8_t w5500_cspin;
+class EthernetClass
+{
+  private:
+    IPAddress _dnsServerAddress;
+    char* _dnsDomainName;
+    char* _hostName;
+    DhcpClass* _dhcp;
 
-  static uint8_t _state[MAX_SOCK_NUM];
-  static uint16_t _server_port[MAX_SOCK_NUM];
+    // KH add to work with new func void MACAddress(uint8_t *mac_address); and SinricPro v2.5.1+
+    uint8_t _mac_address[6] = {0,};
+    //////
 
-  EthernetClass() { _dhcp = NULL; w5500_cspin = 10; }
-  void init(uint8_t _cspin = 10) { w5500_cspin = _cspin; }
+  public:
+    uint8_t w5500_cspin;
+
+    static uint8_t _state[MAX_SOCK_NUM];
+    static uint16_t _server_port[MAX_SOCK_NUM];
+
+    EthernetClass()
+    {
+      _dhcp = NULL;
+      w5500_cspin = 10;
+    }
+    void init(uint8_t _cspin = 10)
+    {
+      w5500_cspin = _cspin;
+    }
 
 #if defined(WIZ550io_WITH_MACADDRESS)
-  // Initialize function when use the ioShield serise (included WIZ550io)
-  // WIZ550io has a MAC address which is written after reset.
-  // Default IP, Gateway and subnet address are also writen.
-  // so, It needs some initial time. please refer WIZ550io Datasheet in details.
-  int begin(void);
-  void begin(IPAddress local_ip);
-  void begin(IPAddress local_ip, IPAddress dns_server);
-  void begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway);
-  void begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
+    // Initialize function when use the ioShield serise (included WIZ550io)
+    // WIZ550io has a MAC address which is written after reset.
+    // Default IP, Gateway and subnet address are also writen.
+    // so, It needs some initial time. please refer WIZ550io Datasheet in details.
+    int begin(void);
+    void begin(IPAddress local_ip);
+    void begin(IPAddress local_ip, IPAddress dns_server);
+    void begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway);
+    void begin(IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
 #else
-  // Initialize the Ethernet shield to use the provided MAC address and gain the rest of the
-  // configuration through DHCP.
-  // Returns 0 if the DHCP configuration failed, and 1 if it succeeded
-  int begin(uint8_t *mac_address);
-  void begin(uint8_t *mac_address, IPAddress local_ip);
-  void begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server);
-  void begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway);
-  void begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
+    // Initialize the Ethernet shield to use the provided MAC address and gain the rest of the
+    // configuration through DHCP.
+    // Returns 0 if the DHCP configuration failed, and 1 if it succeeded
+    int begin(uint8_t *mac_address);
+    void begin(uint8_t *mac_address, IPAddress local_ip);
+    void begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server);
+    void begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway);
+    void begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
 
 #endif
-  
-  int maintain();
-  
-  // KH add to report link status
-  uint8_t       link();           // returns the linkstate, 1 = linked, 0 = no link
-  const char*   linkReport();     // returns the linkstate as a string
-  //////
 
-  // KH add to have similar function to Ethernet lib
-  // Certainly we can use void macAddress(uint8_t mac[]) to read from W5x00.
-  void MACAddress(uint8_t *mac_address)
-  {
-    memcpy(mac_address, _mac_address, sizeof(_mac_address));
-  }
-  //////
+    int maintain();
 
-  IPAddress localIP();
-  IPAddress subnetMask();
-  IPAddress gatewayIP();
-  IPAddress dnsServerIP();
-  char* dnsDomainName();
-  char* hostName();
+    // KH add to report link status
+    uint8_t       link();           // returns the linkstate, 1 = linked, 0 = no link
+    const char*   linkReport();     // returns the linkstate as a string
+    //////
 
-  friend class EthernetClient;
-  friend class EthernetServer;
+    // KH add to have similar function to Ethernet lib
+    // Certainly we can use void macAddress(uint8_t mac[]) to read from W5x00.
+    void MACAddress(uint8_t *mac_address)
+    {
+      memcpy(mac_address, _mac_address, sizeof(_mac_address));
+    }
+    //////
+
+    IPAddress localIP();
+    IPAddress subnetMask();
+    IPAddress gatewayIP();
+    IPAddress dnsServerIP();
+    char* dnsDomainName();
+    char* hostName();
+
+    friend class EthernetClient;
+    friend class EthernetServer;
 };
 
 extern EthernetClass Ethernet;
