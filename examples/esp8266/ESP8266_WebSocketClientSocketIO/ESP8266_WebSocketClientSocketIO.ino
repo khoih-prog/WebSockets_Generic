@@ -13,7 +13,7 @@
 *****************************************************************************************************************************/
 
 #if !defined(ESP8266)
-#error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
+  #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     2
@@ -37,77 +37,85 @@ uint16_t  serverPort = 5000;    //8080;    //3000;
 
 void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
-  switch (type) 
+  switch (type)
   {
     case sIOtype_DISCONNECT:
       Serial.println("[IOc] Disconnected");
       break;
+
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
 
       // join default namespace (no auto join in Socket.IO V3)
       socketIO.send(sIOtype_CONNECT, "/");
-      
+
       break;
+
     case sIOtype_EVENT:
       Serial.print("[IOc] Get event: ");
       Serial.println((char*) payload);
-      
+
       break;
+
     case sIOtype_ACK:
       Serial.print("[IOc] Get ack: ");
       Serial.println(length);
-      
+
       hexdump(payload, length);
       break;
+
     case sIOtype_ERROR:
       Serial.print("[IOc] Get error: ");
       Serial.println(length);
-      
+
       hexdump(payload, length);
       break;
+
     case sIOtype_BINARY_EVENT:
       Serial.print("[IOc] Get binary: ");
       Serial.println(length);
-      
+
       hexdump(payload, length);
       break;
+
     case sIOtype_BINARY_ACK:
-       Serial.print("[IOc] Get binary ack: ");
+      Serial.print("[IOc] Get binary ack: ");
       Serial.println(length);
-      
+
       hexdump(payload, length);
       break;
-      
+
     case sIOtype_PING:
       Serial.println("[IOc] Get PING");
 
       break;
 
-   case sIOtype_PONG:
+    case sIOtype_PONG:
       Serial.println("[IOc] Get PONG");
 
-      break;   
-      
+      break;
+
     default:
       break;
   }
 }
 
-void setup() 
+void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart ESP8266_WebSocketClientSocketIO on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketClientSocketIO on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
 
   // disable AP
-  if (WiFi.getMode() & WIFI_AP) 
+  if (WiFi.getMode() & WIFI_AP)
   {
     WiFi.softAPdisconnect(true);
   }
@@ -149,13 +157,13 @@ void setup()
 
 unsigned long messageTimestamp = 0;
 
-void loop() 
+void loop()
 {
   socketIO.loop();
 
   uint64_t now = millis();
 
-  if (now - messageTimestamp > 30000) 
+  if (now - messageTimestamp > 30000)
   {
     messageTimestamp = now;
 

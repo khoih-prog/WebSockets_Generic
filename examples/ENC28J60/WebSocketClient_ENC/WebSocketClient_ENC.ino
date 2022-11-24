@@ -1,13 +1,13 @@
 /****************************************************************************************************************************
   WebSocketClient_ENC.ino
   For boards using ENC28J60 Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   Created on: 24.05.2015
   Author: Markus Sattler
  *****************************************************************************************************************************/
@@ -16,7 +16,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -55,15 +55,17 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
     case WStype_DISCONNECTED:
       Serial.println("[WSc] Disconnected!");
       break;
-    case WStype_CONNECTED:
-      {
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
-      break;
+    case WStype_CONNECTED:
+    {
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+    break;
+
     case WStype_TEXT:
       Serial.print("[WSc] get text: ");
       Serial.println((char *) payload);
@@ -71,6 +73,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       // send message to server
       // webSocket.sendTXT("message here");
       break;
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -86,7 +89,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       // pong will be send automatically
       Serial.printf("[WSc] get ping\n");
       break;
-      
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");
@@ -100,7 +103,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       break;
 
     default:
-      break;      
+      break;
   }
 }
 
@@ -108,10 +111,12 @@ void setup()
 {
   //Initialize serial and wait for port to open:
   Serial.begin(115200);
+
   while (!Serial);
 
   Serial.print("\nStart WebSocketClient_ENC on " + String(BOARD_NAME));
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");

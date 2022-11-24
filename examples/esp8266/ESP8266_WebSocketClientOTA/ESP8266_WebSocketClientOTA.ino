@@ -49,7 +49,7 @@ bool ws_conn            = false;
 
 #define WS_SERVER             "192.168.2.30"
 #define WS_PORT               8081
-  
+
 bool alreadyConnected   = false;
 
 String IpAddress2String(const IPAddress& ipAddress)
@@ -191,18 +191,20 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       }
 
       break;
+
     case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
+    {
+      alreadyConnected = true;
 
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
 
-        // send message to server when Connected
-        // webSocket.sendTXT("Connected");
-        greetings_();
-      }
-      break;
+      // send message to server when Connected
+      // webSocket.sendTXT("Connected");
+      greetings_();
+    }
+    break;
+
     case WStype_TEXT:
       Serial.printf("[WSc] get text: %s\n", payload);
 
@@ -210,50 +212,55 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       // webSocket.sendTXT("message here");
       text(payload, length);
       break;
+
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
+
       // hexdump(payload, length);
-      
-      if (Update.write(payload, length) != length) 
+
+      if (Update.write(payload, length) != length)
       {
         Update.printError(Serial);
         ESP.restart();
       }
-      
+
       yield();
       SketchSize -= length;
       Serial.printf("[WSc] Sketch size left: %u\n", SketchSize);
-      
-      if (SketchSize < 1) 
+
+      if (SketchSize < 1)
       {
-        if (Update.end(true)) 
-        { 
+        if (Update.end(true))
+        {
           //true to set the size to the current progress
           Serial.printf("Update Success: \nRebooting...\n");
           delay(5);
           yield();
           ESP.restart();
-        } 
-        else 
+        }
+        else
         {
           Update.printError(Serial);
           ESP.restart();
         }
-        
+
         Serial.setDebugOutput(false);
       }
 
       // send data to server
       // webSocket.sendBIN(payload, length);
       break;
+
     case WStype_PING:
       // pong will be send automatically
       Serial.printf("[WSc] get ping\n");
       break;
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");
       break;
+
     case WStype_ERROR:
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
@@ -262,19 +269,21 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length)
       break;
 
     default:
-      break;  
+      break;
   }
 }
 
-void setup() 
+void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
   delay(200);
 
-  Serial.print("\nStart ESP8266_WebSocketClientOTA on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketClientOTA on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
@@ -317,7 +326,7 @@ void setup()
   Serial.println(WS_SERVER);
 }
 
-void loop() 
+void loop()
 {
   webSocket.loop();
 }

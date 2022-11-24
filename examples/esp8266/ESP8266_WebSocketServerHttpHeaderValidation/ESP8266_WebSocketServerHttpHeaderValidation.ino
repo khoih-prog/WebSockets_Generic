@@ -40,7 +40,8 @@ bool isCookieValid(const String& rawCookieHeaderValue)
 
   if (rawCookieHeaderValue.indexOf("sessionId") != -1)
   {
-    String sessionIdStr = rawCookieHeaderValue.substring(rawCookieHeaderValue.indexOf("sessionId=") + 10, rawCookieHeaderValue.indexOf("|"));
+    String sessionIdStr = rawCookieHeaderValue.substring(rawCookieHeaderValue.indexOf("sessionId=") + 10,
+                                                         rawCookieHeaderValue.indexOf("|"));
     unsigned long int sessionId = strtoul(sessionIdStr.c_str(), NULL, 10);
     return sessionId == validSessionId;
   }
@@ -71,7 +72,8 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
 
-  Serial.print("\nStart ESP8266_WebSocketServerHttpHeaderValidation on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketServerHttpHeaderValidation on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
@@ -84,9 +86,9 @@ void setup()
     Serial.print(".");
     delay(100);
   }
-  
+
   Serial.println();
- 
+
   //connecting clients must supply a valid session cookie at websocket upgrade handshake negotiation time
   const char * headerkeys[] = { "Cookie" };
   size_t headerKeyCount = sizeof(headerkeys) / sizeof(char*);

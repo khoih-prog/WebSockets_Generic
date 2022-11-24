@@ -1,16 +1,16 @@
 /****************************************************************************************************************************
   WebSocketClientStompOverSockJs_WiFiNINA.ino
   For Generic boards using WiFiNINA Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   Example for connecting and maintining a connection with a SockJS+STOMP websocket connection.
   In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
-  
+
   Created on: 18.07.2017
   Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
  *****************************************************************************************************************************/
@@ -19,7 +19,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -71,53 +71,57 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
+
       break;
+
     case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
-      }
-      break;
+    {
+      alreadyConnected = true;
+
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+    }
+    break;
+
     case WStype_TEXT:
+    {
+      // #####################
+      // handle SockJs+STOMP protocol
+      // #####################
+
+      String text = (char*) payload;
+
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
+
+      if (payload[0] == 'h')
       {
-        // #####################
-        // handle SockJs+STOMP protocol
-        // #####################
-
-        String text = (char*) payload;
-
-        Serial.print("[WSc] get text: ");
-        Serial.println((char *) payload);
-
-        if (payload[0] == 'h')
-        {
-          Serial.println("Heartbeat!");
-        }
-        else if (payload[0] == 'o')
-        {
-          // on open connection
-          String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
-
-          webSocket.sendTXT(msg);
-        }
-        else if (text.startsWith("a[\"CONNECTED"))
-        {
-          // subscribe to some channels
-          String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
-
-          webSocket.sendTXT(msg);
-          delay(1000);
-
-          // and send a message
-          msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
-          webSocket.sendTXT(msg);
-          delay(1000);
-        }
-        break;
+        Serial.println("Heartbeat!");
       }
+      else if (payload[0] == 'o')
+      {
+        // on open connection
+        String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
+
+        webSocket.sendTXT(msg);
+      }
+      else if (text.startsWith("a[\"CONNECTED"))
+      {
+        // subscribe to some channels
+        String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
+
+        webSocket.sendTXT(msg);
+        delay(1000);
+
+        // and send a message
+        msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
+        webSocket.sendTXT(msg);
+        delay(1000);
+      }
+
+      break;
+    }
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -135,7 +139,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       break;
 
     default:
-      break;      
+      break;
   }
 }
 
@@ -161,9 +165,11 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart WebSocketClientStompOverSockJs_WiFiNINA on "); Serial.println(BOARD_NAME);
+  Serial.print("\nStart WebSocketClientStompOverSockJs_WiFiNINA on ");
+  Serial.println(BOARD_NAME);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   Serial.println("Used/default SPI pinout:");
@@ -180,11 +186,13 @@ void setup()
   if (WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication with WiFi module failed!");
+
     // don't continue
     while (true);
   }
 
   String fv = WiFi.firmwareVersion();
+
   if (fv < WIFI_FIRMWARE_LATEST_VERSION)
   {
     Serial.println("Please upgrade the firmware");

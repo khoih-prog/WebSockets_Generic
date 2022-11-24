@@ -13,7 +13,7 @@
 *****************************************************************************************************************************/
 
 #if !defined(ESP8266)
-#error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
+  #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     2
@@ -78,7 +78,7 @@ void sendTXTMessage()
 
     // Print JSON for debugging
     Serial.println(output);
-    
+
     sendTXTMessage_timeout = millis() + SEND_INTERVAL;
   }
 }
@@ -95,24 +95,27 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       }
 
       break;
+
     case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
+    {
+      alreadyConnected = true;
 
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
-      break;
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+    break;
+
     case WStype_TEXT:
       Serial.printf("[WSc] get text: %s\n", payload);
 
       // send message to server
       //sendTXTMessage();
-      
+
       break;
+
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
       hexdump(payload, length);
@@ -125,7 +128,7 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       // pong will be send automatically
       Serial.printf("[WSc] get ping\n");
       break;
-      
+
     case WStype_PONG:
       // answer to a ping we send
       Serial.printf("[WSc] get pong\n");
@@ -147,11 +150,13 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
   delay(200);
 
-  Serial.print("\nStart ESP8266_WebSocketClient on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketClient on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);

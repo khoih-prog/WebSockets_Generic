@@ -1,13 +1,13 @@
 /****************************************************************************************************************************
   Generic_WebSocketServerHttpHeaderValidation_W5500.ino
   For Generic boards using W5x00 Ethernet Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   First created on: 08.06.2016
   Original Author: Markus Sattler
  *****************************************************************************************************************************/
@@ -16,7 +16,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -46,12 +46,12 @@
   #define ETHERNET_LARGE_BUFFERS
 
   #define _ETG_LOGLEVEL_        1
-      
+
   #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
-  #warning Using Ethernet_ESP8266 lib 
-  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library" 
+  #warning Using Ethernet_ESP8266 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library"
 #elif USE_ETHERNET_ENC
   #include "EthernetENC.h"
   #warning Using EthernetENC lib
@@ -131,9 +131,10 @@ bool isCookieValid(const String& rawCookieHeaderValue)
 {
   if (rawCookieHeaderValue.indexOf("sessionId") != -1)
   {
-    String sessionIdStr = rawCookieHeaderValue.substring(rawCookieHeaderValue.indexOf("sessionId=") + 10, rawCookieHeaderValue.indexOf("|"));
+    String sessionIdStr = rawCookieHeaderValue.substring(rawCookieHeaderValue.indexOf("sessionId=") + 10,
+                                                         rawCookieHeaderValue.indexOf("|"));
     unsigned long int sessionId = strtoul(sessionIdStr.c_str(), NULL, 10);
-    
+
     return sessionId == validSessionId;
   }
 
@@ -161,10 +162,13 @@ void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStarting Generic_WS_ServerHttpHeaderValidation_EthernetENC on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStarting Generic_WS_ServerHttpHeaderValidation_EthernetENC on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
@@ -176,14 +180,14 @@ void setup()
   WSK_LOGWARN1(F("SS:"),   SS);
   WSK_LOGWARN(F("========================="));
 
-  #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
-    // For other boards, to change if necessary
-    #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
-      // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-      Ethernet.init (USE_THIS_SS_PIN);
-           
-    #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
-  #endif
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // For other boards, to change if necessary
+#if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
+  // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
+#endif
 
   // start the ethernet connection and the server:
   // Use DHCP dynamic IP and random mac

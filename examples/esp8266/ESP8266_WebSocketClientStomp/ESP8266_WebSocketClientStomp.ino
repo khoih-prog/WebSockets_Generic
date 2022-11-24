@@ -56,56 +56,57 @@ WebSocketsClient webSocket;
    To solve this, we first convert the String to a NULL terminated char[] array
    via "c_str" and set the length of the payload to include the NULL value.
 */
-void sendMessage(const String & msg) 
+void sendMessage(const String & msg)
 {
   webSocket.sendTXT(msg.c_str(), msg.length() + 1);
 }
 
 void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& length)
 {
-  switch (type) 
+  switch (type)
   {
     case WStype_DISCONNECTED:
       Serial.printf("[WSc] Disconnected!\n");
       break;
-      
+
     case WStype_CONNECTED:
-      {
-        Serial.printf("[WSc] Connected to url: %s\n",  payload);
+    {
+      Serial.printf("[WSc] Connected to url: %s\n",  payload);
 
-        String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
-        sendMessage(msg);
-      }
-      break;
-      
+      String msg = "CONNECT\r\naccept-version:1.1,1.0\r\nheart-beat:10000,10000\r\n\r\n";
+      sendMessage(msg);
+    }
+    break;
+
     case WStype_TEXT:
+    {
+      // #####################
+      // handle STOMP protocol
+      // #####################
+
+      String text = (char*) payload;
+      Serial.printf("[WSc] get text: %s\n", payload);
+
+      if (text.startsWith("CONNECTED"))
       {
-        // #####################
-        // handle STOMP protocol
-        // #####################
+        // subscribe to some channels
+        String msg = "SUBSCRIBE\nid:sub-0\ndestination:/user/queue/messages\n\n";
+        sendMessage(msg);
+        delay(1000);
 
-        String text = (char*) payload;
-        Serial.printf("[WSc] get text: %s\n", payload);
-
-        if (text.startsWith("CONNECTED")) 
-        {
-          // subscribe to some channels
-          String msg = "SUBSCRIBE\nid:sub-0\ndestination:/user/queue/messages\n\n";
-          sendMessage(msg);
-          delay(1000);
-
-          // and send a message
-          msg = "SEND\ndestination:/app/message\n\n{\"user\":\"esp\",\"message\":\"Hello!\"}";
-          sendMessage(msg);
-          delay(1000);
-        } 
-        else 
-        {
-          // do something with messages
-        }
-        break;
+        // and send a message
+        msg = "SEND\ndestination:/app/message\n\n{\"user\":\"esp\",\"message\":\"Hello!\"}";
+        sendMessage(msg);
+        delay(1000);
       }
-      
+      else
+      {
+        // do something with messages
+      }
+
+      break;
+    }
+
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
       hexdump(payload, length);
@@ -114,8 +115,8 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       // webSocket.sendBIN(payload, length);
       break;
 
-      default:
-        break;
+    default:
+      break;
   }
 }
 
@@ -124,22 +125,25 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
 
-  Serial.print("\nStart ESP8266_WebSocketClientStomp on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketClientStomp on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
-  
+
   // connect to WiFi
-  Serial.print("Logging into WLAN: "); Serial.print(wlan_ssid); Serial.print(" ...");
+  Serial.print("Logging into WLAN: ");
+  Serial.print(wlan_ssid);
+  Serial.print(" ...");
   WiFi.mode(WIFI_STA);
   WiFi.begin(wlan_ssid, wlan_password);
 
-  while (WiFi.status() != WL_CONNECTED) 
+  while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     Serial.print(".");
   }
-  
+
   Serial.println(" success.");
-  Serial.print("WebSockets Client IP: "); 
+  Serial.print("WebSockets Client IP: ");
   Serial.println(WiFi.localIP());
 
   // connect to websocket
@@ -152,7 +156,7 @@ void setup()
   Serial.println("Connecting to WebSockets Server @ : " + String(ws_host) + ":" + ws_port + stompUrl );
 }
 
-void loop() 
+void loop()
 {
   webSocket.loop();
 }

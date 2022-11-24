@@ -1,16 +1,16 @@
 /****************************************************************************************************************************
   Generic_WebSocketClientStompOverSockJs_W5500.ino
   For Generic boards using W5x00 Ethernet Shield/Module
-  
+
   Based on and modified from WebSockets libarary https://github.com/Links2004/arduinoWebSockets
   to support other boards such as  SAMD21, SAMD51, Adafruit's nRF52 boards, etc.
-  
+
   Built by Khoi Hoang https://github.com/khoih-prog/WebSockets_Generic
   Licensed under MIT license
-  
+
   Example for connecting and maintining a connection with a SockJS+STOMP websocket connection.
   In this example, we connect to a Spring application (see https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html).
-  
+
   First created on: 18.07.2017
   Original Author: Martin Becker <mgbckr>, Contact: becker@informatik.uni-wuerzburg.de
  *****************************************************************************************************************************/
@@ -19,7 +19,7 @@
   // Default pin 10 to SS/CS
   #define USE_THIS_SS_PIN       10
   #define BOARD_TYPE      "SAM DUE"
-#elif ( defined(CORE_TEENSY) )  
+#elif ( defined(CORE_TEENSY) )
   #error You have to use examples written for Teensy
 #endif
 
@@ -49,12 +49,12 @@
   #define ETHERNET_LARGE_BUFFERS
 
   #define _ETG_LOGLEVEL_        1
-      
+
   #define SHIELD_TYPE           "W5x00 using Ethernet_Generic Library"
 #elif USE_ETHERNET_ESP8266
   #include "Ethernet_ESP8266.h"
-  #warning Using Ethernet_ESP8266 lib 
-  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library" 
+  #warning Using Ethernet_ESP8266 lib
+  #define SHIELD_TYPE           "W5x00 using Ethernet_ESP8266 Library"
 #elif USE_ETHERNET_ENC
   #include "EthernetENC.h"
   #warning Using EthernetENC lib
@@ -143,56 +143,60 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
         Serial.println("[WSc] Disconnected!");
         alreadyConnected = false;
       }
-      
+
       break;
+
     case WStype_CONNECTED:
-      {
-        alreadyConnected = true;
-        
-        Serial.print("[WSc] Connected to url: ");
-        Serial.println((char *) payload);
+    {
+      alreadyConnected = true;
 
-        // send message to server when Connected
-        webSocket.sendTXT("Connected");
-      }
-      break;
+      Serial.print("[WSc] Connected to url: ");
+      Serial.println((char *) payload);
+
+      // send message to server when Connected
+      webSocket.sendTXT("Connected");
+    }
+    break;
+
     case WStype_TEXT:
+    {
+      // #####################
+      // handle SockJs+STOMP protocol
+      // #####################
+
+      String text = (char*) payload;
+
+      Serial.print("[WSc] get text: ");
+      Serial.println((char *) payload);
+
+      if (payload[0] == 'h')
       {
-        // #####################
-        // handle SockJs+STOMP protocol
-        // #####################
-
-        String text = (char*) payload;
-
-        Serial.print("[WSc] get text: ");
-        Serial.println((char *) payload);
-
-        if (payload[0] == 'h')
-        {
-          Serial.println("Heartbeat!");
-        }
-        else if (payload[0] == 'o')
-        {
-          // on open connection
-          String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
-
-          webSocket.sendTXT(msg);
-        }
-        else if (text.startsWith("a[\"CONNECTED"))
-        {
-          // subscribe to some channels
-          String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
-
-          webSocket.sendTXT(msg);
-          delay(1000);
-
-          // and send a message
-          msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
-          webSocket.sendTXT(msg);
-          delay(1000);
-        }
-        break;
+        Serial.println("Heartbeat!");
       }
+      else if (payload[0] == 'o')
+      {
+        // on open connection
+        String msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
+
+        webSocket.sendTXT(msg);
+      }
+      else if (text.startsWith("a[\"CONNECTED"))
+      {
+        // subscribe to some channels
+        String msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
+
+        webSocket.sendTXT(msg);
+        delay(1000);
+
+        // and send a message
+        msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
+        webSocket.sendTXT(msg);
+        delay(1000);
+      }
+
+      break;
+    }
+
     case WStype_BIN:
       Serial.print("[WSc] get binary length: ");
       Serial.println(length);
@@ -218,10 +222,13 @@ void setup()
 {
   // Debug console
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStarting Generic_WebSocketClientStompOverSockJs_EthernetENC on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStarting Generic_WebSocketClientStompOverSockJs_EthernetENC on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   WSK_LOGWARN3(F("Board :"), BOARD_NAME, F(", setCsPin:"), USE_THIS_SS_PIN);
@@ -233,14 +240,14 @@ void setup()
   WSK_LOGWARN1(F("SS:"),   SS);
   WSK_LOGWARN(F("========================="));
 
-  #if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
-    // For other boards, to change if necessary
-    #if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
-      // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
-      Ethernet.init (USE_THIS_SS_PIN);
-           
-    #endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
-  #endif
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // For other boards, to change if necessary
+#if ( USE_ETHERNET_GENERIC  || USE_ETHERNET_ENC )
+  // Must use library patch for Ethernet, Ethernet2, EthernetLarge libraries
+  Ethernet.init (USE_THIS_SS_PIN);
+
+#endif  //( ( USE_ETHERNET_GENERIC || USE_ETHERNET_ENC )
+#endif
 
   // start the ethernet connection and the server:
   // Use DHCP dynamic IP and random mac

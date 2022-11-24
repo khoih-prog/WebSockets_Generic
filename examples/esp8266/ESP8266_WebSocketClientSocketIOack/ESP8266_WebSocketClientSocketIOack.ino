@@ -35,91 +35,97 @@ SocketIOclient socketIO;
 IPAddress serverIP(192, 168, 2, 30);
 uint16_t  serverPort = 8080;
 
-void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length) 
+void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const size_t& length)
 {
   switch (type)
   {
     case sIOtype_DISCONNECT:
       Serial.println("[IOc] Disconnected");
       break;
+
     case sIOtype_CONNECT:
       Serial.print("[IOc] Connected to url: ");
       Serial.println((char*) payload);
 
       // join default namespace (no auto join in Socket.IO V3)
       socketIO.send(sIOtype_CONNECT, "/");
-      
+
       break;
+
     case sIOtype_EVENT:
+    {
+      char * sptr = NULL;
+      int id = strtol((char *)payload, &sptr, 10);
+
+      Serial.print("[IOc] Get event: ");
+      Serial.print((char*) payload);
+      Serial.print(", id: ");
+      Serial.println(id);
+
+      if (id)
       {
-        char * sptr = NULL;
-        int id = strtol((char *)payload, &sptr, 10);
-
-        Serial.print("[IOc] Get event: ");
-        Serial.print((char*) payload);
-        Serial.print(", id: ");
-        Serial.println(id);
-
-        if (id)
-        {
-          payload = (uint8_t *)sptr;
-        }
-
-        DynamicJsonDocument doc(1024);
-        DeserializationError error = deserializeJson(doc, payload, length);
-
-        if (error)
-        {
-          Serial.print(F("DeserializeJson() failed: "));
-          Serial.println(error.c_str());
-          return;
-        }
-
-        String eventName = doc[0];
-
-        Serial.print("[IOc] Event name: ");
-        Serial.println(eventName);
-
-        // Message Includes a ID for a ACK (callback)
-        if (id)
-        {
-          // creat JSON message for Socket.IO (ack)
-          DynamicJsonDocument docOut(1024);
-          JsonArray array = docOut.to<JsonArray>();
-
-          // add payload (parameters) for the ack (callback function)
-          JsonObject param1 = array.createNestedObject();
-          param1["now"] = millis();
-
-          // JSON to String (serializion)
-          String output;
-          output += id;
-          serializeJson(docOut, output);
-
-          // Send event
-          socketIO.send(sIOtype_ACK, output);
-        }
+        payload = (uint8_t *)sptr;
       }
 
-      break;
+      DynamicJsonDocument doc(1024);
+      DeserializationError error = deserializeJson(doc, payload, length);
+
+      if (error)
+      {
+        Serial.print(F("DeserializeJson() failed: "));
+        Serial.println(error.c_str());
+        return;
+      }
+
+      String eventName = doc[0];
+
+      Serial.print("[IOc] Event name: ");
+      Serial.println(eventName);
+
+      // Message Includes a ID for a ACK (callback)
+      if (id)
+      {
+        // creat JSON message for Socket.IO (ack)
+        DynamicJsonDocument docOut(1024);
+        JsonArray array = docOut.to<JsonArray>();
+
+        // add payload (parameters) for the ack (callback function)
+        JsonObject param1 = array.createNestedObject();
+        param1["now"] = millis();
+
+        // JSON to String (serializion)
+        String output;
+        output += id;
+        serializeJson(docOut, output);
+
+        // Send event
+        socketIO.send(sIOtype_ACK, output);
+      }
+    }
+
+    break;
+
     case sIOtype_ACK:
       Serial.print("[IOc] Get ack: ");
       Serial.println(length);
 
       hexdump(payload, length);
       break;
+
     case sIOtype_ERROR:
       Serial.print("[IOc] Get error: ");
       Serial.println(length);
 
       hexdump(payload, length);
       break;
+
     case sIOtype_BINARY_EVENT:
       Serial.print("[IOc] Get binary: ");
       Serial.println(length);
 
       hexdump(payload, length);
       break;
+
     case sIOtype_BINARY_ACK:
       Serial.print("[IOc] Get binary ack: ");
       Serial.println(length);
@@ -132,35 +138,37 @@ void socketIOEvent(const socketIOmessageType_t& type, uint8_t * payload, const s
 
       break;
 
-   case sIOtype_PONG:
+    case sIOtype_PONG:
       Serial.println("[IOc] Get PONG");
 
-      break;   
-      
+      break;
+
     default:
       break;
   }
 }
 
-void setup() 
+void setup()
 {
   // Serial.begin(921600);
   Serial.begin(115200);
+
   while (!Serial);
 
-  Serial.print("\nStart ESP8266_WebSocketClientSocketIOack on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketClientSocketIOack on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
 
   // disable AP
-  if (WiFi.getMode() & WIFI_AP) 
+  if (WiFi.getMode() & WIFI_AP)
   {
     WiFi.softAPdisconnect(true);
   }
 
   WiFiMulti.addAP("SSID", "passpasspass");
-  
+
   //WiFi.disconnect();
   while (WiFiMulti.run() != WL_CONNECTED)
   {
@@ -196,13 +204,13 @@ void setup()
 
 unsigned long messageTimestamp = 0;
 
-void loop() 
+void loop()
 {
   socketIO.loop();
 
   uint64_t now = millis();
 
-  if (now - messageTimestamp > 30000) 
+  if (now - messageTimestamp > 30000)
   {
     messageTimestamp = now;
 

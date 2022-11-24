@@ -38,21 +38,21 @@ void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload,
     case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
       break;
-      
-    case WStype_CONNECTED:
-      {
-        IPAddress ip = webSocket.remoteIP(num);
-        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
 
-        // send message to client
-        webSocket.sendTXT(num, "Connected");
-      }
-      break;
-      
+    case WStype_CONNECTED:
+    {
+      IPAddress ip = webSocket.remoteIP(num);
+      Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+
+      // send message to client
+      webSocket.sendTXT(num, "Connected");
+    }
+    break;
+
     case WStype_TEXT:
       Serial.printf("[%u] get Text: %s\n", num, payload);
       break;
-      
+
     case WStype_BIN:
       Serial.printf("[%u] get binary length: %u\n", num, length);
       hexdump(payload, length);
@@ -64,12 +64,12 @@ void webSocketEvent(const uint8_t& num, const WStype_t& type, uint8_t * payload,
       fragmentBuffer = (char*)payload;
       Serial.printf("[%u] get start start of Textfragment: %s\n", num, payload);
       break;
-      
+
     case WStype_FRAGMENT:
       fragmentBuffer += (char*)payload;
       Serial.printf("[%u] get Textfragment : %s\n", num, payload);
       break;
-      
+
     case WStype_FRAGMENT_FIN:
       fragmentBuffer += (char*)payload;
       Serial.printf("[%u] get end of Textfragment: %s\n", num, payload);
@@ -86,7 +86,8 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
 
-  Serial.print("\nStart ESP8266_WebSocketServerFragmentation on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketServerFragmentation on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   //Serial.setDebugOutput(true);
@@ -99,7 +100,7 @@ void setup()
     Serial.print(".");
     delay(100);
   }
-  
+
   Serial.println();
 
   webSocket.begin();

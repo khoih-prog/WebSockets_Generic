@@ -16,7 +16,7 @@
 *****************************************************************************************************************************/
 
 #if !defined(ESP8266)
-#error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
+  #error This code is intended to run only on the ESP8266 boards ! Please check your Tools->Board setting.
 #endif
 
 #define _WEBSOCKETS_LOGLEVEL_     2
@@ -58,47 +58,48 @@ void webSocketEvent(const WStype_t& type, uint8_t * payload, const size_t& lengt
       break;
 
     case WStype_CONNECTED:
-      {
-        Serial.printf("[WSc] Connected to url: %s\n",  payload);
-      }
-      break;
+    {
+      Serial.printf("[WSc] Connected to url: %s\n",  payload);
+    }
+    break;
 
     case WStype_TEXT:
+    {
+      // #####################
+      // handle SockJs+STOMP protocol
+      // #####################
+
+      String text = (char*) payload;
+
+      Serial.printf("[WSc] get text: %s\n", payload);
+
+      if (payload[0] == 'h')
       {
-        // #####################
-        // handle SockJs+STOMP protocol
-        // #####################
-
-        String text = (char*) payload;
-
-        Serial.printf("[WSc] get text: %s\n", payload);
-
-        if (payload[0] == 'h')
-        {
-          Serial.println("Heartbeat!");
-        }
-        else if (payload[0] == 'o')
-        {
-          // on open connection
-          const char *msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
-          webSocket.sendTXT(msg);
-
-        }
-        else if (text.startsWith("a[\"CONNECTED"))
-        {
-          // subscribe to some channels
-
-          const char *msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
-          webSocket.sendTXT(msg);
-          delay(1000);
-
-          // and send a message
-          msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
-          webSocket.sendTXT(msg);
-          delay(1000);
-        }
-        break;
+        Serial.println("Heartbeat!");
       }
+      else if (payload[0] == 'o')
+      {
+        // on open connection
+        const char *msg = "[\"CONNECT\\naccept-version:1.1,1.0\\nheart-beat:10000,10000\\n\\n\\u0000\"]";
+        webSocket.sendTXT(msg);
+
+      }
+      else if (text.startsWith("a[\"CONNECTED"))
+      {
+        // subscribe to some channels
+
+        const char *msg = "[\"SUBSCRIBE\\nid:sub-0\\ndestination:/user/queue/messages\\n\\n\\u0000\"]";
+        webSocket.sendTXT(msg);
+        delay(1000);
+
+        // and send a message
+        msg = "[\"SEND\\ndestination:/app/message\\n\\n{\\\"user\\\":\\\"esp\\\",\\\"message\\\":\\\"Hello!\\\"}\\u0000\"]";
+        webSocket.sendTXT(msg);
+        delay(1000);
+      }
+
+      break;
+    }
 
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
@@ -119,11 +120,14 @@ void setup()
   // Serial.begin(921600);
   Serial.begin(115200);
 
-  Serial.print("\nStart ESP8266_WebSocketClientStompOverSockJs on "); Serial.println(ARDUINO_BOARD);
+  Serial.print("\nStart ESP8266_WebSocketClientStompOverSockJs on ");
+  Serial.println(ARDUINO_BOARD);
   Serial.println(WEBSOCKETS_GENERIC_VERSION);
 
   // connect to WiFi
-  Serial.print("Logging into WLAN: "); Serial.print(wlan_ssid); Serial.print(" ...");
+  Serial.print("Logging into WLAN: ");
+  Serial.print(wlan_ssid);
+  Serial.print(" ...");
   WiFi.mode(WIFI_STA);
   WiFi.begin(wlan_ssid, wlan_password);
 
