@@ -57,7 +57,7 @@
     {
       "owner": "khoih-prog",
       "name": "WiFiWebServer",
-      "version": ">=1.10.0",
+      "version": ">=1.10.1",
       "platforms": ["*"]
     },
     {
@@ -135,7 +135,7 @@
     {
       "owner": "ssilverman",
       "name": "QNEthernet",
-      "version": ">=0.16.0",
+      "version": ">=0.17.0",
       "platforms": ["teensy"]
     }
   ],
