@@ -261,7 +261,7 @@ This [**WebSockets_Generic** library](https://github.com/khoih-prog/WebSockets_G
 8. Portenta_H7 using Ethernet from [Portenta Vision shields](https://store-usa.arduino.cc/products/arduino-portenta-vision-shield-ethernet)
   
 <p align="center">
-    <img src="https://github.com/khoih-prog/WebSockets_Generic/raw/main/pics//Portenta_Vision.jpg">
+    <img src="https://github.com/khoih-prog/WebSockets_Generic/raw/main/pics/Portenta_Vision.jpg">
 </p>
 
 ---
